@@ -13,11 +13,26 @@ const TenantInvoices = () => {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
     });
 
+    const [profile, setProfile] = useState(null);
+
     useEffect(() => {
         if (!localStorage.getItem('token')) { navigate('/login'); return; }
-        axiosAuth.get('/invoices/my-invoices')
-            .then(res => { setInvoices(res.data); setLoading(false); })
-            .catch(() => { alert('Phiên đăng nhập hết hạn!'); navigate('/login'); });
+        
+        const fetchDashboardData = async () => {
+            try {
+                const [invRes, profRes] = await Promise.all([
+                    axiosAuth.get('/invoices/my-invoices'),
+                    axiosAuth.get('/auth/me')
+                ]);
+                setInvoices(invRes.data);
+                setProfile(profRes.data);
+                setLoading(false);
+            } catch (err) {
+                alert('Phiên đăng nhập hết hạn hoặc lỗi máy chủ!');
+                navigate('/login');
+            }
+        };
+        fetchDashboardData();
     }, []);
 
     const handleLogout = () => {
@@ -46,7 +61,7 @@ const TenantInvoices = () => {
                 <div className="max-w-2xl mx-auto flex justify-between items-center">
                     <div>
                         <h1 className="text-xl font-black tracking-wide">🏠 QUẢN LÝ NHÀ TRỌ</h1>
-                        <p className="text-blue-300 text-sm mt-0.5">Xin chào, <b className="text-white">{user.full_name || 'Khách thuê'}</b></p>
+                        <p className="text-blue-300 text-sm mt-0.5">Xin chào, <b className="text-white">{profile?.full_name || user.full_name || 'Khách thuê'}</b></p>
                     </div>
                     <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-sm font-bold transition">
                         Đăng xuất
@@ -55,6 +70,27 @@ const TenantInvoices = () => {
             </div>
 
             <div className="max-w-2xl mx-auto px-4 pt-6">
+                {/* Profile & Room Info */}
+                {profile && (
+                    <div className="bg-white rounded-xl shadow p-5 mb-6 border-l-4 border-blue-500">
+                        <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Thông tin Hợp đồng & Cá nhân</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <p className="text-gray-500 mb-1">Họ và tên: <b className="text-gray-800">{profile.full_name || 'Chưa cập nhật'}</b></p>
+                                <p className="text-gray-500 mb-1">Số điện thoại: <b className="text-gray-800">{profile.phone || 'Chưa cập nhật'}</b></p>
+                                <p className="text-gray-500 mb-1">CCCD: <b className="text-gray-800">{profile.id_card || 'Chưa cập nhật'}</b></p>
+                                <p className="text-gray-500">Quê quán: <b className="text-gray-800">{profile.hometown || 'Chưa cập nhật'}</b></p>
+                            </div>
+                            <div className="md:border-l md:pl-4">
+                                <p className="text-gray-500 mb-1">Đang thuê: <b className="text-blue-600 text-base">{profile.room_name || 'Chưa xếp phòng'}</b></p>
+                                <p className="text-gray-500 mb-1">Giá thuê: <b className="text-red-500">{profile.price ? fmt(profile.price) : '?'} / tháng</b></p>
+                                <p className="text-gray-500 mb-1">Tiện nghi: <b className="text-gray-800">{profile.amenities || 'Không có'}</b></p>
+                                {profile.start_date && <p className="text-gray-500">Ngày thuê: <b className="text-gray-800">{new Date(profile.start_date).toLocaleDateString('vi-VN')}</b></p>}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* Thống kê nhanh */}
                 <div className="grid grid-cols-3 gap-3 mb-6">
                     <div className="bg-white rounded-xl p-4 text-center shadow border-t-4 border-blue-500">
