@@ -29,9 +29,18 @@ const RoomManagement = () => {
     const [contractRoom, setContractRoom] = useState(null);
 
     // Upload ảnh phòng
-    const handleUploadImage = async (roomId, file) => {
+    const handleUploadImages = async (roomId, files) => {
+        if (!files || files.length === 0) return;
+        if (files.length > 5) {
+            alert('Chỉ được chọn tối đa 5 ảnh!');
+            return;
+        }
+
         const formData = new FormData();
-        formData.append('image', file);
+        for (let i = 0; i < files.length; i++) {
+            formData.append('images', files[i]);
+        }
+        
         try {
             const res = await axios.post(`https://api-quan-ly-nha-tro.onrender.com/api/rooms/upload-image/${roomId}`, formData, {
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
@@ -216,27 +225,42 @@ const RoomManagement = () => {
                             
                             <div className="p-4">
                                 {/* Ảnh phòng */}
-                                {room.image_url ? (
-                                    <div className="relative mb-3">
-                                        <img src={room.image_url.startsWith('http') ? room.image_url : `https://api-quan-ly-nha-tro.onrender.com${room.image_url}`}
-                                            alt="Ảnh phòng"
-                                            className="w-full h-32 object-cover rounded-lg border"
-                                            onError={e => e.target.style.display='none'}
-                                        />
-                                        <label className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded cursor-pointer hover:bg-black/70 transition">
-                                            📷 Đổi ảnh
-                                            <input type="file" accept="image/*" className="hidden"
-                                                onChange={e => e.target.files[0] && handleUploadImage(room.id, e.target.files[0])} />
+                                {(() => {
+                                    let images = [];
+                                    if (room.image_url) {
+                                        if (room.image_url.startsWith('[')) {
+                                            try { images = JSON.parse(room.image_url); } catch (e) {}
+                                        } else {
+                                            images = [room.image_url];
+                                        }
+                                    }
+
+                                    return images.length > 0 ? (
+                                        <div className="relative mb-3">
+                                            <div className="flex gap-2 overflow-x-auto pb-2 snap-x">
+                                                {images.map((imgUrl, idx) => (
+                                                    <img key={idx} src={imgUrl.startsWith('http') ? imgUrl : `https://api-quan-ly-nha-tro.onrender.com${imgUrl}`}
+                                                        alt={`Ảnh phòng ${idx + 1}`}
+                                                        className="w-2/3 h-32 flex-shrink-0 snap-center object-cover rounded-lg border"
+                                                        onError={e => e.target.style.display='none'}
+                                                    />
+                                                ))}
+                                            </div>
+                                            <label className="absolute bottom-0 right-2 shadow bg-black/70 text-white text-xs px-2 py-1 rounded cursor-pointer hover:bg-black/90 transition">
+                                                📷 Đổi toàn bộ ảnh (tối đa 5)
+                                                <input type="file" accept="image/*" multiple className="hidden"
+                                                    onChange={e => handleUploadImages(room.id, e.target.files)} />
+                                            </label>
+                                        </div>
+                                    ) : (
+                                        <label className="mb-3 flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 rounded-lg p-3 cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition">
+                                            <span className="text-2xl">📷</span>
+                                            <span className="text-sm text-gray-400">Click để upload ảnh (tối đa 5 ảnh)</span>
+                                            <input type="file" accept="image/*" multiple className="hidden"
+                                                onChange={e => handleUploadImages(room.id, e.target.files)} />
                                         </label>
-                                    </div>
-                                ) : (
-                                    <label className="mb-3 flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 rounded-lg p-3 cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition">
-                                        <span className="text-2xl">📷</span>
-                                        <span className="text-sm text-gray-400">Click để upload ảnh phòng</span>
-                                        <input type="file" accept="image/*" className="hidden"
-                                            onChange={e => e.target.files[0] && handleUploadImage(room.id, e.target.files[0])} />
-                                    </label>
-                                )}
+                                    );
+                                })()}
 
                                 {/* Chế độ xem hoặc Chế độ Sửa */}
                                 {editData.roomId === room.id ? (

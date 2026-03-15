@@ -83,14 +83,22 @@ const updateMeterReadings = async (req, res) => {
 // Upload ảnh phòng
 const uploadRoomImage = async (req, res) => {
     const { id } = req.params;
-    if (!req.file) return res.status(400).json({ message: 'Không có file ảnh!' });
-    // multer-storage-cloudinary sẽ trả về URL của ảnh trên Cloudinary trong req.file.path
-    const image_url = req.file.path;
+    
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ message: 'Không có file ảnh nào được chọn!' });
+    }
+
+    // Map qua danh sách files để lấy các đường dẫn URL trên Cloudinary
+    const imageUrls = req.files.map(file => file.path);
+    
+    // Chuyển mảng URL thành chuỗi JSON để lưu vào 1 cột image_url trong database
+    const imageUrlsString = JSON.stringify(imageUrls);
+
     try {
-        await db.query('UPDATE Rooms SET image_url = ? WHERE id = ?', [image_url, id]);
-        res.status(200).json({ message: 'Upload ảnh thành công!', image_url });
+        await db.query('UPDATE Rooms SET image_url = ? WHERE id = ?', [imageUrlsString, id]);
+        res.status(200).json({ message: 'Upload các ảnh thành công!', image_url: imageUrlsString });
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi: ' + error.message });
+        res.status(500).json({ message: 'Lỗi Database: ' + error.message });
     }
 };
 

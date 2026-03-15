@@ -16,7 +16,7 @@ router.post('/assign/:id', verifyToken, checkAdmin, roomController.assignTenant)
 // Cập nhật chỉ số đồng hồ điện/nước
 router.put('/meter/:id', verifyToken, checkAdmin, roomController.updateMeterReadings);
 
-// Upload ảnh phòng
-router.post('/upload-image/:id', verifyToken, checkAdmin, uploadCloud.single('image'), roomController.uploadRoomImage);
+// Upload ảnh phòng (tối đa 5 ảnh)
+router.post('/upload-image/:id', verifyToken, checkAdmin, uploadCloud.array('images', 5), roomController.uploadRoomImage);
 
 module.exports = router;
