@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import * as XLSX from 'xlsx';
 
 const ReportDashboard = () => {
     const [revenueData, setRevenueData] = useState([]);
@@ -38,6 +39,24 @@ const ReportDashboard = () => {
 
     // Tính tổng nợ
     const totalDebt = debtList.reduce((sum, item) => sum + Number(item.total_amount), 0);
+
+    // Tải Excel danh sách nợ
+    const exportDebtToExcel = () => {
+        const data = debtList.map((item, index) => ({
+            'STT': index + 1,
+            'Phòng': item.room_name,
+            'Tháng Nợ': item.month_year,
+            'Khách Thuê': item.tenant_name || 'Không rõ',
+            'Số Điện Thoại': item.phone,
+            'Số Tiền Nợ (đ)': Number(item.total_amount)
+        }));
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'DanhSachNo');
+        const d = new Date();
+        const dateStr = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+        XLSX.writeFile(wb, `BaoCao_CongNo_${dateStr}.xlsx`);
+    };
 
     if (loading) return <div className="text-center mt-10 p-5 font-bold">Đang tổng hợp số liệu báo cáo...</div>;
 
@@ -81,9 +100,18 @@ const ReportDashboard = () => {
                         <h2 className="text-lg font-bold text-gray-800 flex items-center">
                             <span className="text-2xl mr-2">⚠️</span> DANH SÁCH CẦN THU HỒI NỢ
                         </h2>
-                        <span className="bg-red-100 text-red-800 px-3 py-1 font-black rounded-lg text-lg">
-                            Tổng nợ: {formatCurrency(totalDebt)}
-                        </span>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={exportDebtToExcel}
+                                disabled={debtList.length === 0}
+                                className="bg-green-600 hover:bg-green-700 text-white font-bold px-3 py-1 rounded-lg text-sm transition disabled:opacity-40"
+                            >
+                                📤 Xuất Excel
+                            </button>
+                            <span className="bg-red-100 text-red-800 px-3 py-1 font-black rounded-lg text-lg">
+                                Tổng nợ: {formatCurrency(totalDebt)}
+                            </span>
+                        </div>
                     </div>
 
                     <div className="overflow-y-auto max-h-[400px] pr-2">

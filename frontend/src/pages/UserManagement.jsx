@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import * as XLSX from 'xlsx';
 
 const UserManagement = () => {
     const [users, setUsers] = useState([]);
@@ -82,6 +83,25 @@ const UserManagement = () => {
         }
     };
 
+    // Xuất Excel
+    const exportToExcel = () => {
+        const data = users.map((u, index) => ({
+            'STT': index + 1,
+            'Họ và Tên': u.full_name,
+            'Tên Đăng Nhập': u.username,
+            'Số Điện Thoại': u.phone || '---',
+            'SỐ CCCD/CMND': u.id_card || '---',
+            'Quê Quán': u.hometown || '---',
+            'Đang Thuê Phòng': u.room_name || 'Chưa xếp phòng'
+        }));
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'DanhSachKhachThue');
+        const d = new Date();
+        const dateStr = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+        XLSX.writeFile(wb, `DSKhachThue_${dateStr}.xlsx`);
+    };
+
     if (loading) return <div className="text-center mt-10 text-gray-500">Đang tải...</div>;
 
     return (
@@ -123,12 +143,21 @@ const UserManagement = () => {
 
             <div className="flex justify-between items-center mb-5">
                 <h1 className="text-2xl font-black text-gray-800 uppercase">👥 Quản Lý Khách Thuê</h1>
-                <button
-                    onClick={() => { setShowAddForm(!showAddForm); setEditUser(null); }}
-                    className={`px-4 py-2 rounded-lg font-bold transition text-sm ${showAddForm ? 'bg-gray-400 text-white' : 'bg-green-600 hover:bg-green-700 text-white'}`}
-                >
-                    {showAddForm ? '✕ Đóng' : '+ Thêm Khách Mới'}
-                </button>
+                <div className="flex gap-2">
+                    <button
+                        onClick={exportToExcel}
+                        disabled={users.length === 0}
+                        className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition disabled:opacity-40"
+                    >
+                        📤 Xuất Excel ({users.length})
+                    </button>
+                    <button
+                        onClick={() => { setShowAddForm(!showAddForm); setEditUser(null); }}
+                        className={`px-4 py-2 rounded-lg font-bold transition text-sm ${showAddForm ? 'bg-gray-400 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
+                    >
+                        {showAddForm ? '✕ Đóng' : '+ Thêm Khách Mới'}
+                    </button>
+                </div>
             </div>
 
             {/* ===== FORM THÊM MỚI ===== */}
