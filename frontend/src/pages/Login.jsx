@@ -102,19 +102,6 @@ const Login = () => {
                         </button>
                     </form>
 
-                    <div className="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
-                        <p className="text-xs font-bold text-gray-500 uppercase mb-2">Tài khoản demo</p>
-                        <div className="flex gap-4 text-sm">
-                            <div>
-                                <span className="text-blue-600 font-bold">Quản trị viên</span><br/>
-                                <span className="text-gray-600 font-mono">admin / 123456</span>
-                            </div>
-                            <div className="border-l border-gray-200 pl-4">
-                                <span className="text-green-600 font-bold">Khách thuê</span><br/>
-                                <span className="text-gray-600 font-mono">tenant1 / 123456</span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
