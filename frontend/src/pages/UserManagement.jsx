@@ -18,7 +18,7 @@ const UserManagement = () => {
 
     const fetchUsers = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/auth/users', apiHeaders);
+            const res = await axios.get('https://api-quan-ly-nha-tro.onrender.com/api/auth/users', apiHeaders);
             setUsers(res.data);
             setLoading(false);
         } catch (error) {
@@ -32,7 +32,7 @@ const UserManagement = () => {
     const handleAddUser = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/api/auth/register', { ...newUser, role: 'Tenant' }, apiHeaders);
+            await axios.post('https://api-quan-ly-nha-tro.onrender.com/api/auth/register', { ...newUser, role: 'Tenant' }, apiHeaders);
             // Hiển phiếu đăng nhập sau khi tạo thành công
             setCredCard({ full_name: newUser.full_name, username: newUser.username, password: newUser.password });
             setNewUser({ username: '', password: '', full_name: '', phone: '', id_card: '', hometown: '' });
@@ -47,7 +47,7 @@ const UserManagement = () => {
     const handleUpdateUser = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:5000/api/auth/users/${editUser.id}`, editUser, apiHeaders);
+            await axios.put(`https://api-quan-ly-nha-tro.onrender.com/api/auth/users/${editUser.id}`, editUser, apiHeaders);
             alert('✅ Đã cập nhật thông tin thành công!');
             setEditUser(null);
             fetchUsers();
@@ -60,7 +60,7 @@ const UserManagement = () => {
     const handleDeleteUser = async (id, name) => {
         if (!window.confirm(`Chắc chắn muốn xóa khách thuê "${name}"?`)) return;
         try {
-            await axios.delete(`http://localhost:5000/api/auth/users/${id}`, apiHeaders);
+            await axios.delete(`https://api-quan-ly-nha-tro.onrender.com/api/auth/users/${id}`, apiHeaders);
             alert('✅ Đã xóa tài khoản!');
             fetchUsers();
         } catch (error) {
@@ -72,7 +72,7 @@ const UserManagement = () => {
     const handleResetPassword = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:5000/api/auth/users/${resetPassUser.id}/reset-password`,
+            await axios.put(`https://api-quan-ly-nha-tro.onrender.com/api/auth/users/${resetPassUser.id}/reset-password`,
                 { new_password: resetPassUser.newPass }, apiHeaders);
             // Hiển phiếu đăng nhập mới
             setCredCard({ full_name: resetPassUser.full_name, username: resetPassUser.username, password: resetPassUser.newPass });

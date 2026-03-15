@@ -33,7 +33,7 @@ const RoomManagement = () => {
         const formData = new FormData();
         formData.append('image', file);
         try {
-            const res = await axios.post(`http://localhost:5000/api/rooms/upload-image/${roomId}`, formData, {
+            const res = await axios.post(`https://api-quan-ly-nha-tro.onrender.com/api/rooms/upload-image/${roomId}`, formData, {
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
             });
             alert('✅ Upload ảnh thành công!');
@@ -48,8 +48,8 @@ const RoomManagement = () => {
 
     const fetchData = async () => {
         try {
-            const resRooms = await axios.get('http://localhost:5000/api/rooms/all', apiHeaders);
-            const resUsers = await axios.get('http://localhost:5000/api/auth/users', apiHeaders);
+            const resRooms = await axios.get('https://api-quan-ly-nha-tro.onrender.com/api/rooms/all', apiHeaders);
+            const resUsers = await axios.get('https://api-quan-ly-nha-tro.onrender.com/api/auth/users', apiHeaders);
             setRooms(resRooms.data);
             setUsers(resUsers.data);
             setLoading(false);
@@ -66,7 +66,7 @@ const RoomManagement = () => {
     const handleAddRoom = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/api/rooms/add', newRoom, apiHeaders);
+            await axios.post('https://api-quan-ly-nha-tro.onrender.com/api/rooms/add', newRoom, apiHeaders);
             alert('Thêm phòng thành công!');
             setNewRoom({ room_name: '', price: '', amenities: '' });
             fetchData();
@@ -79,7 +79,7 @@ const RoomManagement = () => {
     const handleDeleteRoom = async (id) => {
         if (!window.confirm('Chắc chắn muốn xóa phòng này?')) return;
         try {
-            await axios.delete(`http://localhost:5000/api/rooms/delete/${id}`, apiHeaders);
+            await axios.delete(`https://api-quan-ly-nha-tro.onrender.com/api/rooms/delete/${id}`, apiHeaders);
             alert('Đã xóa phòng!');
             fetchData();
         } catch (error) {
@@ -91,7 +91,7 @@ const RoomManagement = () => {
     const handleAssignTenant = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`http://localhost:5000/api/rooms/assign/${assignData.roomId}`, {
+            await axios.post(`https://api-quan-ly-nha-tro.onrender.com/api/rooms/assign/${assignData.roomId}`, {
                 tenant_id: assignData.tenant_id,
                 start_date: assignData.start_date,
                 end_date: assignData.end_date
@@ -108,7 +108,7 @@ const RoomManagement = () => {
     const handleUpdateRoom = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:5000/api/rooms/update/${editData.roomId}`, {
+            await axios.put(`https://api-quan-ly-nha-tro.onrender.com/api/rooms/update/${editData.roomId}`, {
                 price: editData.price,
                 amenities: editData.amenities
             }, apiHeaders);
@@ -124,7 +124,7 @@ const RoomManagement = () => {
     const handleUpdateMeter = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:5000/api/rooms/meter/${meterData.roomId}`, {
+            await axios.put(`https://api-quan-ly-nha-tro.onrender.com/api/rooms/meter/${meterData.roomId}`, {
                 current_elec: meterData.current_elec,
                 current_water: meterData.current_water
             }, apiHeaders);
@@ -218,7 +218,7 @@ const RoomManagement = () => {
                                 {/* Ảnh phòng */}
                                 {room.image_url ? (
                                     <div className="relative mb-3">
-                                        <img src={room.image_url.startsWith('http') ? room.image_url : `http://localhost:5000${room.image_url}`}
+                                        <img src={room.image_url.startsWith('http') ? room.image_url : `https://api-quan-ly-nha-tro.onrender.com${room.image_url}`}
                                             alt="Ảnh phòng"
                                             className="w-full h-32 object-cover rounded-lg border"
                                             onError={e => e.target.style.display='none'}

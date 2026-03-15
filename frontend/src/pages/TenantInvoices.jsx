@@ -9,7 +9,7 @@ const TenantInvoices = () => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
 
     const axiosAuth = axios.create({
-        baseURL: 'http://localhost:5000/api',
+        baseURL: 'https://api-quan-ly-nha-tro.onrender.com/api',
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
     });
 

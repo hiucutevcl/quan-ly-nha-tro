@@ -8,7 +8,7 @@ const MeterHistoryModal = ({ room, onClose }) => {
     const token = localStorage.getItem('token');
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/invoices/meter-history/${room.id}`, {
+        axios.get(`https://api-quan-ly-nha-tro.onrender.com/api/invoices/meter-history/${room.id}`, {
             headers: { Authorization: `Bearer ${token}` }
         }).then(res => {
             setHistory(res.data);

@@ -23,9 +23,9 @@ const InvoiceManagement = () => {
 
     const fetchData = async () => {
         try {
-            const resRooms = await axios.get('http://localhost:5000/api/invoices/rooms', apiHeaders);
-            const resAllRooms = await axios.get('http://localhost:5000/api/rooms/all', apiHeaders);
-            const resInvoices = await axios.get('http://localhost:5000/api/invoices/all', apiHeaders);
+            const resRooms = await axios.get('https://api-quan-ly-nha-tro.onrender.com/api/invoices/rooms', apiHeaders);
+            const resAllRooms = await axios.get('https://api-quan-ly-nha-tro.onrender.com/api/rooms/all', apiHeaders);
+            const resInvoices = await axios.get('https://api-quan-ly-nha-tro.onrender.com/api/invoices/all', apiHeaders);
             setRooms(resRooms.data);
             setAllRooms(resAllRooms.data);
             setInvoices(resInvoices.data);
@@ -62,7 +62,7 @@ const InvoiceManagement = () => {
     const handleCreateInvoice = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('http://localhost:5000/api/invoices/create', invoiceData, apiHeaders);
+            const res = await axios.post('https://api-quan-ly-nha-tro.onrender.com/api/invoices/create', invoiceData, apiHeaders);
             alert('Tạo hóa đơn thành công! Tổng tiền: ' + res.data.total_amount.toLocaleString() + 'đ');
             setInvoiceData({...invoiceData, room_id: '', old_elec: '', new_elec: '', old_water: '', new_water: '', parking_count: 0});
             fetchData();
@@ -75,7 +75,7 @@ const InvoiceManagement = () => {
     const handlePay = async (id) => {
         if (!window.confirm('Chắc chắn khách đã nộp tiền cho hóa đơn này?')) return;
         try {
-            await axios.put(`http://localhost:5000/api/invoices/pay/${id}`, {}, apiHeaders);
+            await axios.put(`https://api-quan-ly-nha-tro.onrender.com/api/invoices/pay/${id}`, {}, apiHeaders);
             fetchData();
         } catch (error) {
             alert('Có lỗi xảy ra khi cập nhật thanh toán!');

@@ -13,8 +13,8 @@ const ReportDashboard = () => {
     useEffect(() => {
         const fetchReports = async () => {
             try {
-                const resRev = await axios.get('http://localhost:5000/api/statistics/revenue', apiHeaders);
-                const resDebt = await axios.get('http://localhost:5000/api/statistics/debts', apiHeaders);
+                const resRev = await axios.get('https://api-quan-ly-nha-tro.onrender.com/api/statistics/revenue', apiHeaders);
+                const resDebt = await axios.get('https://api-quan-ly-nha-tro.onrender.com/api/statistics/debts', apiHeaders);
                 
                 // Format lại dữ liệu cho Chart
                 const chartData = resRev.data.map(item => ({

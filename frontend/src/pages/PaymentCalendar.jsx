@@ -14,8 +14,8 @@ const PaymentCalendar = () => {
 
     useEffect(() => {
         Promise.all([
-            axios.get('http://localhost:5000/api/invoices/all', apiHeaders),
-            axios.get('http://localhost:5000/api/rooms/all', apiHeaders),
+            axios.get('https://api-quan-ly-nha-tro.onrender.com/api/invoices/all', apiHeaders),
+            axios.get('https://api-quan-ly-nha-tro.onrender.com/api/rooms/all', apiHeaders),
         ]).then(([resInvoices, resRooms]) => {
             setInvoices(resInvoices.data);
             setRooms(resRooms.data);
@@ -26,7 +26,7 @@ const PaymentCalendar = () => {
     const handlePayInvoice = async (id) => {
         if (!window.confirm('Xác nhận đã thu tiền hóa đơn này?')) return;
         try {
-            await axios.put(`http://localhost:5000/api/invoices/pay/${id}`, {}, apiHeaders);
+            await axios.put(`https://api-quan-ly-nha-tro.onrender.com/api/invoices/pay/${id}`, {}, apiHeaders);
             setInvoices(prev => prev.map(inv => inv.id === id ? { ...inv, is_paid: 1 } : inv));
         } catch (e) {
             alert('Lỗi: ' + e.message);
