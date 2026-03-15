@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* Custom CSS cơ bản nếu cần */
+body {
+    background-color: #f3f4f6;
+}
