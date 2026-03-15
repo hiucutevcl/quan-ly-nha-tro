@@ -1,18 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
+import axios from 'axios';
 
 /**
  * ContractPDFGenerator - Sinh PDF hợp đồng thuê nhà
  * @param {object} room - Thông tin phòng (room_name, price, amenities, start_date, end_date, tenant_name)
  * @param {object} tenant - Thông tin khách thuê (full_name, phone, id_card, hometown)
- * @param {object} settings - Cài đặt nhà trọ từ localStorage
  */
 const ContractPDFGenerator = ({ room, tenant, onClose }) => {
-    const settings = JSON.parse(localStorage.getItem('nha_tro_settings') || '{}');
+    const [settings, setSettings] = useState({});
+    const [loading, setLoading] = useState(true);
 
-    const landlordName = settings.chuTro || 'Chủ nhà trọ';
-    const address = settings.diaChi || 'Địa chỉ nhà trọ';
-    const phone = settings.sdtChu || 'SĐT chủ trọ';
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const res = await axios.get('https://api-quan-ly-nha-tro.onrender.com/api/settings', {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                });
+                setSettings(res.data);
+            } catch (err) {
+                console.error("Lỗi lấy cài đặt:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchSettings();
+    }, []);
+
+    const landlordName = settings.nha_tro_name || settings.owner || 'Chủ nhà trọ';
+    const address = settings.address || 'Địa chỉ nhà trọ';
+    const phone = settings.phone || 'SĐT chủ trọ';
     const tenantName = room.tenant_name || tenant?.full_name || 'Khách thuê';
     const tenantPhone = tenant?.phone || '---';
     const tenantIdCard = tenant?.id_card || '---';
@@ -146,9 +163,10 @@ const ContractPDFGenerator = ({ room, tenant, onClose }) => {
                 <div className="flex gap-2">
                     <button
                         onClick={handleGenerate}
-                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2"
+                        disabled={loading}
+                        className={`flex-1 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 ${loading ? 'bg-gray-400 text-gray-200 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
                     >
-                        📄 Tải PDF về máy
+                        {loading ? '⏳ Đang tải...' : '📄 Tải PDF về máy'}
                     </button>
                     <button onClick={onClose} className="px-4 bg-gray-200 hover:bg-gray-300 rounded-xl font-bold transition">
                         Hủy

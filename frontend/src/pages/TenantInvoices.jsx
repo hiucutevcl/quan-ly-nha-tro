@@ -14,18 +14,21 @@ const TenantInvoices = () => {
     });
 
     const [profile, setProfile] = useState(null);
+    const [settings, setSettings] = useState(null);
 
     useEffect(() => {
         if (!localStorage.getItem('token')) { navigate('/login'); return; }
         
         const fetchDashboardData = async () => {
             try {
-                const [invRes, profRes] = await Promise.all([
+                const [invRes, profRes, setRes] = await Promise.all([
                     axiosAuth.get('/invoices/my-invoices'),
-                    axiosAuth.get('/auth/me')
+                    axiosAuth.get('/auth/me'),
+                    axiosAuth.get('/settings')
                 ]);
                 setInvoices(invRes.data);
                 setProfile(profRes.data);
+                setSettings(setRes.data);
                 setLoading(false);
             } catch (err) {
                 alert('Phiên đăng nhập hết hạn hoặc lỗi máy chủ!');
@@ -117,6 +120,25 @@ const TenantInvoices = () => {
                     </div>
                 )}
 
+                {/* Nhắc nhở thanh toán nếu từ mùng 5 đến 10 hàng tháng */}
+                {(() => {
+                    const currentDay = new Date().getDate();
+                    if (currentDay >= 5 && currentDay <= 10 && tongChuaThu > 0) {
+                        return (
+                            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-5 rounded-r-xl shadow-sm animate-pulse">
+                                <div className="flex items-center">
+                                    <span className="text-2xl mr-3">🔔</span>
+                                    <div>
+                                        <h3 className="font-black text-lg">Nhắc nhở đóng tiền nhà!</h3>
+                                        <p className="text-sm">Đã sắp đến hạn chót thanh toán (mùng 10 hàng tháng). Vui lòng quét mã QR bên dưới để thanh toán sớm nhé!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    }
+                    return null;
+                })()}
+
                 <h2 className="text-lg font-bold text-gray-700 mb-3">📋 Lịch sử hóa đơn</h2>
 
                 {invoices.length === 0 ? (
@@ -189,6 +211,24 @@ const TenantInvoices = () => {
                                             {fmt(invoice.total_amount)}
                                         </span>
                                     </div>
+
+                                    {/* Thông tin chuyển khoản QR Code nếu chưa thanh toán */}
+                                    {!invoice.is_paid && settings?.bank_name && settings?.bank_account && (
+                                        <div className="mt-5 pt-4 border-t-2 border-dashed flex flex-col items-center bg-gray-50 rounded-lg p-4">
+                                            <p className="text-sm font-bold text-gray-700 mb-3 text-center uppercase">Quét mã QR để thanh toán</p>
+                                            <img 
+                                                src={`https://img.vietqr.io/image/${settings.bank_name}-${settings.bank_account}-compact2.jpg?amount=${invoice.total_amount}&addInfo=${encodeURIComponent(`Thanh toan tien phong ${invoice.room_name} thang ${invoice.month_year}`)}&accountName=${encodeURIComponent(settings.bank_owner || '')}`}
+                                                alt="Mã QR Thanh Toán"
+                                                className="w-48 h-48 object-contain bg-white p-2 rounded-xl shadow-md border"
+                                            />
+                                            <div className="mt-4 text-center text-sm space-y-1">
+                                                <p className="text-gray-500">Ngân hàng: <b className="text-gray-800">{settings.bank_name}</b></p>
+                                                <p className="text-gray-500">Số tài khoản: <b className="text-blue-600">{settings.bank_account}</b></p>
+                                                <p className="text-gray-500">Chủ tài khoản: <b className="text-gray-800">{settings.bank_owner || '---'}</b></p>
+                                                <p className="text-gray-500">Nội dung CK: <b className="text-orange-600">Thanh toan tien phong {invoice.room_name} thang {invoice.month_year}</b></p>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ))}

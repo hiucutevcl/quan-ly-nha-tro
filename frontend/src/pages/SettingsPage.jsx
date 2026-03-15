@@ -1,36 +1,60 @@
 import React, { useState, useEffect } from 'react';
-
-const STORAGE_KEY = 'nha_tro_settings';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const defaultSettings = {
-    name: 'Nhà Trọ Gia Đình',
+    nha_tro_name: 'Nhà Trọ Gia Đình',
     address: '',
     phone: '',
     owner: '',
     elec_price: 3500,
     water_price: 15000,
     note: '',
+    bank_name: '',
+    bank_account: '',
+    bank_owner: ''
 };
 
 const SettingsPage = () => {
-    const [settings, setSettings] = useState(() => {
-        try {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            return saved ? { ...defaultSettings, ...JSON.parse(saved) } : defaultSettings;
-        } catch { return defaultSettings; }
-    });
+    const [settings, setSettings] = useState(defaultSettings);
     const [saved, setSaved] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+
+    const axiosAuth = axios.create({
+        baseURL: 'https://api-quan-ly-nha-tro.onrender.com/api',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    });
+
+    useEffect(() => {
+        if (!localStorage.getItem('token')) { navigate('/login'); return; }
+        axiosAuth.get('/settings')
+            .then(res => {
+                if (Object.keys(res.data).length > 0) {
+                    setSettings({ ...defaultSettings, ...res.data });
+                }
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Lỗi tải cài đặt:", err);
+                setLoading(false);
+            });
+    }, []);
 
     const handleChange = (e) => {
         setSettings({ ...settings, [e.target.name]: e.target.value });
         setSaved(false);
     };
 
-    const handleSave = (e) => {
+    const handleSave = async (e) => {
         e.preventDefault();
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-        setSaved(true);
-        setTimeout(() => setSaved(false), 2500);
+        try {
+            await axiosAuth.put('/settings', settings);
+            setSaved(true);
+            setTimeout(() => setSaved(false), 2500);
+        } catch (error) {
+            alert('Lỗi khi lưu cài đặt: ' + (error.response?.data?.message || error.message));
+        }
     };
 
     return (
@@ -44,8 +68,8 @@ const SettingsPage = () => {
                     <div className="grid grid-cols-1 gap-4">
                         <div>
                             <label className="block text-sm font-bold text-gray-600 mb-1">Tên nhà trọ</label>
-                            <input type="text" name="name" className="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400"
-                                value={settings.name} onChange={handleChange} placeholder="VD: Nhà trọ Thành Công" />
+                            <input type="text" name="nha_tro_name" className="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400"
+                                value={settings.nha_tro_name} onChange={handleChange} placeholder="VD: Nhà trọ Thành Công" />
                         </div>
                         <div>
                             <label className="block text-sm font-bold text-gray-600 mb-1">Địa chỉ</label>
@@ -82,6 +106,28 @@ const SettingsPage = () => {
                             <input type="number" name="water_price" className="w-full border rounded p-2 focus:ring-2 focus:ring-yellow-400"
                                 value={settings.water_price} onChange={handleChange} />
                             <p className="text-xs text-gray-400 mt-1">Giá nước hiện tại: <b>{Number(settings.water_price).toLocaleString()}đ / m³</b></p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Thanh toán / Ngân hàng */}
+                <div className="bg-white p-6 rounded-xl shadow border-t-4 border-green-500">
+                    <h2 className="text-lg font-bold text-gray-700 mb-4">Thông tin chuyển khoản (Tạo mã QR)</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="md:col-span-2">
+                            <label className="block text-sm font-bold text-gray-600 mb-1">Tên Ngân Hàng (Viết tắt chuẩn, vd: VCB, MB, TPB...)</label>
+                            <input type="text" name="bank_name" className="w-full border rounded p-2 focus:ring-2 focus:ring-green-400"
+                                value={settings.bank_name} onChange={handleChange} placeholder="MB, VCB, CTG, BIDV, TCB... (bắt buộc đúng để tạo QR)" />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-600 mb-1">Số tài khoản</label>
+                            <input type="text" name="bank_account" className="w-full border rounded p-2 focus:ring-2 focus:ring-green-400"
+                                value={settings.bank_account} onChange={handleChange} placeholder="Số tài khoản ngân hàng" />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-600 mb-1">Tên chủ tài khoản</label>
+                            <input type="text" name="bank_owner" className="w-full border rounded p-2 focus:ring-2 focus:ring-green-400"
+                                value={settings.bank_owner} onChange={handleChange} placeholder="NGUYEN VAN A" />
                         </div>
                     </div>
                 </div>
