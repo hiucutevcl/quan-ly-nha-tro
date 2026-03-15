@@ -8,7 +8,7 @@ const register = async (req, res) => {
         const { username, password, role, full_name, phone, id_card, hometown } = req.body;
 
         // B1: Kiểm tra username đã tồn tại trong CSDL chưa
-        const [existingUsers] = await db.query('SELECT id FROM Users WHERE username = ?', [username]);
+        const [existingUsers] = await db.query('SELECT id FROM users WHERE username = ?', [username]);
         if (existingUsers.length > 0) {
             return res.status(400).json({ message: 'Tên đăng nhập đã tồn tại!' });
         }
@@ -20,7 +20,7 @@ const register = async (req, res) => {
         // B3: Lưu user mới vào CSDL
         const userRole = role || 'Tenant';
         await db.query(
-            'INSERT INTO Users (username, password, role, full_name, phone, id_card, hometown) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO users (username, password, role, full_name, phone, id_card, hometown) VALUES (?, ?, ?, ?, ?, ?, ?)',
             [username, hashedPassword, userRole, full_name, phone || '', id_card || '', hometown || '']
         );
 
@@ -37,7 +37,7 @@ const login = async (req, res) => {
         const { username, password } = req.body;
 
         // B1: Tìm user theo username CSDL
-        const [users] = await db.query('SELECT * FROM Users WHERE username = ?', [username]);
+        const [users] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
         if (users.length === 0) {
             return res.status(404).json({ message: 'Tên đăng nhập không tồn tại!' });
         }
@@ -81,8 +81,8 @@ const getAllUsers = async (req, res) => {
         const sql = `
             SELECT u.id, u.username, u.full_name, u.phone, u.id_card, u.hometown,
                    r.room_name, r.id as room_id
-            FROM Users u
-            LEFT JOIN Rooms r ON r.tenant_id = u.id
+            FROM users u
+            LEFT JOIN rooms r ON r.tenant_id = u.id
             WHERE u.role = 'Tenant'
             ORDER BY u.id DESC
         `;
@@ -99,7 +99,7 @@ const updateUser = async (req, res) => {
     const { full_name, phone, id_card, hometown } = req.body;
     try {
         await db.query(
-            'UPDATE Users SET full_name = ?, phone = ?, id_card = ?, hometown = ? WHERE id = ?',
+            'UPDATE users SET full_name = ?, phone = ?, id_card = ?, hometown = ? WHERE id = ?',
             [full_name, phone || '', id_card || '', hometown || '', id]
         );
         res.status(200).json({ message: 'Cập nhật thông tin thành công!' });
@@ -112,7 +112,7 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     try {
         const { id } = req.params;
-        await db.query('DELETE FROM Users WHERE id = ?', [id]);
+        await db.query('DELETE FROM users WHERE id = ?', [id]);
         res.status(200).json({ message: 'Xóa user thành công!' });
     } catch (error) {
         res.status(500).json({ message: 'User đang thuê phòng hoặc có hóa đơn nên không thể xóa ngay. ' + error.message });
@@ -129,7 +129,7 @@ const resetPassword = async (req, res) => {
     try {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(new_password, salt);
-        await db.query('UPDATE Users SET password = ? WHERE id = ?', [hashedPassword, id]);
+        await db.query('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, id]);
         res.status(200).json({ message: 'Đặt lại mật khẩu thành công!' });
     } catch (error) {
         res.status(500).json({ message: 'Lỗi: ' + error.message });

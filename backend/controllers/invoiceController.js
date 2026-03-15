@@ -8,13 +8,13 @@ const createInvoice = async (req, res) => {
         const { room_id, new_elec, new_water, month_year, parking_count = 0, is_wifi = true, is_trash = true } = req.body;
 
         // B1: Lấy thông tin phòng để biết tiền phòng và chỉ số đồng hồ
-        const [rooms] = await db.query('SELECT price, current_elec, current_water FROM Rooms WHERE id = ?', [room_id]);
+        const [rooms] = await db.query('SELECT price, current_elec, current_water FROM rooms WHERE id = ?', [room_id]);
         if (rooms.length === 0) return res.status(404).json({ message: 'Không tìm thấy phòng!' });
         const { price: room_fee, current_elec: room_elec, current_water: room_water } = rooms[0];
 
         // B2: Truy vấn hóa đơn tháng trước
         const [lastInvoices] = await db.query(
-            'SELECT new_elec, new_water, total_amount, is_paid FROM Invoices WHERE room_id = ? ORDER BY id DESC LIMIT 1',
+            'SELECT new_elec, new_water, total_amount, is_paid FROM invoices WHERE room_id = ? ORDER BY id DESC LIMIT 1',
             [room_id]
         );
 
@@ -59,14 +59,14 @@ const createInvoice = async (req, res) => {
 
         // B5: Lưu Database hóa đơn
         await db.query(
-            `INSERT INTO Invoices 
+            `INSERT INTO invoices 
             (room_id, month_year, old_elec, new_elec, old_water, new_water, room_fee, elec_fee, water_fee, trash_fee, wifi_fee, parking_count, parking_fee, old_debt, total_amount, is_paid) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [room_id, month_year, old_elec, new_elec, old_water, new_water, room_fee, elec_fee, water_fee, trash_fee, wifi_fee, parking_count, parking_fee, old_debt, total_amount, false]
         );
 
         // B6: Cập nhật lại chỉ số đồng hồ mới vào phòng
-        await db.query('UPDATE Rooms SET current_elec = ?, current_water = ? WHERE id = ?', [new_elec, new_water, room_id]);
+        await db.query('UPDATE rooms SET current_elec = ?, current_water = ? WHERE id = ?', [new_elec, new_water, room_id]);
 
         res.status(201).json({ 
             message: 'Tạo hóa đơn thành công!', 
@@ -84,7 +84,7 @@ const createInvoice = async (req, res) => {
 const payInvoice = async (req, res) => {
     const { id } = req.params;
     try {
-        await db.query('UPDATE Invoices SET is_paid = true WHERE id = ?', [id]);
+        await db.query('UPDATE invoices SET is_paid = true WHERE id = ?', [id]);
         res.status(200).json({ message: 'Thu tiền hóa đơn thành công!' });
     } catch (error) {
         res.status(500).json({ message: 'Lỗi: ' + error.message });
@@ -98,11 +98,11 @@ const getMyInvoices = async (req, res) => {
     try {
         const tenant_id = req.user.id; // Lấy ID người dùng từ Token thông qua middleware
 
-        // Truy vấn Join 2 bảng Invoices và Rooms để trả về thêm Tên phòng
+        // Truy vấn Join 2 bảng invoices và rooms để trả về thêm Tên phòng
         const sql = `
             SELECT i.*, r.room_name 
-            FROM Invoices i
-            JOIN Rooms r ON i.room_id = r.id
+            FROM invoices i
+            JOIN rooms r ON i.room_id = r.id
             WHERE r.tenant_id = ?
             ORDER BY i.id DESC
         `;
@@ -123,8 +123,8 @@ const getRooms = async (req, res) => {
         // Lấy danh sách phòng kèm theo thông tin username của người thuê (nếu có)
         const sql = `
             SELECT r.*, u.username as tenant_username, u.full_name as tenant_name 
-            FROM Rooms r 
-            LEFT JOIN Users u ON r.tenant_id = u.id 
+            FROM rooms r 
+            LEFT JOIN users u ON r.tenant_id = u.id 
             ORDER BY r.room_name ASC
         `;
         const [rooms] = await db.query(sql);
@@ -140,9 +140,9 @@ const getAllInvoices = async (req, res) => {
     try {
         const sql = `
             SELECT i.*, r.room_name, u.full_name as tenant_name 
-            FROM Invoices i
-            JOIN Rooms r ON i.room_id = r.id
-            LEFT JOIN Users u ON r.tenant_id = u.id
+            FROM invoices i
+            JOIN rooms r ON i.room_id = r.id
+            LEFT JOIN users u ON r.tenant_id = u.id
             ORDER BY i.id DESC
         `;
         const [invoices] = await db.query(sql);
@@ -160,7 +160,7 @@ const getMeterHistory = async (req, res) => {
             SELECT month_year, old_elec, new_elec, (new_elec - old_elec) as elec_used,
                    old_water, new_water, (new_water - old_water) as water_used,
                    elec_fee, water_fee, is_paid
-            FROM Invoices
+            FROM invoices
             WHERE room_id = ?
             ORDER BY month_year ASC
         `;
