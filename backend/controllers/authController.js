@@ -136,4 +136,23 @@ const resetPassword = async (req, res) => {
     }
 };
 
-module.exports = { register, login, getAllUsers, deleteUser, updateUser, resetPassword };
+// API 7: Lấy thông tin cá nhân của người đang đăng nhập (Tenant)
+const getMe = async (req, res) => {
+    try {
+        const tenant_id = req.user.id;
+        const sql = `
+            SELECT u.id, u.username, u.full_name, u.phone, u.id_card, u.hometown,
+                   r.id as room_id, r.room_name, r.price, r.amenities, r.start_date, r.end_date, r.current_elec, r.current_water
+            FROM Users u
+            LEFT JOIN Rooms r ON r.tenant_id = u.id
+            WHERE u.id = ?
+        `;
+        const [users] = await db.query(sql, [tenant_id]);
+        if (users.length === 0) return res.status(404).json({ message: 'Không tìm thấy người dùng!' });
+        res.status(200).json(users[0]);
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi server: ' + error.message });
+    }
+};
+
+module.exports = { register, login, getAllUsers, deleteUser, updateUser, resetPassword, getMe };

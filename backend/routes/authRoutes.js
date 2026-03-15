@@ -5,6 +5,7 @@ const { verifyToken, checkAdmin } = require('../middlewares/authMiddleware');
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);
+router.get('/me', verifyToken, authController.getMe);
 
 // API Dành cho quản lý khách thuê
 router.get('/users', verifyToken, checkAdmin, authController.getAllUsers);
