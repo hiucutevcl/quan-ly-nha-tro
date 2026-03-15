@@ -1,19 +1,39 @@
-import React from 'react';
-import jsPDF from 'jspdf';
+import React, { useState } from 'react';
+import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 const InvoicePDFExport = ({ invoice }) => {
+    const [isPrinting, setIsPrinting] = useState(false);
+
     const handlePrint = async () => {
-        const element = document.getElementById(`invoice-preview-${invoice.id}`);
-        const canvas = await html2canvas(element, { scale: 2 });
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a5' });
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = pdf.internal.pageSize.getHeight();
-        const ratio = canvas.width / canvas.height;
-        const imgHeight = pageWidth / ratio;
-        pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, Math.min(imgHeight, pageHeight));
-        pdf.save(`HoaDon_${invoice.room_name}_${invoice.month_year}.pdf`);
+        if (isPrinting) return;
+        setIsPrinting(true);
+        try {
+            const element = document.getElementById(`invoice-preview-${invoice.id}`);
+            
+            // Xóa fixed/left ẩn tạm thời để render chuẩn xác
+            const originalClassName = element.parentElement.className;
+            element.parentElement.className = "absolute top-0 left-0 opacity-0 pointer-events-none z-[-50]";
+
+            const canvas = await html2canvas(element, { scale: 2, useCORS: true, logging: false });
+            
+            // Phục hồi lại class ẩn
+            element.parentElement.className = originalClassName;
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a5' });
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const ratio = canvas.width / canvas.height;
+            const imgHeight = pageWidth / ratio;
+            pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, Math.min(imgHeight, pageHeight));
+            pdf.save(`HoaDon_${invoice.room_name}_${invoice.month_year}.pdf`);
+        } catch (error) {
+            console.error("Lỗi xuất PDF:", error);
+            alert("Lỗi xuất PDF: " + error.message);
+        } finally {
+            setIsPrinting(false);
+        }
     };
 
     const fmt = (v) => Number(v || 0).toLocaleString() + ' đ';
@@ -81,10 +101,11 @@ const InvoicePDFExport = ({ invoice }) => {
             {/* Nút bấm */}
             <button
                 onClick={handlePrint}
-                className="text-purple-600 hover:text-purple-800 text-sm font-semibold"
+                disabled={isPrinting}
+                className={`${isPrinting ? 'text-gray-400' : 'text-purple-600 hover:text-purple-800'} text-sm font-semibold transition`}
                 title="Xuất PDF"
             >
-                🖨️ PDF
+                {isPrinting ? '⏳ Đang tạo...' : '🖨️ PDF'}
             </button>
         </>
     );

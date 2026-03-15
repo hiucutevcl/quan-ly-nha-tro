@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import axios from 'axios';
 
 /**
@@ -43,9 +43,10 @@ const ContractPDFGenerator = ({ room, tenant, onClose }) => {
     };
 
     const handleGenerate = () => {
-        const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+        try {
+            const doc = new jsPDF({ unit: 'mm', format: 'a4' });
 
-        // Helper functions
+            // Helper functions
         const addLine = (y) => { doc.setDrawColor(180); doc.line(15, y, 195, y); };
         const bold = (sz = 12) => { doc.setFontSize(sz); doc.setFont('helvetica', 'bold'); };
         const normal = (sz = 11) => { doc.setFontSize(sz); doc.setFont('helvetica', 'normal'); };
@@ -128,6 +129,10 @@ const ContractPDFGenerator = ({ room, tenant, onClose }) => {
 
         doc.save(`HopDong_${room.room_name}_${today.getFullYear()}${String(today.getMonth()+1).padStart(2,'0')}.pdf`);
         if (onClose) onClose();
+        } catch (error) {
+            console.error("Lỗi tạo PDF hợp đồng:", error);
+            alert("Lỗi tạo PDF hợp đồng: " + error.message);
+        }
     };
 
     return (
