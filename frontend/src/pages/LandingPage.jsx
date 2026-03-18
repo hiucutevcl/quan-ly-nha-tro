@@ -182,8 +182,9 @@ const LandingPage = () => {
                                                 <p className="text-slate-500 text-sm font-medium">{room.amenities && typeof room.amenities === 'string' ? room.amenities.substring(0, 40) + '...' : 'Tiện nghi cơ bản'}</p>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-blue-600 font-black text-lg">{Number(room.price).toLocaleString()}đ</p>
-                                                <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">/ THÁNG</p>
+                                                <Link to="/login" className="inline-block mt-1 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-xs font-bold transition-colors">
+                                                    🔒 Đăng nhập xem giá
+                                                </Link>
                                             </div>
                                         </div>
                                     </div>
@@ -191,6 +192,53 @@ const LandingPage = () => {
                             })}
                         </div>
                     )}
+                </div>
+            </section>
+
+            {/* Security & Features Section */}
+            <section className="py-20 bg-slate-900 text-white relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full blur-[150px] opacity-20"></div>
+                <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500 rounded-full blur-[150px] opacity-20"></div>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div className="text-center max-w-2xl mx-auto mb-16">
+                        <span className="inline-block py-1 px-4 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-bold uppercase tracking-wider mb-4">
+                            Quản trị An ninh & Bảo mật
+                        </span>
+                        <h2 className="text-3xl md:text-4xl font-black mb-4">Tiên phong công nghệ bảo mật <br />cho không gian sống</h2>
+                        <p className="text-slate-400">Hệ thống áp dụng các tiêu chuẩn an toàn dữ liệu khắt khe nhất, bảo vệ quyền riêng tư và thông tin cá nhân của từng cư dân.</p>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-3 gap-8">
+                        <div className="bg-white/5 border border-white/10 p-8 rounded-3xl backdrop-blur-md hover:bg-white/10 transition-colors">
+                            <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-bold mb-3">Mã hóa Dữ liệu Cấp độ cao</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed">Toàn bộ thông tin cá nhân, hợp đồng và hóa đơn điện tử đều được mã hóa an toàn, phân quyền truy cập nghiêm ngặt.</p>
+                        </div>
+                        
+                        <div className="bg-white/5 border border-white/10 p-8 rounded-3xl backdrop-blur-md hover:bg-white/10 transition-colors">
+                            <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-bold mb-3">Quyền Riêng tư Tối đa</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed">Cơ chế xác thực người dùng giúp ẩn danh mọi chi phí và thông tin nhạy cảm. Chỉ bạn mới có quyền xem thông tin của mình.</p>
+                        </div>
+
+                        <div className="bg-white/5 border border-white/10 p-8 rounded-3xl backdrop-blur-md hover:bg-white/10 transition-colors">
+                            <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-bold mb-3">Quản trị Server Ổn định</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed">Hệ thống máy chủ áp dụng tường lửa, chống DDoD và sao lưu dữ liệu tự động hằng ngày để đảm bảo dịch vụ thông suốt.</p>
+                        </div>
+                    </div>
                 </div>
             </section>
 
