@@ -8,6 +8,7 @@ const invoiceRoutes = require('./routes/invoiceRoutes');
 const roomRoutes = require('./routes/roomRoutes');
 const statisticRoutes = require('./routes/statisticRoutes');
 const settingRoutes = require('./routes/settingRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use('/api/invoices', invoiceRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/statistics', statisticRoutes);
 app.use('/api/settings', settingRoutes);
+app.use('/api/chat', chatRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

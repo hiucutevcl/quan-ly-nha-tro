@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 
 const Chatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
-        { text: "Chào bạn! Tôi là Bot hỗ trợ nhà trọ. Bạn cần giúp gì?", sender: 'bot' }
+        { text: "Chào bạn! Mình là trợ lý AI thông minh của hệ thống. Bạn cần tư vấn về phòng nào ạ?", sender: 'bot' }
     ]);
     const [input, setInput] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef(null);
+
+    const API_URL = 'https://api-quan-ly-nha-tro.onrender.com/api/chat/public';
 
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
@@ -18,32 +22,25 @@ const Chatbot = () => {
         if (isOpen) scrollToBottom();
     }, [messages, isOpen]);
 
-    const handleSend = () => {
-        if (!input.trim()) return;
+    const handleSend = async () => {
+        if (!input.trim() || isLoading) return;
 
         const userMsg = input.trim();
-        setMessages(prev => [...prev, { text: userMsg, sender: 'user' }]);
+        const newMessages = [...messages, { text: userMsg, sender: 'user' }];
+        
+        setMessages(newMessages);
         setInput("");
+        setIsLoading(true);
 
-        // Simple logic bot
-        setTimeout(() => {
-            let botReply = "Xin lỗi, tôi chưa hiểu ý bạn. Bạn có thể hỏi về 'giá phòng', 'liên hệ', hoặc 'còn phòng không' nhé!";
-            
-            const lowerMsg = userMsg.toLowerCase();
-            if (lowerMsg.includes("giá") || lowerMsg.includes("bao nhiêu")) {
-                botReply = "Giá phòng dao động từ 2.000.000đ đến 3.500.000đ tùy diện tích và tiện nghi bạn nhé.";
-            } else if (lowerMsg.includes("liên hệ") || lowerMsg.includes("số điện thoại") || lowerMsg.includes("sđt")) {
-                botReply = "Bạn có thể gọi trực tiếp cho chủ nhà qua số điện thoại hiển thị ở phần thông tin liên hệ trên trang web.";
-            } else if (lowerMsg.includes("còn phòng") || lowerMsg.includes("trống")) {
-                botReply = "Bạn vui lòng xem danh sách các phòng bên dưới, những phòng có nhãn 'Còn phòng' màu xanh là đang trống ạ.";
-            } else if (lowerMsg.includes("địa chỉ") || lowerMsg.includes("ở đâu")) {
-                botReply = "Địa chỉ nhà trọ được ghi rõ ở phần giới thiệu trên trang chủ bạn nhé!";
-            } else if (lowerMsg.includes("chào") || lowerMsg.includes("hi") || lowerMsg.includes("hello")) {
-                botReply = "Chào bạn! Chúc bạn một ngày tốt lành. Tôi có thể giúp gì cho bạn trong việc tìm phòng trọ không?";
-            }
-
-            setMessages(prev => [...prev, { text: botReply, sender: 'bot' }]);
-        }, 600);
+        try {
+            const res = await axios.post(API_URL, { messages: newMessages });
+            setMessages(prev => [...prev, { text: res.data.reply, sender: 'bot' }]);
+        } catch (error) {
+            console.error("Lỗi AI API:", error);
+            setMessages(prev => [...prev, { text: 'Mình đang gặp chút sự cố mạng. Vui lòng liên hệ trực tiếp chủ trọ nhé!', sender: 'bot' }]);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -87,15 +84,24 @@ const Chatbot = () => {
                     >
                         {messages.map((msg, idx) => (
                             <div key={idx} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${
+                                <div className={`max-w-[80%] p-3 rounded-2xl text-sm whitespace-pre-line ${
                                     msg.sender === 'user' 
                                     ? 'bg-blue-600 text-white rounded-tr-none' 
-                                    : 'bg-white text-gray-800 shadow-sm border border-gray-100 rounded-tl-none'
+                                    : 'bg-white text-gray-800 shadow-sm border border-gray-100 rounded-tl-none leading-relaxed'
                                 }`}>
                                     {msg.text}
                                 </div>
                             </div>
                         ))}
+                        {isLoading && (
+                            <div className="flex justify-start">
+                                <div className="max-w-[80%] p-3 px-4 rounded-2xl bg-white text-gray-800 shadow-sm border border-gray-100 rounded-tl-none flex items-center gap-1">
+                                    <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                                    <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                                    <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce"></div>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Input */}
@@ -105,8 +111,9 @@ const Chatbot = () => {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                            placeholder="Nhập tin nhắn..."
-                            className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Nhắn hoặc hỏi thêm..."
+                            disabled={isLoading}
+                            className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
                         />
                         <button
                             onClick={handleSend}
