@@ -140,9 +140,9 @@ const SettingsPage = () => {
                 {/* Ghi chú */}
                 <div className="bg-white p-6 rounded-xl shadow border-t-4 border-gray-300">
                     <h2 className="text-lg font-bold text-gray-700 mb-4">Ghi chú / Nội quy nhà trọ</h2>
-                    <textarea name="note" rows={4} className="w-full border rounded p-2 focus:ring-2 focus:ring-gray-400"
+                    <textarea name="note" rows={10} className="w-full border rounded p-2 focus:ring-2 focus:ring-gray-400"
                         value={settings.note} onChange={handleChange}
-                        placeholder="Nhập nội quy, ghi chú hiển thị trên hóa đơn..." />
+                        placeholder="Nhập nội quy, ghi chú hiển thị trên hóa đơn và web chính..." />
                 </div>
 
                 {/* Cấu hình Chatbot FAQ */}
