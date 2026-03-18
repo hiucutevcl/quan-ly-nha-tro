@@ -21,14 +21,15 @@ const Chatbot = () => {
         if (isOpen) scrollToBottom();
     }, [messages, isOpen]);
 
-    const handleSend = async () => {
-        if (!input.trim() || isLoading) return;
+    const handleSend = async (overrideText = null) => {
+        const textToSend = overrideText || input;
+        if ((!textToSend || !textToSend.trim()) || isLoading) return;
 
-        const userMsg = input.trim();
+        const userMsg = textToSend.trim();
         const newMessages = [...messages, { text: userMsg, sender: 'user' }];
         
         setMessages(newMessages);
-        setInput("");
+        if (!overrideText) setInput("");
         setIsLoading(true);
 
         try {
@@ -101,6 +102,20 @@ const Chatbot = () => {
                                 </div>
                             </div>
                         )}
+                    </div>
+
+                    {/* Quick Replies */}
+                    <div className="px-4 pb-3 bg-gray-50 flex gap-2 overflow-x-auto no-scrollbar scroll-smooth">
+                        {["🏠 Xem phòng trống", "💰 Báo giá thuê", "📍 Xin địa chỉ", "📞 Liên hệ chủ trọ", "⚡ Giá điện nước"].map((qr, idx) => (
+                            <button 
+                                key={idx}
+                                onClick={() => handleSend(qr)}
+                                disabled={isLoading}
+                                className="whitespace-nowrap px-3 py-1.5 bg-white border border-blue-100 text-blue-600 rounded-full text-xs font-medium hover:bg-blue-50 transition-colors shadow-sm disabled:opacity-50"
+                            >
+                                {qr}
+                            </button>
+                        ))}
                     </div>
 
                     {/* Input */}
