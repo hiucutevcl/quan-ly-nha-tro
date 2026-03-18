@@ -69,33 +69,59 @@ const handleChatRequest = async (req, res) => {
 
         const match = (keys) => keys.some(k => userText.includes(k));
 
+        const formatTemplate = (template, data) => {
+            if (!template) return '';
+            return template.replace(/{(\w+)}/g, (match, key) => data[key] !== undefined ? data[key] : match).replace(/\\n/g, '\n');
+        };
+
+        const roomList = availableRooms.map(r =>
+            `• Phòng **${r.room_name}**: ${Number(r.price).toLocaleString()}đ/tháng${r.amenities ? ` — ${r.amenities}` : ''}`
+        ).join('\n');
+
+        const prices = allRooms.map(r =>
+            `• Phòng **${r.room_name}**: ${Number(r.price).toLocaleString()}đ/tháng (${r.status === 'Available' ? '✅ Còn trống' : '🔴 Đã có người'})`
+        ).join('\n');
+
+        const defaultTemplates = {
+            chat_available_rooms: `Hiện tại **{name}** đang có **{count} phòng trống** 🏠:\n\n{roomList}\n\nBạn muốn đặt lịch xem phòng, liên hệ chủ trọ qua số **{phone}** nhé!`,
+            chat_price: `💰 Bảng giá phòng tại **{name}**:\n\n{prices}\n\nChưa bao gồm điện & nước. Liên hệ **{phone}** để biết thêm chi tiết!`,
+            chat_address: `📍 **Địa chỉ:** {address}\n\nBạn có thể liên hệ chủ trọ qua số **{phone}** để được hướng dẫn đường đi chi tiết nhé!`,
+            chat_utilities: `⚡ Giá điện: **{elecPrice}đ/kWh**\n💧 Giá nước: **{waterPrice}đ/m³**\n\nĐây là giá thu theo chỉ số thực tế hàng tháng. Nếu cần thêm thông tin, liên hệ **{phone}** nhé!`,
+            chat_contact: `📞 Để liên hệ chủ trọ **{name}**:\n\n• Số điện thoại/Zalo: **{phone}**\n• Địa chỉ: **{address}**\n\nBạn có thể nhắn tin Zalo hoặc gọi trực tiếp, chủ trọ sẽ phản hồi sớm nhất có thể nhé!`
+        };
+
+        const templateData = {
+            name, phone, address, elecPrice, waterPrice,
+            count: availableRooms.length,
+            roomList: roomList || 'Đang cập nhật',
+            prices: prices || 'Đang cập nhật'
+        };
+
         let reply = '';
 
         if (match(keywords.greet)) {
+            // Chào hỏi giữ nguyên hoặc thêm cấu hình sau
             reply = `Chào bạn! 👋 Mình là trợ lý của **${name}**.\nBạn có thể hỏi mình về:\n- 🏠 Phòng trống hiện có\n- 💰 Giá thuê & tiện nghi\n- 📍 Địa chỉ nhà trọ\n- ⚡ Giá điện, nước\n- 📞 Liên hệ chủ trọ\n\nBạn cần hỏi gì ạ?`;
 
         } else if (match(keywords.available)) {
             if (availableRooms.length === 0) {
                 reply = `Hiện tại **${name}** chưa có phòng trống ạ. 😔\nBạn để lại số điện thoại hoặc liên hệ trực tiếp qua **${phone}** để được thông báo khi có phòng nhé!`;
             } else {
-                const roomList = availableRooms.map(r =>
-                    `• Phòng **${r.room_name}**: ${Number(r.price).toLocaleString()}đ/tháng${r.amenities ? ` — ${r.amenities}` : ''}`
-                ).join('\n');
-                reply = `Hiện tại **${name}** đang có **${availableRooms.length} phòng trống** 🏠:\n\n${roomList}\n\nBạn muốn đặt lịch xem phòng, liên hệ chủ trọ qua số **${phone}** nhé!`;
+                const tpl = info.chat_available_rooms || defaultTemplates.chat_available_rooms;
+                reply = formatTemplate(tpl, templateData);
             }
 
         } else if (match(keywords.price)) {
             if (allRooms.length === 0) {
                 reply = `Bạn vui lòng liên hệ chủ trọ qua số **${phone}** để được báo giá nhé!`;
             } else {
-                const prices = allRooms.map(r =>
-                    `• Phòng **${r.room_name}**: ${Number(r.price).toLocaleString()}đ/tháng (${r.status === 'Available' ? '✅ Còn trống' : '🔴 Đã có người'})`
-                ).join('\n');
-                reply = `💰 Bảng giá phòng tại **${name}**:\n\n${prices}\n\nChưa bao gồm điện & nước. Liên hệ **${phone}** để biết thêm chi tiết!`;
+                const tpl = info.chat_price || defaultTemplates.chat_price;
+                reply = formatTemplate(tpl, templateData);
             }
 
         } else if (match(keywords.address)) {
-            reply = `📍 **Địa chỉ:** ${address}\n\nBạn có thể liên hệ chủ trọ qua số **${phone}** để được hướng dẫn đường đi chi tiết nhé!`;
+            const tpl = info.chat_address || defaultTemplates.chat_address;
+            reply = formatTemplate(tpl, templateData);
 
         } else if (match(keywords.amenities)) {
             if (availableRooms.length === 0) {
@@ -109,10 +135,12 @@ const handleChatRequest = async (req, res) => {
             }
 
         } else if (match(keywords.utilities)) {
-            reply = `⚡ Giá điện: **${elecPrice}đ/kWh**\n💧 Giá nước: **${waterPrice}đ/m³**\n\nĐây là giá thu theo chỉ số thực tế hàng tháng. Nếu cần thêm thông tin, liên hệ **${phone}** nhé!`;
+            const tpl = info.chat_utilities || defaultTemplates.chat_utilities;
+            reply = formatTemplate(tpl, templateData);
 
         } else if (match(keywords.contact)) {
-            reply = `📞 Để liên hệ chủ trọ **${name}**:\n\n• Số điện thoại/Zalo: **${phone}**\n• Địa chỉ: **${address}**\n\nBạn có thể nhắn tin Zalo hoặc gọi trực tiếp, chủ trọ sẽ phản hồi sớm nhất có thể nhé!`;
+            const tpl = info.chat_contact || defaultTemplates.chat_contact;
+            reply = formatTemplate(tpl, templateData);
 
         } else if (match(keywords.rules)) {
             const rules = info.rules || 'Vui lòng giữ gìn vệ sinh chung, không gây ồn ào sau 22h, và tôn trọng các cư dân khác.';
