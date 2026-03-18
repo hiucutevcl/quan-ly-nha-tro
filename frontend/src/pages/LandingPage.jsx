@@ -201,7 +201,7 @@ const LandingPage = () => {
                         <div className="bg-white p-10 rounded-[40px] shadow-2xl shadow-slate-200 border border-slate-100">
                             <h3 className="text-2xl font-black mb-6 text-slate-800">Nội quy nhà trọ</h3>
                             <div className="prose prose-slate prose-sm text-slate-600">
-                                {settings.rules || "Vui lòng giữ vệ sinh chung và đảm bảo an ninh trật tự."}
+                                {settings.note || "Vui lòng giữ vệ sinh chung và đảm bảo an ninh trật tự."}
                             </div>
                         </div>
                         <div>

@@ -143,7 +143,7 @@ const handleChatRequest = async (req, res) => {
             reply = formatTemplate(tpl, templateData);
 
         } else if (match(keywords.rules)) {
-            const rules = info.rules || 'Vui lòng giữ gìn vệ sinh chung, không gây ồn ào sau 22h, và tôn trọng các cư dân khác.';
+            const rules = info.note || 'Vui lòng giữ gìn vệ sinh chung, không gây ồn ào sau 22h, và tôn trọng các cư dân khác.';
             reply = `📋 **Nội quy ${name}:**\n\n${rules}\n\nNếu cần biết thêm chi tiết, liên hệ chủ trọ qua **${phone}** nhé!`;
 
         } else if (match(keywords.payment)) {
