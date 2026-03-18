@@ -34,4 +34,22 @@ const updateSettings = async (req, res) => {
     }
 };
 
-module.exports = { getSettings, updateSettings };
+// Lấy thông tin công khai (Tên nhà trọ, địa chỉ, SĐT, nội quy)
+const getPublicSettings = async (req, res) => {
+    try {
+        const publicKeys = ['nha_tro_name', 'address', 'phone', 'rules'];
+        const [settings] = await db.query(
+            'SELECT setting_key, setting_value FROM AppSettings WHERE setting_key IN (?)',
+            [publicKeys]
+        );
+        const settingsObj = {};
+        settings.forEach(i => {
+            settingsObj[i.setting_key] = i.setting_value;
+        });
+        res.status(200).json(settingsObj);
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi server: ' + error.message });
+    }
+};
+
+module.exports = { getSettings, updateSettings, getPublicSettings };

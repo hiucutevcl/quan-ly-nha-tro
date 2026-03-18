@@ -102,4 +102,17 @@ const uploadRoomImage = async (req, res) => {
     }
 };
 
-module.exports = { getAllRooms, createRoom, updateRoomPrice, deleteRoom, assignTenant, updateMeterReadings, uploadRoomImage };
+const getPublicRooms = async (req, res) => {
+    try {
+        const [rooms] = await db.query(`
+            SELECT id, room_name, price, status, amenities, image_url 
+            FROM Rooms 
+            ORDER BY room_name ASC
+        `);
+        res.status(200).json(rooms);
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi server: ' + error.message });
+    }
+};
+
+module.exports = { getAllRooms, createRoom, updateRoomPrice, deleteRoom, assignTenant, updateMeterReadings, uploadRoomImage, getPublicRooms };

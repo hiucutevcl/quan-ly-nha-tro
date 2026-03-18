@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 import Login from './pages/Login'
+import LandingPage from './pages/LandingPage'
 import AdminDashboard from './pages/AdminDashboard'
 import TenantInvoices from './pages/TenantInvoices'
 
@@ -9,8 +10,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Mặc định chuyển hướng về trang Đăng nhập */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        {/* Trang chủ - Landing Page */}
+        <Route path="/" element={<LandingPage />} />
         
         {/* Bước 4: Trang Đăng Nhập */}
         <Route path="/login" element={<Login />} />

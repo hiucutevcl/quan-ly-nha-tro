@@ -4,7 +4,10 @@ const roomController = require('../controllers/roomController');
 const { verifyToken, checkAdmin } = require('../middlewares/authMiddleware');
 const { uploadCloud } = require('../config/cloudinary');
 
-// Các đường dẫn API
+// Các đường dẫn API công khai
+router.get('/public', roomController.getPublicRooms);
+
+// Các đường dẫn API bảo mật (Admin)
 router.get('/all', verifyToken, checkAdmin, roomController.getAllRooms);
 router.post('/add', verifyToken, checkAdmin, roomController.createRoom);
 router.put('/update/:id', verifyToken, checkAdmin, roomController.updateRoomPrice);
