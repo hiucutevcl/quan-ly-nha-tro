@@ -3,9 +3,42 @@ const router = express.Router();
 const roomController = require('../controllers/roomController');
 const { verifyToken, checkAdmin } = require('../middlewares/authMiddleware');
 const { uploadCloud } = require('../config/cloudinary');
+const db = require('../config/db');
 
 // Các đường dẫn API công khai
 router.get('/public', roomController.getPublicRooms);
+
+// === MIGRATION: Thêm cột area và floor vào bảng Rooms (chạy 1 lần) ===
+router.get('/migrate-area-floor', verifyToken, checkAdmin, async (req, res) => {
+    try {
+        // Kiểm tra xem cột đã tồn tại chưa
+        const [columns] = await db.query(`
+            SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Rooms'
+            AND COLUMN_NAME IN ('area', 'floor')
+        `);
+        const existingCols = columns.map(c => c.COLUMN_NAME);
+        const results = [];
+
+        if (!existingCols.includes('area')) {
+            await db.query(`ALTER TABLE Rooms ADD COLUMN area DECIMAL(7,2) NULL COMMENT 'Diện tích phòng (m²)'`);
+            results.push('✅ Đã thêm cột area (m²)');
+        } else {
+            results.push('ℹ️ Cột area đã tồn tại, bỏ qua');
+        }
+
+        if (!existingCols.includes('floor')) {
+            await db.query(`ALTER TABLE Rooms ADD COLUMN floor VARCHAR(50) NULL COMMENT 'Tầng / Vị trí phòng'`);
+            results.push('✅ Đã thêm cột floor (tầng)');
+        } else {
+            results.push('ℹ️ Cột floor đã tồn tại, bỏ qua');
+        }
+
+        res.json({ success: true, results });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
 
 // Các đường dẫn API bảo mật (Admin)
 router.get('/all', verifyToken, checkAdmin, roomController.getAllRooms);
