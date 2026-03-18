@@ -125,18 +125,22 @@ const handleChatRequest = async (req, res) => {
             const intent = quickReplyIntentMap[quickReplyIndex];
 
             if (intent === 'available') {
-                if (availableRooms.length === 0) {
+                // Luôn ưu tiên template admin nếu đã cấu hình
+                if (info.chat_available_rooms) {
+                    reply = formatTemplate(info.chat_available_rooms, templateData);
+                } else if (availableRooms.length === 0) {
                     reply = `Hiện tại **${name}** chưa có phòng trống ạ. 😔\nBạn để lại số điện thoại hoặc liên hệ trực tiếp qua **${phone}** để được thông báo khi có phòng nhé!`;
                 } else {
-                    const tpl = info.chat_available_rooms || defaultTemplates.chat_available_rooms;
-                    reply = formatTemplate(tpl, templateData);
+                    reply = formatTemplate(defaultTemplates.chat_available_rooms, templateData);
                 }
             } else if (intent === 'price') {
-                if (allRooms.length === 0) {
+                // Luôn ưu tiên template admin nếu đã cấu hình
+                if (info.chat_price) {
+                    reply = formatTemplate(info.chat_price, templateData);
+                } else if (allRooms.length === 0) {
                     reply = `Bạn vui lòng liên hệ chủ trọ qua số **${phone}** để được báo giá nhé!`;
                 } else {
-                    const tpl = info.chat_price || defaultTemplates.chat_price;
-                    reply = formatTemplate(tpl, templateData);
+                    reply = formatTemplate(defaultTemplates.chat_price, templateData);
                 }
             } else if (intent === 'address') {
                 const tpl = info.chat_address || defaultTemplates.chat_address;
@@ -154,19 +158,23 @@ const handleChatRequest = async (req, res) => {
             reply = `Chào bạn! 👋 Mình là trợ lý của **${name}**.\nBạn có thể hỏi mình về:\n- 🏠 Phòng trống hiện có\n- 💰 Giá thuê & tiện nghi\n- 📍 Địa chỉ nhà trọ\n- ⚡ Giá điện, nước\n- 📞 Liên hệ chủ trọ\n\nBạn cần hỏi gì ạ?`;
 
         } else if (match(keywords.available)) {
-            if (availableRooms.length === 0) {
+            // Luôn ưu tiên template admin nếu đã cấu hình
+            if (info.chat_available_rooms) {
+                reply = formatTemplate(info.chat_available_rooms, templateData);
+            } else if (availableRooms.length === 0) {
                 reply = `Hiện tại **${name}** chưa có phòng trống ạ. 😔\nBạn để lại số điện thoại hoặc liên hệ trực tiếp qua **${phone}** để được thông báo khi có phòng nhé!`;
             } else {
-                const tpl = info.chat_available_rooms || defaultTemplates.chat_available_rooms;
-                reply = formatTemplate(tpl, templateData);
+                reply = formatTemplate(defaultTemplates.chat_available_rooms, templateData);
             }
 
         } else if (match(keywords.price)) {
-            if (allRooms.length === 0) {
+            // Luôn ưu tiên template admin nếu đã cấu hình
+            if (info.chat_price) {
+                reply = formatTemplate(info.chat_price, templateData);
+            } else if (allRooms.length === 0) {
                 reply = `Bạn vui lòng liên hệ chủ trọ qua số **${phone}** để được báo giá nhé!`;
             } else {
-                const tpl = info.chat_price || defaultTemplates.chat_price;
-                reply = formatTemplate(tpl, templateData);
+                reply = formatTemplate(defaultTemplates.chat_price, templateData);
             }
 
         } else if (match(keywords.address)) {
