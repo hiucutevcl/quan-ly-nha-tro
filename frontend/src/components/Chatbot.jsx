@@ -4,7 +4,7 @@ import axios from 'axios';
 const Chatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
-        { text: "Chào bạn! Mình là trợ lý AI thông minh của hệ thống. Bạn cần tư vấn về phòng nào ạ?", sender: 'bot' }
+        { text: "Chào bạn 👋 Mình là Trợ lý Nhà trọ. Bạn có thể hỏi mình về phòng trống, giá thuê, địa chỉ, hoặc điện nước nhé!", sender: 'bot' }
     ]);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
