@@ -266,12 +266,12 @@ const LandingPage = () => {
                             <p className="text-slate-600 mb-8 leading-relaxed">
                                 Đừng ngần ngại liên hệ hoặc đến xem trực tiếp để cảm nhận không gian tuyệt vời tại {settings.nha_tro_name}. Chúng tôi luôn sẵn sàng hỗ trợ bạn.
                             </p>
-                            <Link to="/login" className="inline-flex items-center gap-2 bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-600 transition-all shadow-xl group">
-                                Bắt đầu ngay
+                            <a href="#rooms" className="inline-flex items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 group">
+                                Xem phòng ngay
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                 </svg>
-                            </Link>
+                            </a>
                         </div>
                     </div>
                 </div>
