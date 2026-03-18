@@ -32,7 +32,8 @@ const Chatbot = () => {
             .catch(err => console.error("Lỗi tải quick replies:", err));
     }, []);
 
-    const handleSend = async (overrideText = null) => {
+    // quickReplyIdx: truyền index của quick reply (0-4) để server dùng đúng template admin
+    const handleSend = async (overrideText = null, quickReplyIdx = null) => {
         const textToSend = overrideText || input;
         if ((!textToSend || !textToSend.trim()) || isLoading) return;
 
@@ -44,7 +45,12 @@ const Chatbot = () => {
         setIsLoading(true);
 
         try {
-            const res = await axios.post(API_URL, { messages: newMessages });
+            const payload = { messages: newMessages };
+            // Gửi index nếu là quick reply để server dùng đúng template từ admin settings
+            if (quickReplyIdx !== null && quickReplyIdx >= 0) {
+                payload.quickReplyIndex = quickReplyIdx;
+            }
+            const res = await axios.post(API_URL, payload);
             setMessages(prev => [...prev, { text: res.data.reply, sender: 'bot' }]);
         } catch (error) {
             console.error("Lỗi AI API:", error);
@@ -120,7 +126,7 @@ const Chatbot = () => {
                         {quickReplies.map((qr, idx) => (
                             <button 
                                 key={idx}
-                                onClick={() => handleSend(qr)}
+                                onClick={() => handleSend(qr, idx)}
                                 disabled={isLoading}
                                 className="whitespace-nowrap px-3 py-1.5 bg-white border border-blue-100 text-blue-600 rounded-full text-xs font-medium hover:bg-blue-50 transition-colors shadow-sm disabled:opacity-50"
                             >
