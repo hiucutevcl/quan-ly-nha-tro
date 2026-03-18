@@ -8,10 +8,9 @@ const Chatbot = () => {
     ]);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const messagesEndRef = useRef(null);
-
-    const API_URL = 'https://api-quan-ly-nha-tro.onrender.com/api/chat/public';
-
+    const messagesEndRef = useRef(null);    const API_URL = window.location.hostname === 'localhost' 
+        ? 'http://localhost:5000/api/chat/public' 
+        : 'https://api-quan-ly-nha-tro.onrender.com/api/chat/public';
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollTo({ top: messagesEndRef.current.scrollHeight, behavior: "smooth" });
