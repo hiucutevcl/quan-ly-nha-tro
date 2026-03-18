@@ -146,7 +146,13 @@ const LandingPage = () => {
                     ) : (
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
                             {rooms.map((room) => {
-                                const images = room.image_url ? JSON.parse(room.image_url) : [];
+                                let images = [];
+                                try {
+                                    images = room.image_url ? JSON.parse(room.image_url) : [];
+                                } catch (e) {
+                                    // Fallback for older database rows where image_url was a simple string
+                                    images = typeof room.image_url === 'string' ? [room.image_url] : [];
+                                }
                                 const mainImg = images[0] || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
                                 
                                 return (
@@ -173,7 +179,7 @@ const LandingPage = () => {
                                         <div className="flex justify-between items-start">
                                             <div>
                                                 <h4 className="text-xl font-black text-slate-800 tracking-tight">{room.room_name}</h4>
-                                                <p className="text-slate-500 text-sm font-medium">{room.amenities ? room.amenities.substring(0, 40) + '...' : 'Tiện nghi cơ bản'}</p>
+                                                <p className="text-slate-500 text-sm font-medium">{room.amenities && typeof room.amenities === 'string' ? room.amenities.substring(0, 40) + '...' : 'Tiện nghi cơ bản'}</p>
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-blue-600 font-black text-lg">{Number(room.price).toLocaleString()}đ</p>

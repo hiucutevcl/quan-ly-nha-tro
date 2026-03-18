@@ -9,7 +9,9 @@ const Chatbot = () => {
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
-        messagesEndRef.scrollTo({ top: messagesEndRef.scrollHeight, behavior: "smooth" });
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollTo({ top: messagesEndRef.current.scrollHeight, behavior: "smooth" });
+        }
     };
 
     useEffect(() => {
