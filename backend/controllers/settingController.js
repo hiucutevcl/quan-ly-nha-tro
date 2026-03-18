@@ -37,7 +37,7 @@ const updateSettings = async (req, res) => {
 // Lấy thông tin công khai (Tên nhà trọ, địa chỉ, SĐT, nội quy)
 const getPublicSettings = async (req, res) => {
     try {
-        const publicKeys = ['nha_tro_name', 'address', 'phone', 'note'];
+        const publicKeys = ['nha_tro_name', 'address', 'phone', 'note', 'owner', 'quick_replies'];
         const [settings] = await db.query(
             'SELECT setting_key, setting_value FROM AppSettings WHERE setting_key IN (?)',
             [publicKeys]

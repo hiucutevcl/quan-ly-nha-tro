@@ -17,7 +17,8 @@ const defaultSettings = {
     chat_price: '💰 Bảng giá phòng tại {name}:\n\n{prices}\n\nChưa bao gồm điện & nước. Liên hệ {phone} để biết thêm chi tiết!',
     chat_address: '📍 Địa chỉ: {address}\n\nBạn có thể liên hệ chủ trọ qua số {phone} để được hướng dẫn đường đi chi tiết nhé!',
     chat_utilities: '⚡ Giá điện: {elecPrice}đ/kWh\n💧 Giá nước: {waterPrice}đ/m³\n\nĐây là giá thu theo chỉ số thực tế hàng tháng. Nếu cần thêm thông tin, liên hệ {phone} nhé!',
-    chat_contact: '📞 Để liên hệ chủ trọ {name}:\n\n• Số điện thoại/Zalo: {phone}\n• Địa chỉ: {address}\n\nBạn có thể nhắn tin Zalo hoặc gọi trực tiếp, chủ trọ sẽ phản hồi sớm nhất có thể nhé!'
+    chat_contact: '📞 Để liên hệ chủ trọ {name}:\n\n• Số điện thoại/Zalo: {phone}\n• Địa chỉ: {address}\n\nBạn có thể nhắn tin Zalo hoặc gọi trực tiếp, chủ trọ sẽ phản hồi sớm nhất có thể nhé!',
+    quick_replies: '🏠 Xem phòng trống\n💰 Báo giá thuê\n📍 Xin địa chỉ\n📞 Liên hệ chủ trọ\n⚡ Giá điện nước'
 };
 
 const SettingsPage = () => {
@@ -152,6 +153,12 @@ const SettingsPage = () => {
                         Chatbot sẽ tự động dùng câu trả lời dưới đây khi khách hỏi. Bạn có thể chèn các biến như <b>{'{name}'}</b>, <b>{'{phone}'}</b>, <b>{'{address}'}</b>, <b>{'{roomList}'}</b>... để bot tự điền dữ liệu thật.
                     </p>
                     <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-bold text-gray-600 mb-1">Các Nút Gợi Ý Tương Tác Nhanh (Quick Replies)</label>
+                            <p className="text-xs text-gray-400 mb-2">Mỗi gợi ý nhập trên 1 dòng. Khách duyệt web có thể bấm vào thay vì phải tự gõ câu hỏi.</p>
+                            <textarea name="quick_replies" rows={5} className="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-400"
+                                value={settings.quick_replies} onChange={handleChange} />
+                        </div>
                         <div>
                             <label className="block text-sm font-bold text-gray-600 mb-1">Khi khách hỏi Phòng Trống</label>
                             <p className="text-xs text-gray-400 mb-2">Biến hỗ trợ: {'{name}, {count}, {roomList}, {phone}'}</p>

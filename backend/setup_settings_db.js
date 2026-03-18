@@ -37,7 +37,8 @@ async function setupSettingsDb() {
             ['note', ''],
             ['bank_name', ''],
             ['bank_account', ''],
-            ['bank_owner', '']
+            ['bank_owner', ''],
+            ['quick_replies', '🏠 Xem phòng trống\n💰 Báo giá thuê\n📍 Xin địa chỉ\n📞 Liên hệ chủ trọ\n⚡ Giá điện nước']
         ];
 
         for (const [key, value] of initialData) {

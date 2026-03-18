@@ -8,6 +8,7 @@ const Chatbot = () => {
     ]);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [quickReplies, setQuickReplies] = useState(["🏠 Xem phòng trống", "💰 Báo giá thuê", "📍 Xin địa chỉ", "📞 Liên hệ chủ trọ", "⚡ Giá điện nước"]);
     const messagesEndRef = useRef(null);    const API_URL = window.location.hostname === 'localhost' 
         ? 'http://localhost:5000/api/chat/public' 
         : 'https://api-quan-ly-nha-tro.onrender.com/api/chat/public';
@@ -20,6 +21,16 @@ const Chatbot = () => {
     useEffect(() => {
         if (isOpen) scrollToBottom();
     }, [messages, isOpen]);
+
+    useEffect(() => {
+        axios.get(API_URL.replace('/chat/public', '/settings/public'))
+            .then(res => {
+                if (res.data.quick_replies) {
+                    setQuickReplies(res.data.quick_replies.split('\n').filter(q => q.trim() !== ''));
+                }
+            })
+            .catch(err => console.error("Lỗi tải quick replies:", err));
+    }, []);
 
     const handleSend = async (overrideText = null) => {
         const textToSend = overrideText || input;
@@ -106,7 +117,7 @@ const Chatbot = () => {
 
                     {/* Quick Replies */}
                     <div className="px-4 pb-3 bg-gray-50 flex gap-2 overflow-x-auto no-scrollbar scroll-smooth">
-                        {["🏠 Xem phòng trống", "💰 Báo giá thuê", "📍 Xin địa chỉ", "📞 Liên hệ chủ trọ", "⚡ Giá điện nước"].map((qr, idx) => (
+                        {quickReplies.map((qr, idx) => (
                             <button 
                                 key={idx}
                                 onClick={() => handleSend(qr)}
