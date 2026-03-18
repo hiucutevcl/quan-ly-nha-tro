@@ -223,7 +223,7 @@ const LandingPage = () => {
             {/* Footer */}
             <footer className="bg-white border-t border-slate-100 py-12">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-400 text-sm font-medium">
-                    <p>© {new Date().getFullYear()} {settings.nha_tro_name}. Phát triển bởi <span className="text-slate-600">Antigravity AI</span>.</p>
+                    <p>© {new Date().getFullYear()} Phòng trọ thông minh. Phát triển bởi <span className="text-slate-600">Phạm Minh Hiếu</span>.</p>
                 </div>
             </footer>
 
