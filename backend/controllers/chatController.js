@@ -4,26 +4,40 @@ const handleChatRequest = async (req, res) => {
     try {
         const { messages } = req.body;
 
-        if (!messages || !Array.isArray(messages) || messages.length === 0) {
-            return res.status(400).json({ error: 'Dữ liệu tin nhắn không hợp lệ' });
+        const lastMessage = messages[messages.length - 1];
+        if (!lastMessage || !lastMessage.text) {
+            return res.status(400).json({ reply: 'Tin nhắn trống hoặc không hợp lệ.' });
+        }
+        
+        const userText = lastMessage.text.toLowerCase().trim();
+
+        let info = {};
+        let availableRooms = [];
+        let allRooms = [];
+
+        try {
+            // Lấy thông tin nhà trọ từ database
+            const [settings] = await db.query('SELECT setting_key, setting_value FROM AppSettings');
+            settings.forEach(s => info[s.setting_key] = s.setting_value);
+        } catch (dbErr) {
+            console.log("Không thể lấy AppSettings, dùng mặc định:", dbErr.message);
         }
 
-        const userText = messages[messages.length - 1].text.toLowerCase().trim();
+        try {
+            // Lấy danh sách phòng trống
+            const [avRooms] = await db.query(
+                'SELECT room_name, price, amenities FROM Rooms WHERE status = "Available"'
+            );
+            availableRooms = avRooms;
 
-        // Lấy thông tin nhà trọ từ database
-        const [settings] = await db.query('SELECT setting_key, setting_value FROM AppSettings');
-        let info = {};
-        settings.forEach(s => info[s.setting_key] = s.setting_value);
-
-        // Lấy danh sách phòng trống
-        const [availableRooms] = await db.query(
-            'SELECT room_name, price, amenities FROM Rooms WHERE status = "Available"'
-        );
-
-        // Lấy tất cả phòng
-        const [allRooms] = await db.query(
-            'SELECT room_name, price, status, amenities FROM Rooms'
-        );
+            // Lấy tất cả phòng
+            const [alRooms] = await db.query(
+                'SELECT room_name, price, status, amenities FROM Rooms'
+            );
+            allRooms = alRooms;
+        } catch (dbErr) {
+            console.log("Không thể lấy Rooms, dùng mặc định:", dbErr.message);
+        }
 
         const phone = info.phone || 'chủ trọ';
         const address = info.address || 'Đang cập nhật';
