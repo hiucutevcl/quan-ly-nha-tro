@@ -23,3 +23,8 @@ ADD COLUMN trash_fee DECIMAL(10, 2) DEFAULT 0 COMMENT 'Tiền rác',
 ADD COLUMN wifi_fee DECIMAL(10, 2) DEFAULT 0 COMMENT 'Tiền mạng',
 ADD COLUMN parking_fee DECIMAL(10, 2) DEFAULT 0 COMMENT 'Tiền gửi xe (số lượng * đơn giá)',
 ADD COLUMN parking_count INT DEFAULT 0 COMMENT 'Số lượng xe gửi';
+
+-- Thêm diện tích và tầng/vị trí vào bảng Rooms
+ALTER TABLE Rooms
+ADD COLUMN IF NOT EXISTS area DECIMAL(7,2) NULL COMMENT 'Diện tích phòng (m²)',
+ADD COLUMN IF NOT EXISTS floor VARCHAR(50) NULL COMMENT 'Tầng / Vị trí phòng';

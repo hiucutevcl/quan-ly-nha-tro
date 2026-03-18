@@ -8,16 +8,16 @@ const RoomManagement = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const amenityOptions = ['Máy lạnh', 'Tủ lạnh', 'Máy giặt', 'Nóng lạnh', 'Thang máy', 'Ban công/Cửa sổ'];
+    const amenityOptions = ['Máy lạnh', 'Tủ lạnh', 'Máy giặt', 'Nóng lạnh', 'Thang máy', 'Ban công/Cửa sổ', 'Wifi', 'Giường', 'Tủ quần áo', 'Nhà vệ sinh riêng', 'Bếp riêng', 'Gác lửng'];
 
     // State Thêm phòng
-    const [newRoom, setNewRoom] = useState({ room_name: '', price: '', amenities: '' });
+    const [newRoom, setNewRoom] = useState({ room_name: '', price: '', area: '', floor: '', amenities: '' });
 
     // State Gán hợp đồng
     const [assignData, setAssignData] = useState({ roomId: null, tenant_id: '', start_date: '', end_date: '' });
 
     // State Sửa phòng
-    const [editData, setEditData] = useState({ roomId: null, price: '', amenities: '' });
+    const [editData, setEditData] = useState({ roomId: null, price: '', area: '', floor: '', amenities: '' });
 
     // State Ghi chỉ số đồng hồ
     const [meterData, setMeterData] = useState({ roomId: null, current_elec: '', current_water: '' });
@@ -77,7 +77,7 @@ const RoomManagement = () => {
         try {
             await axios.post('https://api-quan-ly-nha-tro.onrender.com/api/rooms/add', newRoom, apiHeaders);
             alert('Thêm phòng thành công!');
-            setNewRoom({ room_name: '', price: '', amenities: '' });
+            setNewRoom({ room_name: '', price: '', area: '', floor: '', amenities: '' });
             fetchData();
         } catch (error) {
             alert('Lỗi thêm phòng: ' + (error.response?.data?.message || error.message));
@@ -113,16 +113,18 @@ const RoomManagement = () => {
         }
     };
 
-    // 4. Cập nhật phòng (Giá, Tiện ích)
+    // 4. Cập nhật phòng (Giá, Tiện ích, Diện tích, Tầng)
     const handleUpdateRoom = async (e) => {
         e.preventDefault();
         try {
             await axios.put(`https://api-quan-ly-nha-tro.onrender.com/api/rooms/update/${editData.roomId}`, {
                 price: editData.price,
+                area: editData.area,
+                floor: editData.floor,
                 amenities: editData.amenities
             }, apiHeaders);
             alert('Cập nhật phòng thành công!');
-            setEditData({ roomId: null, price: '', amenities: '' });
+            setEditData({ roomId: null, price: '', area: '', floor: '', amenities: '' });
             fetchData();
         } catch (error) {
             alert('Lỗi cập nhật: ' + (error.response?.data?.message || error.message));
@@ -160,8 +162,8 @@ const RoomManagement = () => {
             <div className="bg-white p-6 rounded-lg shadow-md mb-8 max-w-2xl mx-auto border-t-4 border-green-500">
                 <h2 className="text-lg font-semibold mb-3">Tạo Phòng Mới</h2>
                 <form onSubmit={handleAddRoom} className="flex flex-col gap-4">
-                    <div className="flex gap-4">
-                        <div className="flex-1">
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
                             <label className="block text-sm font-bold text-gray-700 mb-1">Tên phòng (vd: P.101)</label>
                             <input 
                                 type="text" required
@@ -169,7 +171,7 @@ const RoomManagement = () => {
                                 value={newRoom.room_name} onChange={e => setNewRoom({...newRoom, room_name: e.target.value})}
                             />
                         </div>
-                        <div className="flex-1">
+                        <div>
                             <label className="block text-sm font-bold text-gray-700 mb-1">Giá thuê/tháng (VNĐ)</label>
                             <input 
                                 type="number" required
@@ -177,11 +179,29 @@ const RoomManagement = () => {
                                 value={newRoom.price} onChange={e => setNewRoom({...newRoom, price: e.target.value})}
                             />
                         </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Diện tích (m²)</label>
+                            <input 
+                                type="number" min="1"
+                                placeholder="VD: 25"
+                                className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+                                value={newRoom.area} onChange={e => setNewRoom({...newRoom, area: e.target.value})}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Số tầng / Vị trí</label>
+                            <input 
+                                type="text"
+                                placeholder="VD: Tầng 2, Góc trái"
+                                className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+                                value={newRoom.floor} onChange={e => setNewRoom({...newRoom, floor: e.target.value})}
+                            />
+                        </div>
                     </div>
                     
                     <div className="bg-gray-50 p-3 rounded border border-gray-200">
                         <label className="block text-sm font-bold text-gray-700 mb-2">Đánh dấu những tiện nghi có trong phòng:</label>
-                        <div className="flex flex-wrap gap-4">
+                        <div className="flex flex-wrap gap-3">
                             {amenityOptions.map(item => (
                                 <label key={item} className="flex items-center gap-1 cursor-pointer text-sm hover:text-green-600 transition">
                                     <input type="checkbox" 
@@ -265,9 +285,23 @@ const RoomManagement = () => {
                                 {/* Chế độ xem hoặc Chế độ Sửa */}
                                 {editData.roomId === room.id ? (
                                     <form onSubmit={handleUpdateRoom} className="bg-blue-50 p-3 rounded border border-blue-200 mb-3">
-                                        <label className="block text-xs font-bold mb-1">Giá Mới (VNĐ/tháng)</label>
-                                        <input type="number" required className="w-full mb-3 p-1 border rounded"
-                                            value={editData.price} onChange={e => setEditData({...editData, price: e.target.value})} />
+                                        <div className="grid grid-cols-2 gap-2 mb-3">
+                                            <div>
+                                                <label className="block text-xs font-bold mb-1">Giá Mới (VNĐ/tháng)</label>
+                                                <input type="number" required className="w-full p-1 border rounded text-sm"
+                                                    value={editData.price} onChange={e => setEditData({...editData, price: e.target.value})} />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold mb-1">Diện tích (m²)</label>
+                                                <input type="number" min="1" placeholder="VD: 25" className="w-full p-1 border rounded text-sm"
+                                                    value={editData.area} onChange={e => setEditData({...editData, area: e.target.value})} />
+                                            </div>
+                                            <div className="col-span-2">
+                                                <label className="block text-xs font-bold mb-1">Số tầng / Vị trí</label>
+                                                <input type="text" placeholder="VD: Tầng 2, Góc trái" className="w-full p-1 border rounded text-sm"
+                                                    value={editData.floor} onChange={e => setEditData({...editData, floor: e.target.value})} />
+                                            </div>
+                                        </div>
                                         
                                         <label className="block text-xs font-bold mb-2">Cập nhật Tiện nghi:</label>
                                         <div className="grid grid-cols-2 gap-2 mb-3">
@@ -289,9 +323,13 @@ const RoomManagement = () => {
                                     </form>
                                 ) : (
                                     <>
-                                        <p className="text-gray-600 mb-1">Giá thuê: <b className="text-red-500">{Number(room.price).toLocaleString()}đ/tháng</b></p>
+                                        <div className="flex flex-wrap gap-x-4 gap-y-1 mb-2">
+                                            <p className="text-gray-600">Giá thuê: <b className="text-red-500">{Number(room.price).toLocaleString()}đ/tháng</b></p>
+                                            {room.area && <p className="text-gray-500 text-sm">📐 <b>{room.area} m²</b></p>}
+                                            {room.floor && <p className="text-gray-500 text-sm">🏢 <b>{room.floor}</b></p>}
+                                        </div>
                                         {room.amenities && (
-                                            <div className="mb-2 mt-2">
+                                            <div className="mb-2 mt-1">
                                                 <span className="text-gray-500 text-xs">Phòng bao gồm:</span>
                                                 <div className="flex flex-wrap gap-1 mt-1">
                                                     {room.amenities.split(',').map(a => a.trim()).filter(Boolean).map(a => (
@@ -411,7 +449,7 @@ const RoomManagement = () => {
 
                                         <div className="flex gap-3">
                                             <button 
-                                                onClick={() => setEditData({roomId: room.id, price: room.price, amenities: room.amenities || ''})}
+                                                onClick={() => setEditData({roomId: room.id, price: room.price, area: room.area || '', floor: room.floor || '', amenities: room.amenities || ''})}
                                                 className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1"
                                                 title="Sửa phòng"
                                             >

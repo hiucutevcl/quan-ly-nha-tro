@@ -17,21 +17,27 @@ const getAllRooms = async (req, res) => {
 
 // Thêm phòng mới
 const createRoom = async (req, res) => {
-    const { room_name, price, amenities } = req.body;
+    const { room_name, price, area, floor, amenities } = req.body;
     try {
-        await db.query('INSERT INTO Rooms (room_name, price, amenities, status) VALUES (?, ?, ?, ?)', [room_name, price, amenities || '', 'Available']);
+        await db.query(
+            'INSERT INTO Rooms (room_name, price, area, floor, amenities, status) VALUES (?, ?, ?, ?, ?, ?)',
+            [room_name, price, area || null, floor || null, amenities || '', 'Available']
+        );
         res.status(201).json({ message: 'Tạo phòng mới thành công!' });
     } catch (error) {
         res.status(500).json({ message: 'Lỗi: ' + error.message });
     }
 };
 
-// Sửa thông tin phòng (Giá, Tiện ích)
+// Sửa thông tin phòng (Giá, Diện tích, Tầng, Tiện ích)
 const updateRoomPrice = async (req, res) => {
     const { id } = req.params;
-    const { price, amenities } = req.body;
+    const { price, area, floor, amenities } = req.body;
     try {
-        await db.query('UPDATE Rooms SET price = ?, amenities = ? WHERE id = ?', [price, amenities || '', id]);
+        await db.query(
+            'UPDATE Rooms SET price = ?, area = ?, floor = ?, amenities = ? WHERE id = ?',
+            [price, area || null, floor || null, amenities || '', id]
+        );
         res.status(200).json({ message: 'Cập nhật thông tin phòng thành công!' });
     } catch (error) {
         res.status(500).json({ message: 'Lỗi: ' + error.message });
@@ -105,7 +111,7 @@ const uploadRoomImage = async (req, res) => {
 const getPublicRooms = async (req, res) => {
     try {
         const [rooms] = await db.query(`
-            SELECT id, room_name, price, status, amenities, image_url 
+            SELECT id, room_name, price, area, floor, status, amenities, image_url 
             FROM Rooms 
             ORDER BY room_name ASC
         `);
