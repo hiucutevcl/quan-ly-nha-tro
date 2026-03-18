@@ -12,6 +12,7 @@ const LandingPage = () => {
     });
     const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedRoom, setSelectedRoom] = useState(null);
 
     const API_URL = 'https://api-quan-ly-nha-tro.onrender.com/api';
 
@@ -150,13 +151,12 @@ const LandingPage = () => {
                                 try {
                                     images = room.image_url ? JSON.parse(room.image_url) : [];
                                 } catch (e) {
-                                    // Fallback for older database rows where image_url was a simple string
                                     images = typeof room.image_url === 'string' ? [room.image_url] : [];
                                 }
                                 const mainImg = images[0] || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
                                 
                                 return (
-                                    <div key={room.id} className="group cursor-pointer">
+                                    <div key={room.id} className="group cursor-pointer" onClick={() => setSelectedRoom(room)}>
                                         <div className="relative aspect-[4/3] overflow-hidden rounded-3xl mb-4 shadow-md group-hover:shadow-xl transition-all duration-500">
                                             <img 
                                                 src={mainImg} 
@@ -172,19 +172,28 @@ const LandingPage = () => {
                                                     {room.status === 'Available' ? 'CÒN PHÒNG' : 'HẾT PHÒNG'}
                                                 </span>
                                             </div>
-                                            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <p className="text-white text-sm font-medium">{room.amenities || 'Đầy đủ tiện nghi cơ bản'}</p>
+                                            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity flex justify-between items-end">
+                                                <p className="text-white text-sm font-medium">{room.amenities ? room.amenities.substring(0, 30) + '...' : 'Đầy đủ tiện nghi cơ bản'}</p>
+                                                <button className="bg-white/20 hover:bg-white border border-white/50 hover:text-slate-900 text-white px-4 py-1.5 rounded-full text-xs font-bold backdrop-blur-sm transition-all">
+                                                    Xem chi tiết
+                                                </button>
                                             </div>
                                         </div>
                                         <div className="flex justify-between items-start">
                                             <div>
                                                 <h4 className="text-xl font-black text-slate-800 tracking-tight">{room.room_name}</h4>
-                                                <p className="text-slate-500 text-sm font-medium">{room.amenities && typeof room.amenities === 'string' ? room.amenities.substring(0, 40) + '...' : 'Tiện nghi cơ bản'}</p>
+                                                <p className="text-slate-500 text-sm font-medium">
+                                                    {room.area && `${room.area} m²`} 
+                                                    {room.area && room.floor && ' • '}
+                                                    {room.floor && `Tầng ${room.floor}`}
+                                                    {!room.area && !room.floor && (room.amenities && typeof room.amenities === 'string' ? room.amenities.substring(0, 40) + '...' : 'Tiện nghi cơ bản')}
+                                                </p>
                                             </div>
                                             <div className="text-right">
-                                                <Link to="/login" className="inline-block mt-1 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-xs font-bold transition-colors">
-                                                    🔒 Đăng nhập xem giá
-                                                </Link>
+                                                <p className="text-xl font-black text-blue-600 border-b-2 border-blue-200 inline-block pb-1">
+                                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(room.price)}
+                                                </p>
+                                                <p className="text-xs text-slate-400 font-medium tracking-wide uppercase mt-1">/ THÁNG</p>
                                             </div>
                                         </div>
                                     </div>
@@ -274,6 +283,128 @@ const LandingPage = () => {
                     <p>© {new Date().getFullYear()} Phòng trọ thông minh. Phát triển bởi <span className="text-slate-600">Phạm Minh Hiếu</span>.</p>
                 </div>
             </footer>
+
+            {/* Room Details Modal */}
+            {selectedRoom && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+                    <div 
+                        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+                        onClick={() => setSelectedRoom(null)}
+                    ></div>
+                    <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in duration-300">
+                        {/* Modal Header */}
+                        <div className="flex items-center justify-between p-6 border-b border-slate-100">
+                            <div>
+                                <h3 className="text-2xl font-black text-slate-800 tracking-tight">{selectedRoom.room_name}</h3>
+                                <div className="flex items-center gap-3 mt-2">
+                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${selectedRoom.status === 'Available' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                        {selectedRoom.status === 'Available' ? 'CÒN PHÒNG' : 'HẾT PHÒNG'}
+                                    </span>
+                                    {selectedRoom.area && <span className="text-slate-500 text-sm font-medium">📐 {selectedRoom.area} m²</span>}
+                                    {selectedRoom.floor && <span className="text-slate-500 text-sm font-medium">🏢 Tầng {selectedRoom.floor}</span>}
+                                </div>
+                            </div>
+                            <button 
+                                onClick={() => setSelectedRoom(null)}
+                                className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        {/* Modal Body */}
+                        <div className="p-6 overflow-y-auto flex-1">
+                            <div className="grid md:grid-cols-2 gap-8">
+                                {/* Images */}
+                                <div className="space-y-4">
+                                    {(() => {
+                                        let modalImages = [];
+                                        try {
+                                            modalImages = selectedRoom.image_url ? JSON.parse(selectedRoom.image_url) : [];
+                                        } catch(e) {
+                                            modalImages = typeof selectedRoom.image_url === 'string' ? [selectedRoom.image_url] : [];
+                                        }
+                                        if (modalImages.length === 0) modalImages = ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'];
+                                        
+                                        return (
+                                            <>
+                                                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100">
+                                                    <img src={modalImages[0]} alt="Phòng chính" className="w-full h-full object-cover" />
+                                                </div>
+                                                {modalImages.length > 1 && (
+                                                    <div className="grid grid-cols-4 gap-2">
+                                                        {modalImages.slice(1, 5).map((img, idx) => (
+                                                            <div key={idx} className="aspect-square rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
+                                                                <img src={img} alt={`Phòng ${idx+1}`} className="w-full h-full object-cover" />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </>
+                                        );
+                                    })()}
+                                </div>
+                                
+                                {/* Info */}
+                                <div className="space-y-6">
+                                    <div className="bg-blue-50/50 p-6 rounded-2xl border border-blue-100">
+                                        <p className="text-slate-500 text-sm font-bold uppercase tracking-wider mb-2">Giá Phòng</p>
+                                        <div className="flex items-baseline gap-2">
+                                            <p className="text-3xl font-black text-blue-600">
+                                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(selectedRoom.price)}
+                                            </p>
+                                            <span className="text-slate-500 font-medium">/ tháng</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">Tiện nghi & Dịch vụ</h4>
+                                        <ul className="grid grid-cols-2 gap-3 text-slate-600">
+                                            {(selectedRoom.amenities ? selectedRoom.amenities.split(',').map(a => a.trim()) : ['Đầy đủ tiện nghi cơ bản']).map((amenity, idx) => (
+                                                <li key={idx} className="flex items-center gap-2">
+                                                    <span className="w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center flex-shrink-0">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                        </svg>
+                                                    </span>
+                                                    <span className="font-medium text-sm">{amenity}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                    
+                                    <div className="pt-6 border-t border-slate-100">
+                                        <p className="text-sm text-slate-500 leading-relaxed">
+                                            Phòng trọ thuộc hệ thống <span className="font-bold text-slate-700">{settings.nha_tro_name}</span>. Môi trường sống văn minh, an toàn với hệ thống bảo mật cao, giờ giấc tự do và ban quản lý thân thiện.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* Modal Footer */}
+                        <div className="p-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+                            <button 
+                                onClick={() => setSelectedRoom(null)}
+                                className="px-6 py-2.5 rounded-xl font-bold text-slate-600 hover:bg-slate-200 transition-colors"
+                            >
+                                Đóng
+                            </button>
+                            <a 
+                                href={`tel:${settings.phone}`}
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-xl font-bold shadow-lg shadow-blue-200 transition-all flex items-center gap-2"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                                </svg>
+                                Gọi tư vấn
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Chatbot Component */}
             <Chatbot />
