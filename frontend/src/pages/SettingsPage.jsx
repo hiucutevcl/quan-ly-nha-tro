@@ -63,9 +63,21 @@ const SettingsPage = () => {
         }
     };
 
+    const getQr = (index) => {
+        if (!settings.quick_replies) return '';
+        return settings.quick_replies.split('\n')[index] || '';
+    };
+
+    const updateQr = (index, value) => {
+        let arr = (settings.quick_replies || '').split('\n');
+        while (arr.length < 5) arr.push('');
+        arr[index] = value;
+        setSettings({ ...settings, quick_replies: arr.join('\n') });
+    };
+
     return (
-        <div className="max-w-2xl mx-auto">
-            <h1 className="text-2xl font-black text-gray-800 mb-6 uppercase text-center">⚙️ Cài Đặt Nhà Trọ</h1>
+        <div className="max-w-3xl mx-auto pb-10">
+            <h1 className="text-2xl font-black text-gray-800 mb-6 uppercase text-center mt-6">⚙️ Cài Đặt Nhà Trọ</h1>
 
             <form onSubmit={handleSave} className="space-y-6">
                 {/* Thông tin cơ bản */}
@@ -149,46 +161,107 @@ const SettingsPage = () => {
                 {/* Cấu hình Chatbot FAQ */}
                 <div className="bg-white p-6 rounded-xl shadow border-t-4 border-indigo-500">
                     <h2 className="text-lg font-bold text-gray-700 mb-4">🤖 Cấu hình Câu trả lời Chatbot (FAQ)</h2>
-                    <p className="text-sm text-gray-500 mb-4">
-                        Chatbot sẽ tự động dùng câu trả lời dưới đây khi khách hỏi. Bạn có thể chèn các biến như <b>{'{name}'}</b>, <b>{'{phone}'}</b>, <b>{'{address}'}</b>, <b>{'{roomList}'}</b>... để bot tự điền dữ liệu thật.
+                    <p className="text-sm text-gray-500 mb-6">
+                        Bạn có thể thay đổi tên <b>Nút gợi ý</b> (sẽ hiển thị trên Chatbot cho khách bấm) và <b>Câu trả lời</b> tương ứng của Bot.
+                        Sử dụng các biến như <b>{'{name}'}</b>, <b>{'{phone}'}</b>... để dữ liệu tự động thay đổi theo thông tin thật.
                     </p>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-bold text-gray-600 mb-1">Các Nút Gợi Ý Tương Tác Nhanh (Quick Replies)</label>
-                            <p className="text-xs text-gray-400 mb-2">Mỗi gợi ý nhập trên 1 dòng. Khách duyệt web có thể bấm vào thay vì phải tự gõ câu hỏi.</p>
-                            <textarea name="quick_replies" rows={5} className="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-400"
-                                value={settings.quick_replies} onChange={handleChange} />
+                    <div className="space-y-6">
+
+                        {/* 1. Phòng Trống */}
+                        <div className="border border-slate-200 p-5 rounded-xl bg-slate-50 relative">
+                            <div className="absolute top-0 right-0 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl">1</div>
+                            <h3 className="text-md font-bold text-slate-800 mb-1">Khi khách hỏi Phòng Trống</h3>
+                            <p className="text-xs text-slate-500 mb-4">Biến hỗ trợ: {'{name}, {count}, {roomList}, {phone}'}</p>
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 mb-1">Tên nút Gợi ý (Quick Reply):</label>
+                                    <input type="text" className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400"
+                                        value={getQr(0)} onChange={(e) => updateQr(0, e.target.value)} placeholder="VD: 🏠 Xem phòng trống" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 mb-1">Câu trả lời của Bot:</label>
+                                    <textarea name="chat_available_rooms" rows={3} className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400"
+                                        value={settings.chat_available_rooms} onChange={handleChange} />
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-600 mb-1">Khi khách hỏi Phòng Trống</label>
-                            <p className="text-xs text-gray-400 mb-2">Biến hỗ trợ: {'{name}, {count}, {roomList}, {phone}'}</p>
-                            <textarea name="chat_available_rooms" rows={3} className="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-400"
-                                value={settings.chat_available_rooms} onChange={handleChange} />
+
+                        {/* 2. Giá Phòng */}
+                        <div className="border border-slate-200 p-5 rounded-xl bg-slate-50 relative">
+                            <div className="absolute top-0 right-0 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl">2</div>
+                            <h3 className="text-md font-bold text-slate-800 mb-1">Khi khách hỏi Giá Phòng</h3>
+                            <p className="text-xs text-slate-500 mb-4">Biến hỗ trợ: {'{name}, {prices}, {phone}'}</p>
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 mb-1">Tên nút Gợi ý (Quick Reply):</label>
+                                    <input type="text" className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400"
+                                        value={getQr(1)} onChange={(e) => updateQr(1, e.target.value)} placeholder="VD: 💰 Báo giá thuê" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 mb-1">Câu trả lời của Bot:</label>
+                                    <textarea name="chat_price" rows={3} className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400"
+                                        value={settings.chat_price} onChange={handleChange} />
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-600 mb-1">Khi khách hỏi Giá Phòng</label>
-                            <p className="text-xs text-gray-400 mb-2">Biến hỗ trợ: {'{name}, {prices}, {phone}'}</p>
-                            <textarea name="chat_price" rows={3} className="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-400"
-                                value={settings.chat_price} onChange={handleChange} />
+
+                        {/* 3. Địa Chỉ */}
+                        <div className="border border-slate-200 p-5 rounded-xl bg-slate-50 relative">
+                            <div className="absolute top-0 right-0 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl">3</div>
+                            <h3 className="text-md font-bold text-slate-800 mb-1">Khi khách hỏi Địa Chỉ</h3>
+                            <p className="text-xs text-slate-500 mb-4">Biến hỗ trợ: {'{address}, {phone}'}</p>
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 mb-1">Tên nút Gợi ý (Quick Reply):</label>
+                                    <input type="text" className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400"
+                                        value={getQr(2)} onChange={(e) => updateQr(2, e.target.value)} placeholder="VD: 📍 Xin địa chỉ" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 mb-1">Câu trả lời của Bot:</label>
+                                    <textarea name="chat_address" rows={2} className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400"
+                                        value={settings.chat_address} onChange={handleChange} />
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-600 mb-1">Khi khách hỏi Địa Chỉ</label>
-                            <p className="text-xs text-gray-400 mb-2">Biến hỗ trợ: {'{address}, {phone}'}</p>
-                            <textarea name="chat_address" rows={2} className="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-400"
-                                value={settings.chat_address} onChange={handleChange} />
+
+                        {/* 4. Liên Hệ */}
+                        <div className="border border-slate-200 p-5 rounded-xl bg-slate-50 relative">
+                            <div className="absolute top-0 right-0 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl">4</div>
+                            <h3 className="text-md font-bold text-slate-800 mb-1">Khi khách hỏi Liên Hệ / Gọi điện</h3>
+                            <p className="text-xs text-slate-500 mb-4">Biến hỗ trợ: {'{name}, {phone}, {address}'}</p>
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 mb-1">Tên nút Gợi ý (Quick Reply):</label>
+                                    <input type="text" className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400"
+                                        value={getQr(3)} onChange={(e) => updateQr(3, e.target.value)} placeholder="VD: 📞 Liên hệ chủ trọ" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 mb-1">Câu trả lời của Bot:</label>
+                                    <textarea name="chat_contact" rows={3} className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400"
+                                        value={settings.chat_contact} onChange={handleChange} />
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-600 mb-1">Khi khách hỏi Giá Điện/Nước</label>
-                            <p className="text-xs text-gray-400 mb-2">Biến hỗ trợ: {'{elecPrice}, {waterPrice}, {phone}'}</p>
-                            <textarea name="chat_utilities" rows={3} className="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-400"
-                                value={settings.chat_utilities} onChange={handleChange} />
+
+                        {/* 5. Điện Nước */}
+                        <div className="border border-slate-200 p-5 rounded-xl bg-slate-50 relative">
+                            <div className="absolute top-0 right-0 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl">5</div>
+                            <h3 className="text-md font-bold text-slate-800 mb-1">Khi khách hỏi Giá Điện / Nước</h3>
+                            <p className="text-xs text-slate-500 mb-4">Biến hỗ trợ: {'{elecPrice}, {waterPrice}, {phone}'}</p>
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 mb-1">Tên nút Gợi ý (Quick Reply):</label>
+                                    <input type="text" className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400"
+                                        value={getQr(4)} onChange={(e) => updateQr(4, e.target.value)} placeholder="VD: ⚡ Giá điện nước" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 mb-1">Câu trả lời của Bot:</label>
+                                    <textarea name="chat_utilities" rows={3} className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400"
+                                        value={settings.chat_utilities} onChange={handleChange} />
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-600 mb-1">Khi khách hỏi Liên Hệ / Gọi điện</label>
-                            <p className="text-xs text-gray-400 mb-2">Biến hỗ trợ: {'{name}, {phone}, {address}'}</p>
-                            <textarea name="chat_contact" rows={3} className="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-400"
-                                value={settings.chat_contact} onChange={handleChange} />
-                        </div>
+
                     </div>
                 </div>
 
