@@ -62,7 +62,7 @@ export default function ArticleDetail() {
               </div>
               
               <div className="p-8 sm:p-10">
-                <div className="prose prose-lg prose-orange max-w-none text-gray-700 leading-relaxed" 
+                <div className="article-content max-w-none text-gray-700 leading-relaxed" 
                      dangerouslySetInnerHTML={{ __html: article.content }} />
                      
                 <div className="mt-12 pt-8 border-t border-gray-100 flex justify-between items-center">
