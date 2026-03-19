@@ -348,8 +348,15 @@ function RoomCard({ room, onClick }) {
       </div>
       <div style={{ padding: '1.1rem 1.25rem', display: 'flex', flexDirection: 'column', gap: 8 }}>
         <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'hsl(220,20%,10%)', lineHeight: 1.3 }}>{room.room_name}</h3>
+        {room.building_name && (
+          <span style={{
+            display: 'inline-block', fontSize: 10, fontWeight: 700,
+            background: 'hsl(172,60%,92%)', color: 'hsl(172,60%,30%)',
+            padding: '2px 8px', borderRadius: 6, marginTop: 2
+          }}>🏢 {room.building_name}</span>
+        )}
         <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'hsl(220,10%,56%)' }}>
-          📍 {room.area ? `${room.area} m²` : ''}
+          📐 {room.area ? `${room.area} m²` : ''}
           {room.area && room.floor && ' • '}
           {room.floor ? `Tầng ${room.floor}` : ''}
         </div>
@@ -541,8 +548,15 @@ function RoomModal({ room, settings, onClose }) {
                 background: room.status === 'Available' ? 'hsl(152,60%,92%)' : 'hsl(0,70%,94%)',
                 color: room.status === 'Available' ? 'hsl(152,60%,30%)' : 'hsl(0,70%,40%)'
               }}>{room.status === 'Available' ? 'Còn phòng' : 'Hết phòng'}</span>
+              {room.building_name && (
+                <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 8,
+                  background: 'hsl(172,60%,92%)', color: 'hsl(172,60%,30%)' }}>🏢 {room.building_name}</span>
+              )}
               {room.area && <span style={{ fontSize: 12, color: 'hsl(220,10%,50%)' }}>📐 {room.area} m²</span>}
               {room.floor && <span style={{ fontSize: 12, color: 'hsl(220,10%,50%)' }}>🏢 Tầng {room.floor}</span>}
+              {room.room_address && (
+                <span style={{ fontSize: 12, color: 'hsl(220,10%,50%)', width: '100%' }}>📍 {room.room_address}</span>
+              )}
             </div>
           </div>
           <button onClick={onClose} style={{
