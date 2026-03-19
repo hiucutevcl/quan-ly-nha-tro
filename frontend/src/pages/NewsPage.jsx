@@ -5,44 +5,7 @@ import AdsBanner from '../components/AdsBanner';
 
 const API_URL = 'https://api-quan-ly-nha-tro.onrender.com/api';
 
-const articles = [
-  {
-    id: 1,
-    title: 'Quy trình khai báo tạm trú trực tuyến an toàn, nhanh chóng năm 2026',
-    date: '10/03/2026',
-    category: 'Thủ Tục',
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=600&q=80',
-    excerpt: 'Theo quy định mới, khách thuê có thể khai báo tạm trú online qua Cổng Dịch Vụ Công Quốc Gia. Hãy cùng tìm hiểu các giấy tờ cần chuẩn bị và quy trình.',
-    content: "Chi tiết...",
-  },
-  {
-    id: 2,
-    title: 'Cẩm nang Phòng Cháy Chữa Cháy (PCCC) cho phòng trọ sinh viên',
-    date: '05/03/2026',
-    category: 'An Toàn',
-    image: 'https://images.unsplash.com/photo-1563200782-208b89416550?auto=format&fit=crop&w=600&q=80',
-    excerpt: 'Trang bị ngay 5 bình chữa cháy mini cho phòng trọ sinh viên. Tuyệt đối không sạc xe máy điện, xe đạp điện qua đêm trong hầm để xe...',
-    content: "Chi tiết...",
-  },
-  {
-    id: 3,
-    title: 'Nội quy chung cư mini & Hệ thống nhà trọ',
-    date: '01/03/2026',
-    category: 'Quy Định',
-    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=80',
-    excerpt: 'Để đảm bảo an ninh trật tự và môi trường sống văn minh, cư dân vui lòng tuân thủ quy định giờ giấc giới nghiêm, tiếng ồn sau 22h và đổ rác đúng giờ.',
-    content: "Chi tiết...",
-  },
-  {
-    id: 4,
-    title: 'Mẹo tiết kiệm điệm nước mùa Hè cực kì hiệu quả',
-    date: '15/02/2026',
-    category: 'Đời Sống',
-    image: 'https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?auto=format&fit=crop&w=600&q=80',
-    excerpt: 'Mùa hè tới khiến hóa đơn tiền điện tăng cao. Hãy đặt máy lạnh ở mức độ 26-28 độ C kết hợp quạt, vệ sinh màng lọc và bảo dưỡng định kỳ.',
-    content: "Chi tiết...",
-  }
-];
+import { articles } from '../data/articles';
 
 export default function NewsPage() {
   const [settings, setSettings] = useState({ nha_tro_name: 'Hệ thống Nhà trọ', phone: '' });
@@ -97,12 +60,12 @@ export default function NewsPage() {
                 <div className="p-6 sm:w-3/5 flex flex-col justify-center">
                   <div className="text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">{article.date}</div>
                   <h3 className="text-xl font-bold text-gray-900 mb-3 leading-snug group-hover:text-orange-600 transition-colors">
-                    <Link to="#">{article.title}</Link>
+                    <Link to={`/tin-tuc-quy-dinh/${article.id}`}>{article.title}</Link>
                   </h3>
                   <p className="text-gray-500 text-sm leading-relaxed mb-4">
                     {article.excerpt}
                   </p>
-                  <Link to="#" className="inline-block mt-auto text-sm font-bold text-orange-600 hover:text-orange-700">Đọc tiếp →</Link>
+                  <Link to={`/tin-tuc-quy-dinh/${article.id}`} className="inline-block mt-auto text-sm font-bold text-orange-600 hover:text-orange-700">Đọc tiếp →</Link>
                 </div>
               </article>
             ))}
