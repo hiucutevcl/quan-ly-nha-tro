@@ -23,7 +23,8 @@ const defaultSettings = {
     ads_config: JSON.stringify([
       { title: '🌐 Lắp đặt Internet FPT Sinh Viên', desc: 'Giảm ngay 50% phí hòa mạng.', details: 'Chương trình cực HOT dành cho Tân sinh viên! Tặng thêm 2 tháng cước khi đóng trước 6 tháng. Ưu tiên lắp đặt hỏa tốc trong 24h vòng quanh hệ thống nhà trọ. Liên hệ ngay SĐT: 0988.xxx.xxx', image: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80' },
       { title: '📦 Dịch vụ chuyển trọ Thành Hưng', desc: 'Chỉ từ 299k trọn gói xe tải nhỏ.', details: 'Bạn cần chuyển trọ cuối tháng? Đã có Thành Hưng! Xe tải nhỏ 500kg chạy nội ô. Hỗ trợ bọc lót chống trầy xước tủ lạnh, tivi, đệm. Gọi trước 1 ngày để nhận ngay chiết khấu 100k cho khách quen nhà trọ.', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80' }
-    ])
+    ]),
+    buildings_list: JSON.stringify(['Cơ sở Cầu Giấy', 'Cơ sở Ba Đình'])
 };
 
 const SettingsPage = () => {
@@ -108,6 +109,63 @@ const SettingsPage = () => {
                     <textarea name="note" rows={8} className="w-full border rounded p-2 focus:ring-2 focus:ring-gray-400"
                         value={settings.note} onChange={handleChange}
                         placeholder="Nhập nội quy, thông báo hiển thị trên cộng đồng..." />
+                </div>
+
+                {/* --- QUẢN LÝ DANH SÁCH KHU NHÀ / CƠ SỞ --- */}
+                <div className="bg-white p-6 rounded-xl shadow border-t-4 border-teal-500">
+                    <h2 className="text-lg font-bold text-gray-700 mb-4">🏢 Quản lý Danh Sách Cơ Sở / Tòa Nhà</h2>
+                    <p className="text-sm text-gray-500 mb-6">
+                        Thêm tên các Cơ sở / Chi nhánh (Ví dụ: Cơ sở Cầu Giấy, Tòa nhà A...). Danh sách này sẽ hiện ra dưới dạng nút chọn khi bạn <b>Thêm Phòng Mới</b>.
+                    </p>
+                    
+                    {(() => {
+                        let buildList = [];
+                        try {
+                            if (settings.buildings_list) {
+                                buildList = JSON.parse(settings.buildings_list);
+                                if (!Array.isArray(buildList)) buildList = [];
+                            }
+                        } catch (e) {
+                            buildList = [];
+                        }
+
+                        const handleBuildChange = (index, value) => {
+                            const newList = [...buildList];
+                            newList[index] = value;
+                            setSettings({ ...settings, buildings_list: JSON.stringify(newList) });
+                        };
+
+                        const addBuild = () => {
+                            const newList = [...buildList, ''];
+                            setSettings({ ...settings, buildings_list: JSON.stringify(newList) });
+                        };
+
+                        const removeBuild = (index) => {
+                            if (!window.confirm('Xóa cơ sở này khỏi danh sách chọn?')) return;
+                            const newList = buildList.filter((_, i) => i !== index);
+                            setSettings({ ...settings, buildings_list: JSON.stringify(newList) });
+                        };
+
+                        return (
+                            <div className="space-y-3">
+                                {buildList.map((build, idx) => (
+                                    <div key={idx} className="flex gap-2 items-center">
+                                        <div className="bg-teal-100 text-teal-800 font-bold px-3 py-2 rounded-lg text-sm">
+                                            CS {idx + 1}
+                                        </div>
+                                        <input type="text" className="flex-1 border border-teal-200 rounded-lg p-2 text-sm focus:ring-2 focus:ring-teal-400"
+                                            value={build} onChange={(e) => handleBuildChange(idx, e.target.value)} placeholder="VD: Cơ sở Cầu Giấy" />
+                                        <button type="button" onClick={() => removeBuild(idx)} 
+                                            className="bg-red-100 text-red-600 hover:bg-red-200 px-3 py-2 rounded-lg font-bold text-sm transition">Xóa</button>
+                                    </div>
+                                ))}
+                                <button type="button" onClick={addBuild} 
+                                    className="w-full py-2 mt-2 border-2 border-dashed border-teal-300 text-teal-600 font-bold rounded-xl hover:bg-teal-50 transition">
+                                    + THÊM CƠ SỞ / TÒA NHÀ
+                                </button>
+                            </div>
+                        );
+                    })()}
                 </div>
 
                 {/* --- QUẢN LÝ NÚT CHATBOT ĐỘNG (CUSTOM QUICK REPLIES) --- */}

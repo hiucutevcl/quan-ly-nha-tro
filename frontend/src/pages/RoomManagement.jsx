@@ -8,16 +8,19 @@ const RoomManagement = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const amenityOptions = ['Máy lạnh', 'Tủ lạnh', 'Máy giặt', 'Nóng lạnh', 'Thang máy', 'Ban công/Cửa sổ', 'Wifi', 'Giường', 'Tủ quần áo', 'Nhà vệ sinh riêng', 'Bếp riêng', 'Gác lửng'];
+    const amenityOptions = ['Máy lạnh', 'Tủ lạnh', 'Máy giặt', 'Nóng lạnh', 'Thang máy', 'Ban công/Cửa sổ', 'Wifi', 'Giường', 'Tủ quần áo', 'Nhà vệ sinh riêng', 'Bếp riêng', 'Gác lỮng'];
+
+    // Danh sách khu nhà / cơ sở từ settings
+    const [buildingsList, setBuildingsList] = useState([]);
 
     // State Thêm phòng
-    const [newRoom, setNewRoom] = useState({ room_name: '', price: '', area: '', floor: '', amenities: '' });
+    const [newRoom, setNewRoom] = useState({ room_name: '', price: '', area: '', floor: '', amenities: '', building_name: '' });
 
     // State Gán hợp đồng
     const [assignData, setAssignData] = useState({ roomId: null, tenant_id: '', start_date: '', end_date: '' });
 
     // State Sửa phòng
-    const [editData, setEditData] = useState({ roomId: null, price: '', area: '', floor: '', amenities: '' });
+    const [editData, setEditData] = useState({ roomId: null, price: '', area: '', floor: '', amenities: '', building_name: '' });
 
     // State Ghi chỉ số đồng hồ
     const [meterData, setMeterData] = useState({ roomId: null, current_elec: '', current_water: '' });
@@ -69,6 +72,17 @@ const RoomManagement = () => {
 
     useEffect(() => {
         fetchData();
+        // Fetch danh sách khu nhà từ public settings
+        axios.get('https://api-quan-ly-nha-tro.onrender.com/api/settings/public')
+            .then(res => {
+                if (res.data.buildings_list) {
+                    try {
+                        const list = JSON.parse(res.data.buildings_list);
+                        if (Array.isArray(list)) setBuildingsList(list.filter(Boolean));
+                    } catch(e) {}
+                }
+            })
+            .catch(() => {});
     }, []);
 
     // 1. Thêm phòng mới
@@ -77,7 +91,7 @@ const RoomManagement = () => {
         try {
             await axios.post('https://api-quan-ly-nha-tro.onrender.com/api/rooms/add', newRoom, apiHeaders);
             alert('Thêm phòng thành công!');
-            setNewRoom({ room_name: '', price: '', area: '', floor: '', amenities: '' });
+            setNewRoom({ room_name: '', price: '', area: '', floor: '', amenities: '', building_name: '' });
             fetchData();
         } catch (error) {
             alert('Lỗi thêm phòng: ' + (error.response?.data?.message || error.message));
@@ -113,7 +127,7 @@ const RoomManagement = () => {
         }
     };
 
-    // 4. Cập nhật phòng (Giá, Tiện ích, Diện tích, Tầng)
+    // 4. Cập nhật phòng (Giá, Tiện ích, Diện tích, Tầng, Khu nhà)
     const handleUpdateRoom = async (e) => {
         e.preventDefault();
         try {
@@ -121,10 +135,11 @@ const RoomManagement = () => {
                 price: editData.price,
                 area: editData.area,
                 floor: editData.floor,
-                amenities: editData.amenities
+                amenities: editData.amenities,
+                building_name: editData.building_name
             }, apiHeaders);
             alert('Cập nhật phòng thành công!');
-            setEditData({ roomId: null, price: '', area: '', floor: '', amenities: '' });
+            setEditData({ roomId: null, price: '', area: '', floor: '', amenities: '', building_name: '' });
             fetchData();
         } catch (error) {
             alert('Lỗi cập nhật: ' + (error.response?.data?.message || error.message));
@@ -214,6 +229,29 @@ const RoomManagement = () => {
                             ))}
                         </div>
                     </div>
+
+                    {/* Chọn Khu Nhà / Cơ sở */}
+                    {buildingsList.length > 0 && (
+                        <div className="bg-teal-50 p-3 rounded border border-teal-200">
+                            <label className="block text-sm font-bold text-teal-800 mb-2">🏢 Chọn Cơ Sở / Khu Nhà:</label>
+                            <div className="flex flex-wrap gap-3">
+                                {buildingsList.map(b => (
+                                    <label key={b} className="flex items-center gap-1.5 cursor-pointer text-sm hover:text-teal-700 transition">
+                                        <input type="radio" name="new_building" className="w-4 h-4 text-teal-600 cursor-pointer"
+                                            checked={newRoom.building_name === b}
+                                            onChange={() => setNewRoom({ ...newRoom, building_name: b })} />
+                                        <span>{b}</span>
+                                    </label>
+                                ))}
+                                <label className="flex items-center gap-1.5 cursor-pointer text-sm text-gray-400 hover:text-gray-600 transition">
+                                    <input type="radio" name="new_building" className="w-4 h-4"
+                                        checked={newRoom.building_name === ''}
+                                        onChange={() => setNewRoom({ ...newRoom, building_name: '' })} />
+                                    Không xác định
+                                </label>
+                            </div>
+                        </div>
+                    )}
                     
                     <button type="submit" className="bg-green-600 text-white font-bold py-2 px-6 rounded hover:bg-green-700 transition">Lưu Thông Tin</button>
                 </form>
@@ -315,6 +353,29 @@ const RoomManagement = () => {
                                                 </label>
                                             ))}
                                         </div>
+
+                                        {/* Chọn Khu Nhà khi Sửa */}
+                                        {buildingsList.length > 0 && (
+                                            <div className="mb-3">
+                                                <label className="block text-xs font-bold text-teal-700 mb-1">🏢 Khu Nhà / Cơ Sở:</label>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {buildingsList.map(b => (
+                                                        <label key={b} className="flex items-center gap-1 cursor-pointer text-xs bg-teal-50 px-2 py-1 rounded border border-teal-200 hover:bg-teal-100">
+                                                            <input type="radio" name="edit_building" className="w-3 h-3 text-teal-600"
+                                                                checked={editData.building_name === b}
+                                                                onChange={() => setEditData({ ...editData, building_name: b })} />
+                                                            <span>{b}</span>
+                                                        </label>
+                                                    ))}
+                                                    <label className="flex items-center gap-1 cursor-pointer text-xs bg-gray-50 px-2 py-1 rounded border hover:bg-gray-100">
+                                                        <input type="radio" name="edit_building" className="w-3 h-3"
+                                                            checked={!editData.building_name}
+                                                            onChange={() => setEditData({ ...editData, building_name: '' })} />
+                                                        Không xác định
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        )}
                                         
                                         <div className="flex justify-between gap-2 mt-2">
                                             <button type="button" onClick={() => setEditData({roomId: null})} className="w-1/2 bg-gray-300 py-1 rounded text-xs font-bold">Hủy</button>
@@ -327,6 +388,9 @@ const RoomManagement = () => {
                                             <p className="text-gray-600">Giá thuê: <b className="text-red-500">{Number(room.price).toLocaleString()}đ/tháng</b></p>
                                             {room.area && <p className="text-gray-500 text-sm">📐 <b>{room.area} m²</b></p>}
                                             {room.floor && <p className="text-gray-500 text-sm">🏢 <b>{room.floor}</b></p>}
+                                            {room.building_name && (
+                                                <p className="text-teal-700 text-sm font-bold">📍 {room.building_name}</p>
+                                            )}
                                         </div>
                                         {room.amenities && (
                                             <div className="mb-2 mt-1">
@@ -449,7 +513,7 @@ const RoomManagement = () => {
 
                                         <div className="flex gap-3">
                                             <button 
-                                                onClick={() => setEditData({roomId: room.id, price: room.price, area: room.area || '', floor: room.floor || '', amenities: room.amenities || ''})}
+                                                onClick={() => setEditData({roomId: room.id, price: room.price, area: room.area || '', floor: room.floor || '', amenities: room.amenities || '', building_name: room.building_name || ''})}
                                                 className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1"
                                                 title="Sửa phòng"
                                             >
