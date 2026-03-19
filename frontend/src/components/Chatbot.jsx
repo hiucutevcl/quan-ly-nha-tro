@@ -8,7 +8,7 @@ const Chatbot = () => {
     ]);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [quickReplies, setQuickReplies] = useState(["🏠 Xem phòng trống", "💰 Báo giá thuê", "📍 Xin địa chỉ", "📞 Liên hệ chủ trọ", "⚡ Giá điện nước"]);
+    const [customQuickReplies, setCustomQuickReplies] = useState([]);
     const messagesEndRef = useRef(null);    const API_URL = window.location.hostname === 'localhost' 
         ? 'http://localhost:5000/api/chat/public' 
         : 'https://api-quan-ly-nha-tro.onrender.com/api/chat/public';
@@ -25,9 +25,14 @@ const Chatbot = () => {
     useEffect(() => {
         axios.get(API_URL.replace('/chat/public', '/settings/public'))
             .then(res => {
-                if (res.data.quick_replies) {
-                    setQuickReplies(res.data.quick_replies.split('\n').filter(q => q.trim() !== ''));
+                let dynamicReplies = [];
+                if (res.data.custom_quick_replies) {
+                    try {
+                        dynamicReplies = JSON.parse(res.data.custom_quick_replies);
+                        if (!Array.isArray(dynamicReplies)) dynamicReplies = [];
+                    } catch(e) {}
                 }
+                setCustomQuickReplies(dynamicReplies);
             })
             .catch(err => console.error("Lỗi tải quick replies:", err));
     }, []);
@@ -46,10 +51,7 @@ const Chatbot = () => {
 
         try {
             const payload = { messages: newMessages };
-            // Gửi index nếu là quick reply để server dùng đúng template từ admin settings
-            if (quickReplyIdx !== null && quickReplyIdx >= 0) {
-                payload.quickReplyIndex = quickReplyIdx;
-            }
+            // Không gửi quickReplyIdx nữa vì server sẽ query String name trực tiếp
             const res = await axios.post(API_URL, payload);
             setMessages(prev => [...prev, { text: res.data.reply, sender: 'bot' }]);
         } catch (error) {
@@ -123,14 +125,14 @@ const Chatbot = () => {
 
                     {/* Quick Replies */}
                     <div className="px-4 pb-3 bg-gray-50 flex gap-2 overflow-x-auto no-scrollbar scroll-smooth">
-                        {quickReplies.map((qr, idx) => (
+                        {customQuickReplies.map((qr, idx) => (
                             <button 
                                 key={idx}
-                                onClick={() => handleSend(qr, idx)}
+                                onClick={() => handleSend(qr.title)}
                                 disabled={isLoading}
                                 className="whitespace-nowrap px-3 py-1.5 bg-white border border-blue-100 text-blue-600 rounded-full text-xs font-medium hover:bg-blue-50 transition-colors shadow-sm disabled:opacity-50"
                             >
-                                {qr}
+                                {qr.title}
                             </button>
                         ))}
                     </div>

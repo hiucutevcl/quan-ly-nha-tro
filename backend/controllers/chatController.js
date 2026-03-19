@@ -115,44 +115,26 @@ const handleChatRequest = async (req, res) => {
             prices: prices || 'Đang cập nhật'
         };
 
-        // Map từ index của quick reply sang intent (theo thứ tự admin settings)
-        // 0=Phòng trống, 1=Giá phòng, 2=Địa chỉ, 3=Liên hệ, 4=Điện nước
-        const quickReplyIntentMap = ['available', 'price', 'address', 'contact', 'utilities'];
+        // Parse custom quick replies
+        let customQuickReplies = [];
+        if (info.custom_quick_replies) {
+            try {
+                customQuickReplies = JSON.parse(info.custom_quick_replies);
+                if (!Array.isArray(customQuickReplies)) customQuickReplies = [];
+            } catch (e) {
+                console.error("Parse custom_quick_replies error", e);
+            }
+        }
 
         let reply = '';
 
-        // Nếu client gửi quickReplyIndex hợp lệ → dùng template từ admin trực tiếp
-        if (typeof quickReplyIndex === 'number' && quickReplyIndex >= 0 && quickReplyIndex < quickReplyIntentMap.length) {
-            const intent = quickReplyIntentMap[quickReplyIndex];
+        const matchedQR = customQuickReplies.find(qr => 
+            removeVietnameseTones(qr.title.trim().toLowerCase()) === userText || 
+            qr.title.trim().toLowerCase() === lastMessage.text.trim().toLowerCase()
+        );
 
-            if (intent === 'available') {
-                // Luôn ưu tiên template admin nếu đã cấu hình
-                if (info.chat_available_rooms) {
-                    reply = formatTemplate(info.chat_available_rooms, templateData);
-                } else if (availableRooms.length === 0) {
-                    reply = `Hiện tại **${name}** chưa có phòng trống ạ. 😔\nBạn để lại số điện thoại hoặc liên hệ trực tiếp qua **${phone}** để được thông báo khi có phòng nhé!`;
-                } else {
-                    reply = formatTemplate(defaultTemplates.chat_available_rooms, templateData);
-                }
-            } else if (intent === 'price') {
-                // Luôn ưu tiên template admin nếu đã cấu hình
-                if (info.chat_price) {
-                    reply = formatTemplate(info.chat_price, templateData);
-                } else if (allRooms.length === 0) {
-                    reply = `Bạn vui lòng liên hệ chủ trọ qua số **${phone}** để được báo giá nhé!`;
-                } else {
-                    reply = formatTemplate(defaultTemplates.chat_price, templateData);
-                }
-            } else if (intent === 'address') {
-                const tpl = info.chat_address || defaultTemplates.chat_address;
-                reply = formatTemplate(tpl, templateData);
-            } else if (intent === 'contact') {
-                const tpl = info.chat_contact || defaultTemplates.chat_contact;
-                reply = formatTemplate(tpl, templateData);
-            } else if (intent === 'utilities') {
-                const tpl = info.chat_utilities || defaultTemplates.chat_utilities;
-                reply = formatTemplate(tpl, templateData);
-            }
+        if (matchedQR) {
+            reply = formatTemplate(matchedQR.answer, templateData);
 
         // Nếu là tin nhắn gõ tay → dùng keyword matching
         } else if (match(keywords.greet)) {
