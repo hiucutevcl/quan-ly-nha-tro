@@ -355,10 +355,15 @@ function RoomCard({ room, onClick }) {
             padding: '2px 8px', borderRadius: 6, marginTop: 2
           }}>🏢 {room.building_name}</span>
         )}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'hsl(220,10%,56%)' }}>
-          📐 {room.area ? `${room.area} m²` : ''}
-          {room.area && room.floor && ' • '}
-          {room.floor ? `Tầng ${room.floor}` : ''}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'hsl(220,10%,56%)', flexWrap: 'wrap' }}>
+          <span>📐 {room.area ? `${room.area} m²` : ''}</span>
+          {room.area && room.floor && <span>•</span>}
+          <span>{room.floor ? `Tầng ${room.floor}` : ''}</span>
+          {room.room_address && (
+              <span style={{ width: '100%', marginTop: 2, display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  📍 {room.room_address}
+              </span>
+          )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
           <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: 'hsl(24,80%,50%)' }}>
