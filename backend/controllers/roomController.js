@@ -17,11 +17,11 @@ const getAllRooms = async (req, res) => {
 
 // Thêm phòng mới
 const createRoom = async (req, res) => {
-    const { room_name, price, area, floor, amenities, building_name } = req.body;
+    const { room_name, price, area, floor, amenities, building_name, room_address } = req.body;
     try {
         await db.query(
-            'INSERT INTO Rooms (room_name, price, area, floor, amenities, building_name, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [room_name, price, area || null, floor || null, amenities || '', building_name || '', 'Available']
+            'INSERT INTO Rooms (room_name, price, area, floor, amenities, building_name, room_address, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [room_name, price, area || null, floor || null, amenities || '', building_name || '', room_address || '', 'Available']
         );
         res.status(201).json({ message: 'Tạo phòng mới thành công!' });
     } catch (error) {
@@ -29,14 +29,14 @@ const createRoom = async (req, res) => {
     }
 };
 
-// Sửa thông tin phòng (Giá, Diện tích, Tầng, Tiện ích, Khu nhà)
+// Sửa thông tin phòng (Giá, Diện tích, Tầng, Tiện ích, Khu nhà, Địa chỉ)
 const updateRoomPrice = async (req, res) => {
     const { id } = req.params;
-    const { price, area, floor, amenities, building_name } = req.body;
+    const { price, area, floor, amenities, building_name, room_address } = req.body;
     try {
         await db.query(
-            'UPDATE Rooms SET price = ?, area = ?, floor = ?, amenities = ?, building_name = ? WHERE id = ?',
-            [price, area || null, floor || null, amenities || '', building_name || '', id]
+            'UPDATE Rooms SET price = ?, area = ?, floor = ?, amenities = ?, building_name = ?, room_address = ? WHERE id = ?',
+            [price, area || null, floor || null, amenities || '', building_name || '', room_address || '', id]
         );
         res.status(200).json({ message: 'Cập nhật thông tin phòng thành công!' });
     } catch (error) {

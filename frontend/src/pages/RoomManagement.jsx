@@ -8,19 +8,19 @@ const RoomManagement = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const amenityOptions = ['Máy lạnh', 'Tủ lạnh', 'Máy giặt', 'Nóng lạnh', 'Thang máy', 'Ban công/Cửa sổ', 'Wifi', 'Giường', 'Tủ quần áo', 'Nhà vệ sinh riêng', 'Bếp riêng', 'Gác lỮng'];
+    const amenityOptions = ['Máy lạnh', 'Tủ lạnh', 'Máy giặt', 'Nóng lạnh', 'Thang máy', 'Ban công/Cửa sổ', 'Wifi', 'Giường', 'Tủ quần áo', 'Nhà vệ sinh riêng', 'Bếp riêng', 'Gác lửng'];
 
     // Danh sách khu nhà / cơ sở từ settings
     const [buildingsList, setBuildingsList] = useState([]);
 
     // State Thêm phòng
-    const [newRoom, setNewRoom] = useState({ room_name: '', price: '', area: '', floor: '', amenities: '', building_name: '' });
+    const [newRoom, setNewRoom] = useState({ room_name: '', price: '', area: '', floor: '', amenities: '', building_name: '', room_address: '' });
 
     // State Gán hợp đồng
     const [assignData, setAssignData] = useState({ roomId: null, tenant_id: '', start_date: '', end_date: '' });
 
     // State Sửa phòng
-    const [editData, setEditData] = useState({ roomId: null, price: '', area: '', floor: '', amenities: '', building_name: '' });
+    const [editData, setEditData] = useState({ roomId: null, price: '', area: '', floor: '', amenities: '', building_name: '', room_address: '' });
 
     // State Ghi chỉ số đồng hồ
     const [meterData, setMeterData] = useState({ roomId: null, current_elec: '', current_water: '' });
@@ -91,7 +91,7 @@ const RoomManagement = () => {
         try {
             await axios.post('https://api-quan-ly-nha-tro.onrender.com/api/rooms/add', newRoom, apiHeaders);
             alert('Thêm phòng thành công!');
-            setNewRoom({ room_name: '', price: '', area: '', floor: '', amenities: '', building_name: '' });
+            setNewRoom({ room_name: '', price: '', area: '', floor: '', amenities: '', building_name: '', room_address: '' });
             fetchData();
         } catch (error) {
             alert('Lỗi thêm phòng: ' + (error.response?.data?.message || error.message));
@@ -252,6 +252,16 @@ const RoomManagement = () => {
                             </div>
                         </div>
                     )}
+
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">📍 Địa chỉ phòng (tùy chọn)</label>
+                        <input
+                            type="text"
+                            placeholder="VD: 25 Xuân Thủy, Cầu Giấy, Hà Nội"
+                            className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+                            value={newRoom.room_address} onChange={e => setNewRoom({...newRoom, room_address: e.target.value})}
+                        />
+                    </div>
                     
                     <button type="submit" className="bg-green-600 text-white font-bold py-2 px-6 rounded hover:bg-green-700 transition">Lưu Thông Tin</button>
                 </form>
@@ -376,6 +386,12 @@ const RoomManagement = () => {
                                                 </div>
                                             </div>
                                         )}
+
+                                        <div className="mb-3">
+                                            <label className="block text-xs font-bold mb-1">📍 Địa chỉ phòng</label>
+                                            <input type="text" placeholder="VD: 25 Xuân Thủy, Cầu Giấy" className="w-full p-1 border rounded text-sm"
+                                                value={editData.room_address || ''} onChange={e => setEditData({...editData, room_address: e.target.value})} />
+                                        </div>
                                         
                                         <div className="flex justify-between gap-2 mt-2">
                                             <button type="button" onClick={() => setEditData({roomId: null})} className="w-1/2 bg-gray-300 py-1 rounded text-xs font-bold">Hủy</button>
@@ -389,7 +405,10 @@ const RoomManagement = () => {
                                             {room.area && <p className="text-gray-500 text-sm">📐 <b>{room.area} m²</b></p>}
                                             {room.floor && <p className="text-gray-500 text-sm">🏢 <b>{room.floor}</b></p>}
                                             {room.building_name && (
-                                                <p className="text-teal-700 text-sm font-bold">📍 {room.building_name}</p>
+                                                <span className="inline-flex items-center gap-1 bg-teal-100 text-teal-800 text-xs font-bold px-2 py-0.5 rounded-full border border-teal-200">🏢 {room.building_name}</span>
+                                            )}
+                                            {room.room_address && (
+                                                <p className="w-full text-gray-500 text-xs">📍 {room.room_address}</p>
                                             )}
                                         </div>
                                         {room.amenities && (
@@ -513,7 +532,7 @@ const RoomManagement = () => {
 
                                         <div className="flex gap-3">
                                             <button 
-                                                onClick={() => setEditData({roomId: room.id, price: room.price, area: room.area || '', floor: room.floor || '', amenities: room.amenities || '', building_name: room.building_name || ''})}
+                                                onClick={() => setEditData({roomId: room.id, price: room.price, area: room.area || '', floor: room.floor || '', amenities: room.amenities || '', building_name: room.building_name || '', room_address: room.room_address || ''})}
                                                 className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1"
                                                 title="Sửa phòng"
                                             >
