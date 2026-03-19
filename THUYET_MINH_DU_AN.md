@@ -17,14 +17,21 @@ Khác với các công cụ ghi chép truyền thống, dự án này được t
 ### A. Dành Cho Người Thuê (Tenant / Khách truy cập)
 1. **Landing Page Chuyên Nghiệp**: Trang chủ giới thiệu hệ thống phòng trọ, hiển thị phòng trống realtime, giao diện bắt mắt tạo sự tin tưởng.
 2. **Kênh Tin Tức & Quy Định**: Không chỉ là nơi thuê phòng, hệ thống còn cung cấp một chuyên trang (`/tin-tuc-quy-dinh`) về kinh nghiệm sống, PCCC, hướng dẫn làm thủ tục lưu trú trực tuyến.
-3. **AI Chatbot Hỗ Trợ 24/7**: 
-   - Chatbot không sử dụng các câu lệnh tĩnh cứng nhắc mà được thiết kế bằng thuật toán Keyword Matching & Template kết hợp Admin Cấu hình.
-   - Trả lời chuẩn xác bảng giá, tiện ích, địa chỉ.
-   - **Đặc biệt**: Chatbot hỗ trợ thông tin **Đa khu nhà**, báo giá điện nước theo từng đơn vị chuẩn quốc tế (`kWh` đối với điện tích năng, `m³` đối với nước), tránh dùng từ lóng (ký điện, khối nước) để đảm bảo tính pháp lý và chuyên nghiệp.
+3. **AI Chatbot Hỗ Trợ Khách Hàng 24/7 (AI Assistant)**: 
+   - **Cách thức hoạt động:** Chatbot sử dụng thuật toán Keyword Matching & Template kết hợp Google Gemini AI. Khách hàng có thể "Nhập câu hỏi tự do" (Natural Language) hoặc bấm các nút "Gợi ý hỏi nhanh" sẵn có.
+   - **Các tính năng & cách hỏi:**
+     - *Hỏi Phòng Trống:* "Hiện tại còn bao nhiêu phòng trống?", "Xem phòng"...
+     - *Hỏi Giá Thuê:* "Báo giá thuê phòng", "Phòng bên bạn giá cả thế nào?"
+     - *Hỏi Địa Chỉ:* "Xin địa chỉ nhà trọ", "Chỗ bạn ở đâu?"
+     - *Hỏi Điện/Nước:* "Giá điện nước tính sao?", "Điện bao nhiêu 1 ký?" (Bot sẽ tự hiểu và nắn chỉnh lại đơn vị sang chuẩn `kWh` và `m³`).
+     - *Liên Hệ:* "Cho mình xin số điện thoại người quản lý".
+   - **Gợi ý - Câu Trả Lời Nhanh (Quick Replies):** Bố trí 5 nút gợi ý sẵn trên màn hình chat (Ví dụ: "🏠 Xem phòng trống", "💰 Báo giá thuê"), giúp khách hàng nắm bắt thông tin chỉ bằng 1 thao tác click chuột thay vì gõ văn bản dài.
+   - **Hỗ trợ Đa khu nhà:** Trả lời linh hoạt bảng giá điện nước phân nhánh theo từng chi nhánh/khu vực cấu hình.
 
 ### B. Dành Cho Chủ Nhà (Admin Dashboard)
-1. **Quản lý Đa Khu Nhà (Multi-buildings Management)**: Cấu hình thông tin, giá điện nước, nội quy của nhiều chi nhánh khác nhau ngay trên Settings.
-2. **Quản trị Phòng Trọ & Tiền phòng**: Tạo, xóa, theo dõi trạng thái Available/Occupied của từng phòng.
+1. **Quản lý Kịch Bản Chatbot (Chatbot CMS)**: Admin có trọn quyền thay đổi tiêu đề của các Nút Gợi ý (Quick Replies) và thiết lập sẵn câu trả lời tương ứng cho Bot. Hỗ trợ hệ thống biến số động `{name}`, `{price}`, `{phone}` để tin nhắn tự động cập nhật nếu giá cả thay đổi.
+2. **Quản lý Cấu hình Đa Khu Nhà (Multi-buildings)**: Quản lý chi tiết giá điện, giá nước và nội quy của nhiều chi nhánh khác nhau ngay trên Settings. Backend AI sẽ dựa trên dữ liệu thật này để trả lời khách.
+3. **Quản trị Phòng Trọ & Tiền phòng**: Tạo, xóa, theo dõi trạng thái Available/Occupied của từng phòng. Hỗ trợ Upload nhiều ảnh thật (Cloudinary) khi thêm phòng mới.
 3. **Xuất Hợp Đồng PDF Tự Động**: Tính năng cho phép tạo và tải xuống hợp đồng thuê nhà file PDF tự động dựa trên thông tin người thuê chỉ với 1 click.
 4. **Theo dõi Chỉ số Đồng hồ**: Nhập liệu điện nước (kWh, m³). Hệ thống tự xuất hóa đơn tương ứng với giá quy định của từng khu.
 
