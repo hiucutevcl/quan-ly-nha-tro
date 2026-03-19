@@ -160,7 +160,7 @@ const RoomManagement = () => {
         }
     };
 
-    // 4. Cập nhật phòng (Giá, Tiện ích, Diện tích, Tầng, Khu nhà)
+    // 4. Cập nhật phòng (Giá, Tiện ích, Diện tích, Tầng, Khu nhà, Địa chỉ)
     const handleUpdateRoom = async (e) => {
         e.preventDefault();
         try {
@@ -169,10 +169,11 @@ const RoomManagement = () => {
                 area: editData.area,
                 floor: editData.floor,
                 amenities: editData.amenities,
-                building_name: editData.building_name
+                building_name: editData.building_name,
+                room_address: editData.room_address
             }, apiHeaders);
             alert('Cập nhật phòng thành công!');
-            setEditData({ roomId: null, price: '', area: '', floor: '', amenities: '', building_name: '' });
+            setEditData({ roomId: null, price: '', area: '', floor: '', amenities: '', building_name: '', room_address: '' });
             fetchData();
         } catch (error) {
             alert('Lỗi cập nhật: ' + (error.response?.data?.message || error.message));
