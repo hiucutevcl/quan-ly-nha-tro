@@ -40,6 +40,37 @@ router.get('/migrate-area-floor', verifyToken, checkAdmin, async (req, res) => {
     }
 });
 
+// === MIGRATION: Thêm cột building_name và room_address vào bảng Rooms ===
+router.get('/migrate-building', verifyToken, checkAdmin, async (req, res) => {
+    try {
+        const [columns] = await db.query(`
+            SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Rooms'
+            AND COLUMN_NAME IN ('building_name', 'room_address')
+        `);
+        const existingCols = columns.map(c => c.COLUMN_NAME);
+        const results = [];
+
+        if (!existingCols.includes('building_name')) {
+            await db.query(`ALTER TABLE Rooms ADD COLUMN building_name VARCHAR(255) DEFAULT ''`);
+            results.push('✅ Đã thêm cột building_name');
+        } else {
+            results.push('ℹ️ Cột building_name đã tồn tại');
+        }
+
+        if (!existingCols.includes('room_address')) {
+            await db.query(`ALTER TABLE Rooms ADD COLUMN room_address VARCHAR(500) DEFAULT ''`);
+            results.push('✅ Đã thêm cột room_address');
+        } else {
+            results.push('ℹ️ Cột room_address đã tồn tại');
+        }
+
+        res.json({ success: true, results });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // Các đường dẫn API bảo mật (Admin)
 router.get('/all', verifyToken, checkAdmin, roomController.getAllRooms);
 router.post('/add', verifyToken, checkAdmin, roomController.createRoom);
