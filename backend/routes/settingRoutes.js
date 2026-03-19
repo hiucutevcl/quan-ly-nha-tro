@@ -12,4 +12,19 @@ router.get('/', verifyToken, settingController.getSettings);
 // Route cập nhật cài đặt (Chỉ Admin)
 router.put('/', verifyToken, checkAdmin, settingController.updateSettings);
 
+// Route upload ảnh banner (Chỉ Admin)
+const { uploadCloud } = require('../config/cloudinary');
+router.post('/upload-banner', verifyToken, checkAdmin, (req, res, next) => {
+    const upload = uploadCloud.single('image');
+    upload(req, res, function (err) {
+        if (err) {
+            console.error('Lỗi upload banner:', err);
+            return res.status(400).json({ 
+                message: 'Không thể upload ảnh báo. Lỗi: ' + err.message 
+            });
+        }
+        next();
+    });
+}, settingController.uploadBannerImage);
+
 module.exports = router;

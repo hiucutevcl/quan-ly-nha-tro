@@ -52,4 +52,19 @@ const getPublicSettings = async (req, res) => {
     }
 };
 
-module.exports = { getSettings, updateSettings, getPublicSettings };
+// Upload ảnh banner
+const uploadBannerImage = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'Vui lòng chọn ảnh để upload.' });
+        }
+        res.status(200).json({ 
+            message: 'Upload thành công!', 
+            imageUrl: req.file.path // URL trả về trực tiếp từ Cloudinary Storage
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi server khi upload: ' + error.message });
+    }
+};
+
+module.exports = { getSettings, updateSettings, getPublicSettings, uploadBannerImage };

@@ -338,10 +338,40 @@ const SettingsPage = () => {
                                                 <input type="text" className="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-rose-400"
                                                     value={ad.desc} onChange={(e) => handleAdChange(idx, 'desc', e.target.value)} placeholder="VD: Giảm ngay 50%..." />
                                             </div>
-                                            <div>
-                                                <label className="block text-xs font-bold text-gray-600 mb-1">Link Ảnh Banner (Nên dùng Unsplash/Picsum)</label>
-                                                <input type="text" className="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-rose-400"
-                                                    value={ad.image} onChange={(e) => handleAdChange(idx, 'image', e.target.value)} placeholder="https://..." />
+                                            <div className="md:col-span-2">
+                                                <label className="block text-xs font-bold text-gray-600 mb-1">Ảnh Banner (Click để tải lên hoặc dán link)</label>
+                                                <div className="flex gap-2">
+                                                    <input type="text" className="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-rose-400"
+                                                        value={ad.image} onChange={(e) => handleAdChange(idx, 'image', e.target.value)} placeholder="https://..." />
+                                                    
+                                                    <label className="bg-rose-100 hover:bg-rose-200 text-rose-700 px-4 py-2 rounded font-bold cursor-pointer text-sm whitespace-nowrap flex items-center justify-center transition-colors">
+                                                        <span>📸 Tải Ảnh Lên</span>
+                                                        <input 
+                                                            type="file" 
+                                                            className="hidden" 
+                                                            accept="image/*"
+                                                            onChange={async (e) => {
+                                                                const file = e.target.files[0];
+                                                                if (!file) return;
+                                                                
+                                                                const formData = new FormData();
+                                                                formData.append('image', file);
+                                                                
+                                                                try {
+                                                                    // Loading indicator...
+                                                                    handleAdChange(idx, 'image', 'Đang tải ảnh lên hệ thống...');
+                                                                    const res = await axiosAuth.post('/settings/upload-banner', formData, {
+                                                                        headers: { 'Content-Type': 'multipart/form-data' }
+                                                                    });
+                                                                    handleAdChange(idx, 'image', res.data.imageUrl);
+                                                                } catch (err) {
+                                                                    handleAdChange(idx, 'image', ad.image); // Revert
+                                                                    alert('Lỗi tải ảnh: ' + (err.response?.data?.message || err.message));
+                                                                }
+                                                            }}
+                                                        />
+                                                    </label>
+                                                </div>
                                             </div>
                                             <div className="md:col-span-2">
                                                 <label className="block text-xs font-bold text-gray-600 mb-1">CHI TIẾT MỞ RỘNG (Hiển thị khi Click vào Popup)</label>
