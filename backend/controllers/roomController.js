@@ -111,9 +111,7 @@ const uploadRoomImage = async (req, res) => {
 const getPublicRooms = async (req, res) => {
     try {
         const [rooms] = await db.query(`
-            SELECT id, room_name, price, area, floor, status, amenities, image_url 
-            FROM Rooms 
-            ORDER BY room_name ASC
+            SELECT * FROM Rooms ORDER BY room_name ASC
         `);
         res.status(200).json(rooms);
     } catch (error) {
