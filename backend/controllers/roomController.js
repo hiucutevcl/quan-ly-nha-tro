@@ -18,6 +18,16 @@ const getAllRooms = async (req, res) => {
 // Thêm phòng mới
 const createRoom = async (req, res) => {
     const { room_name, price, area, floor, amenities, building_name, room_address } = req.body;
+    
+    // Đảm bảo cột tồn tại trước khi INSERT (migration tự động)
+    const ensureCols = [
+        `ALTER TABLE Rooms ADD COLUMN IF NOT EXISTS building_name VARCHAR(255) DEFAULT ''`,
+        `ALTER TABLE Rooms ADD COLUMN IF NOT EXISTS room_address VARCHAR(500) DEFAULT ''`,
+    ];
+    for (const sql of ensureCols) {
+        try { await db.query(sql); } catch(e) { /* ignore */ }
+    }
+
     try {
         await db.query(
             'INSERT INTO Rooms (room_name, price, area, floor, amenities, building_name, room_address, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
