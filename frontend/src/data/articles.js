@@ -4,8 +4,8 @@ export const articles = [
     title: 'Hướng dẫn các bước đăng ký tạm trú trên ứng dụng VNeID mới nhất 2026',
     date: '10/03/2026',
     category: 'Thủ Tục',
-    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80',
-    excerpt: 'Hướng dẫn các bước đăng ký tạm trú trên ứng dụng VNeID mới nhất 2026. Lệ phí đăng ký tạm trú mới nhất là bao nhiêu?',
+    image: 'https://picsum.photos/seed/thutuc/800/600',
+    excerpt: 'Hướng dẫn chi tiết từng bước cách đăng ký tạm trú trên ứng dụng VNeID mới nhất năm 2026. Tìm hiểu về mức đóng lệ phí đăng ký tạm trú mới nhất hiện nay là bao nhiêu và các giấy tờ chuẩn bị.',
     content: `
       <p>Việc khai báo tạm trú hiện nay đã trở nên vô cùng dễ dàng và tiện lợi thông qua <strong>ứng dụng VNeID</strong>. Người thuê không cần phải ra trực tiếp cơ quan Công an phường/xã, giúp tiết kiệm thời gian đi lại và minh bạch hóa thủ tục hành chính.</p>
       
@@ -40,8 +40,8 @@ export const articles = [
     title: 'Quy Định PCCC Nhà Trọ: Hướng Dẫn Chi Tiết & Cập Nhật 2025 - 2026',
     date: '05/03/2026',
     category: 'An Toàn',
-    image: 'https://images.unsplash.com/photo-1549849221-aee85cb966f3?auto=format&fit=crop&w=800&q=80',
-    excerpt: 'Hệ thống báo cháy, cảm biến khói, và quy định an toàn sạc bình xe điện tại nhà trọ, chung cư mini. Tuyệt đối tuân thủ để đảm bảo tính mạng.',
+    image: 'https://picsum.photos/seed/pccc/800/600',
+    excerpt: 'Cháy nổ tại các khu nhà trọ, chung cư mini luôn là nỗi ám ảnh. Quy định PCCC nhà trọ mới nhất đi sâu vào tiêu chuẩn lắp đặt hệ thống báo cháy, cảm biến khói, và quy định an toàn sạc bình xe điện tại nhà trọ, tuyệt đối tuân thủ để đảm bảo tính mạng.',
     content: `
       <p>Cháy nổ tại các khu nhà trọ sinh viên, chung cư mini luôn là nỗi ám ảnh do mật độ dân số đông và không gian sinh hoạt chật hẹp. Quy định PCCC nhà trọ mới nhất hướng dẫn chi tiết về tiêu chuẩn an toàn, trang thiết bị bắt buộc và trách nhiệm của chủ nhà trọ cũng như người thuê. Việc chủ quan lơ là không chỉ gây thiệt hại về tài sản mà còn trả giá bằng sinh mạng.</p>
 
@@ -76,8 +76,8 @@ export const articles = [
     title: 'Nội quy chung cư mini & Khu nhà trọ sinh viên: Những điều cấm kỵ',
     date: '15/03/2026',
     category: 'Quy Định',
-    image: 'https://images.unsplash.com/photo-1549880181-56a44cf4a9a5?auto=format&fit=crop&w=800&q=80',
-    excerpt: 'Để đảm bảo an ninh trật tự và môi trường sống văn minh, tập thể cư dân cần lưu ý các quy định cốt lõi về tiếng ồn, rác thải, và nuôi thú cưng.',
+    image: 'https://picsum.photos/seed/noiquy/800/600',
+    excerpt: 'Môi trường sống tại chung cư mini là không gian đông đúc nhộn nhịp. Để đảm bảo an ninh trật tự và môi trường sống văn minh, tập thể cư dân cần lưu ý các quy định cốt lõi về tiếng ồn sau 22h, cách vứt rác thải sinh hoạt, và quy định cấm nuôi chó mèo.',
     content: `
       <p>Môi trường sống tại chung cư mini hoặc hệ thống phòng trọ là không gian đa văn hóa, đông đúc nhộn nhịp. Tuy nhiên, sự tự do của cá nhân này không được phép xâm phạm đến quyền lợi nghỉ ngơi của cá nhân khác. Sau đây là Nội quy chung mà mọi thành viên cần nằm lòng:</p>
 
@@ -120,8 +120,8 @@ export const articles = [
     title: '10 cách giúp tiết kiệm điện hiệu quả để giảm tiền điện mùa nắng nóng',
     date: '01/03/2026',
     category: 'Đời Sống',
-    image: 'https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?auto=format&fit=crop&w=800&q=80',
-    excerpt: 'Sự thật là các thiết bị điện như máy tính, tivi ngay cả khi đã tắt vẫn tốn điện năng ngầm. Cách sử dụng máy lạnh và thiết bị điện hiệu quả giúp sinh viên sống nhàn dạ.',
+    image: 'https://picsum.photos/seed/tietkiem/800/600',
+    excerpt: 'Nắng nóng kéo theo hóa đơn tiền điện tăng phi mã. Sự thật ít ai biết là các thiết bị điện như máy tính, tivi ngay cả khi đã tắt bằng remote vẫn tốn điện năng ngầm. Cùng tìm hiểu 4 cách sử dụng điều hòa và thiết bị điện hiệu quả giúp sinh viên sống nhàn nhã.',
     content: `
       <p>Với giá điện bán lẻ cho nhà trọ tính theo bậc và định mức khoảng 3.500đ - 4.500đ/kWh, hóa đơn sinh hoạt mỗi dịp Hè nắng nóng đổ lửa luôn là nỗi kinh hoàng với ví tiền sinh viên và nhóm lao động văn phòng. Ông Đặng Nguyên Phương - Trưởng Ban Kinh doanh, Tổng Công ty Điện lực miền Nam (EVNSPC) chỉ ra các cách để tiết kiệm điện hiệu quả nhằm giảm chi phí.</p>
 
