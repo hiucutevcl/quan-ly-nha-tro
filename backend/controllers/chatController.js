@@ -65,6 +65,7 @@ const handleChatRequest = async (req, res) => {
         const name = info.nha_tro_name || 'Nhà Trọ';
         const elecPrice = Number(info.elec_price || 3500).toLocaleString();
         const waterPrice = Number(info.water_price || 15000).toLocaleString();
+        const buildingsInfo = info.buildings_info ? `\n\n🏘️ **Danh sách các khu nhà & Giá điện nước:**\n${info.buildings_info}\n` : '';
 
         // ---- Bộ nhận dạng từ khóa ----
         const rawKeywords = {
@@ -102,13 +103,13 @@ const handleChatRequest = async (req, res) => {
         const defaultTemplates = {
             chat_available_rooms: `Hiện tại **{name}** đang có **{count} phòng trống** 🏠:\\n\\n{roomList}\\n\\nBạn muốn đặt lịch xem phòng, liên hệ chủ trọ qua số **{phone}** nhé!`,
             chat_price: `💰 Bảng giá phòng tại **{name}**:\\n\\n{prices}\\n\\nChưa bao gồm điện & nước. Liên hệ **{phone}** để biết thêm chi tiết!`,
-            chat_address: `📍 **Địa chỉ:** {address}\\n\\nBạn có thể liên hệ chủ trọ qua số **{phone}** để được hướng dẫn đường đi chi tiết nhé!`,
-            chat_utilities: `⚡ Giá điện: **{elecPrice}đ/kWh**\\n💧 Giá nước: **{waterPrice}đ/m³**\\n\\nĐây là giá thu theo chỉ số thực tế hàng tháng. Nếu cần thêm thông tin, liên hệ **{phone}** nhé!`,
-            chat_contact: `📞 Để liên hệ chủ trọ **{name}**:\\n\\n• Số điện thoại/Zalo: **{phone}**\\n• Địa chỉ: **{address}**\\n\\nBạn có thể nhắn tin Zalo hoặc gọi trực tiếp, chủ trọ sẽ phản hồi sớm nhất có thể nhé!`
+            chat_address: `📍 **Địa chỉ:** {address}{buildingsInfo}\\n\\nBạn có thể liên hệ chủ trọ qua số **{phone}** để được hướng dẫn đường đi chi tiết nhé!`,
+            chat_utilities: `⚡ Giá điện mặc định: **{elecPrice}đ/kWh**\\n💧 Giá nước mặc định: **{waterPrice}đ/m³**{buildingsInfo}\\n\\nĐây là giá thu theo chỉ số thực tế hàng tháng (chuẩn kWh, m³). Nếu cần thêm thông tin, liên hệ **{phone}** nhé!`,
+            chat_contact: `📞 Để liên hệ chủ trọ **{name}**:\\n\\n• Số điện thoại/Zalo: **{phone}**\\n• Địa chỉ chính: **{address}**{buildingsInfo}\\n\\nBạn có thể nhắn tin Zalo hoặc gọi trực tiếp, chủ trọ sẽ phản hồi sớm nhất có thể nhé!`
         };
 
         const templateData = {
-            name, phone, address, elecPrice, waterPrice,
+            name, phone, address, elecPrice, waterPrice, buildingsInfo,
             count: availableRooms.length,
             roomList: roomList || 'Đang cập nhật',
             prices: prices || 'Đang cập nhật'

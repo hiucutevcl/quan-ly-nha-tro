@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Chatbot from '../components/Chatbot';
+import AdsBanner from '../components/AdsBanner';
 
 const API_URL = 'https://api-quan-ly-nha-tro.onrender.com/api';
 
@@ -32,6 +33,7 @@ function Navbar({ name, phone }) {
   const links = [
     { label: 'Giới thiệu', href: '#about' },
     { label: 'Danh sách phòng', href: '#rooms' },
+    { label: 'Tin tức & Lưu trú', href: '/tin-tuc-quy-dinh' },
     { label: 'Tiện ích', href: '#features' },
     { label: 'Liên hệ', href: '#contact' },
   ];
@@ -727,6 +729,14 @@ const LandingPage = () => {
       <HeroSection settings={settings} availableCount={availableCount} />
       <FeaturesSection />
       <RoomsSection rooms={rooms} loading={loading} onRoomClick={setSelectedRoom} />
+      
+      {/* Quảng Cáo hiển thị bên dưới danh sách phòng */}
+      <section style={{ background: '#fff' }} className="section-padding">
+        <div className="container-tight">
+          <AdsBanner layout="banner" />
+        </div>
+      </section>
+
       <RulesSection note={settings.note} />
       <CTASection nhaName={settings.nha_tro_name} phone={settings.phone} owner={settings.owner} />
       <Footer settings={settings} />

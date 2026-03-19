@@ -18,7 +18,8 @@ const defaultSettings = {
     chat_address: '📍 Địa chỉ: {address}\n\nBạn có thể liên hệ chủ trọ qua số {phone} để được hướng dẫn đường đi chi tiết nhé!',
     chat_utilities: '⚡ Giá điện: {elecPrice}đ/kWh\n💧 Giá nước: {waterPrice}đ/m³\n\nĐây là giá thu theo chỉ số thực tế hàng tháng. Nếu cần thêm thông tin, liên hệ {phone} nhé!',
     chat_contact: '📞 Để liên hệ chủ trọ {name}:\n\n• Số điện thoại/Zalo: {phone}\n• Địa chỉ: {address}\n\nBạn có thể nhắn tin Zalo hoặc gọi trực tiếp, chủ trọ sẽ phản hồi sớm nhất có thể nhé!',
-    quick_replies: '🏠 Xem phòng trống\n💰 Báo giá thuê\n📍 Xin địa chỉ\n📞 Liên hệ chủ trọ\n⚡ Giá điện nước'
+    quick_replies: '🏠 Xem phòng trống\n💰 Báo giá thuê\n📍 Xin địa chỉ\n📞 Liên hệ chủ trọ\n⚡ Giá điện nước',
+    buildings_info: ''
 };
 
 const SettingsPage = () => {
@@ -156,6 +157,21 @@ const SettingsPage = () => {
                     <textarea name="note" rows={10} className="w-full border rounded p-2 focus:ring-2 focus:ring-gray-400"
                         value={settings.note} onChange={handleChange}
                         placeholder="Nhập nội quy, ghi chú hiển thị trên hóa đơn và web chính..." />
+                </div>
+
+                {/* Thông tin Đa Khu Nhà */}
+                <div className="bg-white p-6 rounded-xl shadow border-t-4 border-purple-500">
+                    <h2 className="text-lg font-bold text-gray-700 mb-4">🏠 Thông tin các Khu nhà (Chatbot dùng báo giá Điện/Nước)</h2>
+                    <p className="text-sm text-gray-500 mb-4">
+                        Nếu bạn có nhiều khu nhà, hãy ghi rõ từng khu với đơn vị đo chuẩn (kWh, m³). Ví dụ:
+                        <br/>
+                        - Khu A (Q10): Điện 3.500đ/kWh, Nước 15.000đ/m³.
+                        <br/>
+                        - Khu B (Q3): Điện 4.000đ/kWh, Nước 20.000đ/m³.
+                    </p>
+                    <textarea name="buildings_info" rows={5} className="w-full border rounded p-2 focus:ring-2 focus:ring-purple-400"
+                        value={settings.buildings_info} onChange={handleChange}
+                        placeholder="Nhập thông tin các khu nhà..." />
                 </div>
 
                 {/* Cấu hình Chatbot FAQ */}
