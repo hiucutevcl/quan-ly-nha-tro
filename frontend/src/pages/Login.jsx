@@ -13,7 +13,7 @@ const Login = () => {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        axios.get('https://api-quan-ly-nha-tro.onrender.com/api/settings')
+        axios.get('https://api-quan-ly-nha-tro.onrender.com/api/settings/public')
             .then(res => setSettings(res.data))
             .catch(err => console.log('Err fetch settings', err));
     }, []);
