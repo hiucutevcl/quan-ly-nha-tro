@@ -9,7 +9,14 @@ const Login = () => {
     const [errorMsg, setErrorMsg] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [showPass, setShowPass] = useState(false);
+    const [settings, setSettings] = useState({});
     const navigate = useNavigate();
+
+    React.useEffect(() => {
+        axios.get('https://api-quan-ly-nha-tro.onrender.com/api/settings')
+            .then(res => setSettings(res.data))
+            .catch(err => console.log('Err fetch settings', err));
+    }, []);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -55,16 +62,20 @@ const Login = () => {
                 {/* Logo */}
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: '3rem' }}>
-                        <div style={{
-                            width: 44, height: 44, background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', borderRadius: 12,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        }}>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                            </svg>
-                        </div>
-                        <span style={{ color: 'white', fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em' }}>Nhà Trọ Minh Hiếu</span>
+                        {settings.logo_image ? (
+                            <img src={settings.logo_image} alt="Logo" style={{ height: 44, maxWidth: 120, borderRadius: 8, objectFit: 'contain' }} />
+                        ) : (
+                            <div style={{
+                                width: 44, height: 44, background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', borderRadius: 12,
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            }}>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                </svg>
+                            </div>
+                        )}
+                        <span style={{ color: 'white', fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em' }}>{settings.name || 'Nhà Trọ Minh Hiếu'}</span>
                     </div>
 
                     <h1 style={{ color: 'white', fontSize: 38, fontWeight: 800, lineHeight: 1.15, letterSpacing: '-0.03em', marginBottom: 16 }}>
@@ -96,16 +107,20 @@ const Login = () => {
                 <div style={{ width: '100%' }}>
                     {/* Mobile Logo */}
                     <div style={{ textAlign: 'center', marginBottom: '2.5rem' }} className="login-mobile-logo">
-                        <div style={{
-                            width: 52, height: 52, background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', borderRadius: 14,
-                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16
-                        }}>
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                            </svg>
-                        </div>
-                        <h2 style={{ fontSize: 20, fontWeight: 800, color: '#0f172a', margin: 0 }}>Nhà Trọ Minh Hiếu</h2>
+                        {settings.logo_image ? (
+                            <img src={settings.logo_image} alt="Logo" style={{ height: 52, maxWidth: 140, borderRadius: 12, objectFit: 'contain', marginBottom: 16 }} />
+                        ) : (
+                            <div style={{
+                                width: 52, height: 52, background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', borderRadius: 14,
+                                display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16
+                            }}>
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                </svg>
+                            </div>
+                        )}
+                        <h2 style={{ fontSize: 20, fontWeight: 800, color: '#0f172a', margin: 0 }}>{settings.name || 'Nhà Trọ Minh Hiếu'}</h2>
                         <p style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>Hệ thống quản lý phòng trọ</p>
                     </div>
 

@@ -98,6 +98,14 @@ function Navbar({ name, phone, logo_image }) {
             onMouseEnter={e => { e.currentTarget.style.background = '#ede9fe'; }}
             onMouseLeave={e => { e.currentTarget.style.background = '#f5f3ff'; }}
           >Xem phòng</a>
+          <a href="#contact" style={{
+            background: 'transparent', color: '#6b7280',
+            padding: '8px 18px', borderRadius: 999, fontSize: 13, fontWeight: 600,
+            textDecoration: 'none', transition: 'all 0.2s', border: '1px solid transparent'
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#f3f4f6'; e.currentTarget.style.color = '#111827'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#6b7280'; }}
+          >Đăng ký</a>
           <Link to="/login" style={{
             background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: '#fff',
             padding: '8px 20px', borderRadius: 999, fontSize: 13, fontWeight: 600,
@@ -138,6 +146,10 @@ function Navbar({ name, phone, logo_image }) {
                 flex: 1, textAlign: 'center', background: '#f5f3ff', color: '#6366f1',
                 padding: '10px', borderRadius: 999, fontWeight: 600, textDecoration: 'none', border: '1px solid #e0e7ff'
               }}>Xem phòng</a>
+              <a href="#contact" onClick={() => setMobileOpen(false)} style={{
+                flex: 1, textAlign: 'center', background: '#f8fafc', color: '#475569',
+                padding: '10px', borderRadius: 999, fontWeight: 600, textDecoration: 'none'
+              }}>Đăng ký</a>
               <Link to="/login" style={{
                 flex: 1, textAlign: 'center', background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: '#fff',
                 padding: '10px', borderRadius: 999, fontWeight: 600, textDecoration: 'none'
