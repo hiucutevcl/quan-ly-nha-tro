@@ -155,27 +155,34 @@ function HeroSection({ settings, availableCount }) {
   return (
     <section style={{
       minHeight: '100vh', display: 'flex', alignItems: 'center',
-      background: 'var(--gradient-hero)', overflowX: 'hidden', position: 'relative'
+      background: 'linear-gradient(145deg, #f8fafc 0%, #ffffff 100%)', overflowX: 'hidden', position: 'relative'
     }}>
-      <div className="container-tight" style={{ width: '100%', padding: '7rem 1.5rem 4rem' }}>
+      {/* Decorative background circle */}
+      <div style={{
+        position: 'absolute', top: '-10%', right: '-5%', width: '50vw', height: '50vw',
+        background: 'radial-gradient(circle, hsla(215, 100%, 94%, 0.8) 0%, rgba(255,255,255,0) 70%)',
+        borderRadius: '50%', zIndex: 0, pointerEvents: 'none'
+      }} />
+
+      <div className="container-tight" style={{ width: '100%', padding: '7rem 1.5rem 4rem', position: 'relative', zIndex: 1 }}>
         <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem',
+          display: 'grid', gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 0.9fr)', gap: '4rem',
           alignItems: 'center'
         }} className="hero-grid">
 
           {/* Left */}
-          <div className="animate-fade-up" style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+          <div className="animate-fade-up" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             {/* Badge */}
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, alignSelf: 'flex-start' }}>
               <span style={{
                 padding: '6px 14px', borderRadius: 999,
-                background: 'hsl(215,100%,96%)', border: '1px solid hsl(215,100%,90%)',
-                color: 'hsl(215,100%,40%)', fontSize: 12, fontWeight: 700,
-                letterSpacing: '0.02em', display: 'flex', alignItems: 'center', gap: 6
+                background: '#eff6ff', border: '1px solid #dbeafe',
+                color: '#2563eb', fontSize: 13, fontWeight: 600,
+                letterSpacing: '0.01em', display: 'flex', alignItems: 'center', gap: 6
               }}>
                 <span className="animate-pulse-dot" style={{
                   width: 6, height: 6, borderRadius: '50%',
-                  background: 'hsl(215,100%,50%)', display: 'inline-block'
+                  background: '#3b82f6', display: 'inline-block'
                 }} />
                 {availableCount > 0 ? `Hiện đang trống ${availableCount} phòng` : 'Hệ thống phòng trọ hiện đại'}
               </span>
@@ -183,86 +190,116 @@ function HeroSection({ settings, availableCount }) {
 
             {/* Headline */}
             <h1 style={{
-              fontSize: 'clamp(2.5rem, 5vw, 3.8rem)', fontWeight: 800,
-              lineHeight: 1.15, letterSpacing: '-0.03em', margin: 0,
-              color: 'hsl(220,20%,12%)'
+              fontSize: 'clamp(2.8rem, 5.5vw, 4.2rem)', fontWeight: 800,
+              lineHeight: 1.1, letterSpacing: '-0.04em', margin: 0,
+              color: '#0f172a'
             }}>
               Tìm phòng trọ <br/>
-              <span style={{ color: 'hsl(215, 100%, 45%)' }}>chất lượng</span> nhanh chóng
+              <span style={{ 
+                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)', 
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' 
+              }}>chất lượng</span> nhanh chóng
             </h1>
 
             {/* Subtitle */}
             <p style={{
-              fontSize: 16, color: 'hsl(220,10%,40%)', lineHeight: 1.6,
-              margin: 0, maxWidth: 480, fontWeight: 400
+              fontSize: 17, color: '#475569', lineHeight: 1.6,
+              margin: 0, maxWidth: 500, fontWeight: 400
             }}>
               {settings.nha_tro_name} mang đến trải nghiệm lưu trú an toàn, tiện nghi và minh bạch. 
-              Môi trường sống lý tưởng dành cho bạn.
+              Môi trường sống lý tưởng dành cho bạn ngay hôm nay.
             </p>
 
             {/* Buttons */}
-            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 8 }}>
+            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 4 }}>
               <a href="#rooms" style={{
-                background: 'hsl(215, 100%, 45%)', color: '#fff',
-                padding: '14px 28px', borderRadius: 12, fontSize: 15, fontWeight: 700,
-                textDecoration: 'none', boxShadow: '0 8px 20px hsla(215, 100%, 45%, 0.25)',
-                transition: 'all 0.25s', display: 'inline-block'
+                background: '#2563eb', color: '#fff',
+                padding: '14px 32px', borderRadius: 999, fontSize: 16, fontWeight: 600,
+                textDecoration: 'none', boxShadow: '0 8px 16px rgba(37, 99, 235, 0.25)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', display: 'inline-block'
               }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 24px hsla(215, 100%, 45%, 0.35)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 8px 20px hsla(215, 100%, 45%, 0.25)'; }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 24px rgba(37, 99, 235, 0.35)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 8px 16px rgba(37, 99, 235, 0.25)'; }}
               >Xem phòng ngay</a>
               <a href={`tel:${settings.phone}`} style={{
-                background: '#fff', color: 'hsl(220,20%,20%)',
-                padding: '14px 28px', borderRadius: 12, fontSize: 15, fontWeight: 600,
-                textDecoration: 'none', border: '1px solid hsl(210,16%,88%)',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.04)', transition: 'all 0.25s', display: 'inline-flex', alignItems: 'center', gap: 8
+                background: '#ffffff', color: '#0f172a',
+                padding: '14px 32px', borderRadius: 999, fontSize: 16, fontWeight: 600,
+                textDecoration: 'none', border: '1px solid #e2e8f0',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.02)', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', display: 'inline-flex', alignItems: 'center', gap: 8
               }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'hsl(210,16%,80%)'; e.currentTarget.style.background = 'hsl(210,16%,98%)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'hsl(210,16%,88%)'; e.currentTarget.style.background = '#fff'; }}
-              >📞 Gọi {settings.owner || 'tư vấn'}</a>
+                onMouseEnter={e => { e.currentTarget.style.borderColor = '#cbd5e1'; e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.transform = ''; }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                Gọi {settings.owner || 'Chủ trọ'}
+              </a>
             </div>
 
-            {/* Trust stats row (Minimalist) */}
-            <div style={{ display: 'flex', gap: '2.5rem', flexWrap: 'wrap', paddingTop: '1.5rem', marginTop: '1rem', borderTop: '1px solid hsl(210,16%,92%)' }}>
-              {[
-                { label: 'Phòng tiện nghi', value: '100+' },
-                { label: 'An ninh 24/7', value: 'Bảo đảm' },
-                { label: 'Giá dịch vụ', value: 'Minh bạch' },
-              ].map(s => (
-                <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                   <span style={{ fontSize: 20, fontWeight: 800, color: 'hsl(220,20%,15%)', letterSpacing: '-0.02em' }}>{s.value}</span>
-                   <span style={{ fontSize: 13, color: 'hsl(220,10%,50%)', fontWeight: 500 }}>{s.label}</span>
-                </div>
-              ))}
+            {/* Trust stats row */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', flexWrap: 'wrap', paddingTop: '1rem', marginTop: '1rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                 <span style={{ fontSize: 26, fontWeight: 800, color: '#0f172a', letterSpacing: '-0.03em' }}>100+</span>
+                 <span style={{ fontSize: 14, color: '#64748b', fontWeight: 500 }}>Phòng tiện nghi</span>
+              </div>
+              <div style={{ width: 1, height: 40, background: '#e2e8f0' }} className="stats-divider" />
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                 <span style={{ fontSize: 26, fontWeight: 800, color: '#0f172a', letterSpacing: '-0.03em' }}>Bảo đảm</span>
+                 <span style={{ fontSize: 14, color: '#64748b', fontWeight: 500 }}>An ninh 24/7</span>
+              </div>
+              <div style={{ width: 1, height: 40, background: '#e2e8f0' }} className="stats-divider" />
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                 <span style={{ fontSize: 26, fontWeight: 800, color: '#0f172a', letterSpacing: '-0.03em' }}>Minh bạch</span>
+                 <span style={{ fontSize: 14, color: '#64748b', fontWeight: 500 }}>Giá dịch vụ</span>
+              </div>
             </div>
           </div>
 
           {/* Right - image */}
-          <div className="animate-fade-up hero-img-col" style={{ position: 'relative', animationDelay: '0.15s' }}>
-            <div style={{ borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 64px hsla(220,20%,10%,0.14)' }}>
+          <div className="animate-fade-up hero-img-col" style={{ position: 'relative', animationDelay: '0.1s' }}>
+            <div style={{ 
+              position: 'relative', borderRadius: '32px', overflow: 'hidden', 
+              boxShadow: '0 32px 64px -12px rgba(15, 23, 42, 0.15)',
+              transform: 'perspective(1000px) rotateY(-5deg)',
+              transition: 'transform 0.5s ease',
+            }}
+             onMouseEnter={e => { e.currentTarget.style.transform = 'perspective(1000px) rotateY(0deg)'; }}
+             onMouseLeave={e => { e.currentTarget.style.transform = 'perspective(1000px) rotateY(-5deg)'; }}
+            >
               <img
                 src={settings.hero_image || "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80"}
-                alt="Phòng trọ hiện đại"
-                style={{ width: '100%', height: 440, objectFit: 'cover', display: 'block' }}
+                alt="Phòng trọ tiện nghi"
+                style={{ width: '100%', height: 480, objectFit: 'cover', display: 'block' }}
               />
               <div style={{
                 position: 'absolute', inset: 0,
-                background: 'linear-gradient(to top, hsla(220,20%,10%,0.2), transparent)'
+                background: 'linear-gradient(135deg, rgba(37,99,235,0.1) 0%, rgba(0,0,0,0) 100%)',
+                pointerEvents: 'none'
               }} />
             </div>
 
-            {/* Floating card */}
-            <div className="glass-card" style={{
-              position: 'absolute', bottom: -20, left: -20,
-              padding: '16px 20px', minWidth: 180
+            {/* Floating Glassmorphism Card */}
+            <div style={{
+              position: 'absolute', bottom: 40, left: -30,
+              padding: '24px 28px', minWidth: 200,
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255, 255, 255, 0.6)',
+              borderRadius: '24px',
+              boxShadow: '0 20px 40px -8px rgba(0,0,0,0.1)'
             }}>
-              <p style={{ margin: 0, fontSize: 11, color: 'hsl(220,10%,56%)' }}>Phòng có sẵn</p>
-              <p style={{ margin: '4px 0', fontSize: 28, fontWeight: 800, color: 'hsl(220,20%,10%)' }}>
-                {availableCount}+
-              </p>
-              <p style={{ margin: 0, fontSize: 11, color: 'hsl(152,60%,38%)', fontWeight: 600 }}>
-                ↑ Cập nhật liên tục
-              </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+                 <div style={{ width: 40, height: 40, borderRadius: '12px', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2563eb' }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                 </div>
+                 <div>
+                    <p style={{ margin: 0, fontSize: 13, color: '#64748b', fontWeight: 500 }}>Phòng có sẵn</p>
+                    <p style={{ margin: 0, fontSize: 24, fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>{availableCount}+</p>
+                 </div>
+              </div>
+              <div style={{ fontSize: 12, color: '#10b981', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', display: 'inline-block' }}/> Cập nhật liên tục
+              </div>
             </div>
           </div>
         </div>
@@ -270,8 +307,9 @@ function HeroSection({ settings, availableCount }) {
 
       <style>{`
         @media (max-width: 768px) {
-          .hero-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+          .hero-grid { grid-template-columns: 1fr !important; gap: 3rem !important; }
           .hero-img-col { display: none; }
+          .stats-divider { display: none; }
         }
       `}</style>
     </section>
