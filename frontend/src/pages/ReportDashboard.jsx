@@ -40,6 +40,17 @@ const ReportDashboard = () => {
     // Tính tổng nợ
     const totalDebt = debtList.reduce((sum, item) => sum + Number(item.total_amount), 0);
 
+    const handleRemind = async (id) => {
+        try {
+            await axios.put(`https://api-quan-ly-nha-tro.onrender.com/api/invoices/${id}/remind`, {}, apiHeaders);
+            alert(`Đã gửi thông báo nhắc nợ thành công đến màn hình ứng dụng của khách hàng!`);
+            // Cập nhật lại list (nếu bạn muốn hiện thông báo đã nhắc) 
+            setDebtList(debtList.map(item => item.id === id ? { ...item, is_reminded: 1 } : item));
+        } catch (error) {
+            alert('Lỗi gửi nhắc nhở: ' + (error.response?.data?.message || error.message));
+        }
+    };
+
     // Tải Excel danh sách nợ
     const exportDebtToExcel = () => {
         const data = debtList.map((item, index) => ({
@@ -132,10 +143,11 @@ const ReportDashboard = () => {
                                         <div className="text-right">
                                             <p className="font-black text-red-600 text-xl">{formatCurrency(item.total_amount)}</p>
                                             <button 
-                                                className="mt-2 text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
-                                                onClick={() => alert(`Tính năng tự động gửi SMS nhắc nợ đến ${item.phone} sẽ ra mắt ở phiên bản sau!`)}
+                                                className={`mt-2 text-xs font-bold py-1 px-3 rounded transition ${item.is_reminded ? 'bg-gray-400 text-white cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 text-white'}`}
+                                                disabled={item.is_reminded}
+                                                onClick={() => handleRemind(item.id)}
                                             >
-                                                🔔 Nhắc nhở
+                                                {item.is_reminded ? '✓ Đã nhắc' : '🔔 Nhắc nhở'}
                                             </button>
                                         </div>
                                     </div>

@@ -23,7 +23,7 @@ const getRevenue = async (req, res) => {
 const getDebtList = async (req, res) => {
     try {
         const sql = `
-            SELECT i.id, i.month_year, i.total_amount, r.room_name, u.full_name as tenant_name, u.username as phone
+            SELECT i.id, i.month_year, i.total_amount, i.is_reminded, r.room_name, u.full_name as tenant_name, u.username as phone
             FROM Invoices i
             JOIN Rooms r ON i.room_id = r.id
             LEFT JOIN Users u ON r.tenant_id = u.id

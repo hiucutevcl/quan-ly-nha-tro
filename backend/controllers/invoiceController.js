@@ -91,6 +91,18 @@ const payInvoice = async (req, res) => {
     }
 };
 
+// API MỚI: Đánh dấu nhắc nợ (Nhắc nhở)
+const remindInvoice = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await db.query('ALTER TABLE Invoices ADD COLUMN IF NOT EXISTS is_reminded BOOLEAN DEFAULT FALSE');
+        await db.query('UPDATE Invoices SET is_reminded = TRUE WHERE id = ?', [id]);
+        res.status(200).json({ message: 'Đã gửi thông báo nhắc nợ đến hệ thống của khách hàng!' });
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi: ' + error.message });
+    }
+};
+
 // ==========================================
 // 2. API: LẤY LỊCH SỬ HÓA ĐƠN (CỦA TENANT) - BƯỚC 6 
 // ==========================================
@@ -171,4 +183,4 @@ const getMeterHistory = async (req, res) => {
     }
 };
 
-module.exports = { createInvoice, getMyInvoices, getRooms, payInvoice, getAllInvoices, getMeterHistory };
+module.exports = { createInvoice, getMyInvoices, getRooms, payInvoice, remindInvoice, getAllInvoices, getMeterHistory };

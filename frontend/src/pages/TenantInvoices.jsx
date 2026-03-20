@@ -137,7 +137,18 @@ const TenantInvoices = () => {
 
                 {/* Alerts */}
                 <div className="space-y-4 mb-8">
-                    {tongChuaThu > 0 && (
+                    {invoices.some(i => !i.is_paid && i.is_reminded) && (
+                        <div className="bg-rose-50 border-2 border-rose-500 rounded-2xl p-5 shadow-[0_0_20px_rgba(244,63,94,0.3)] flex items-start gap-4 relative overflow-hidden animate-pulse">
+                            <div className="absolute left-0 top-0 bottom-0 w-2 bg-rose-600"></div>
+                            <div className="w-12 h-12 rounded-full bg-rose-600 flex items-center justify-center text-white text-2xl font-bold shrink-0 shadow-lg">⚠️</div>
+                            <div>
+                                <h3 className="font-black text-rose-800 text-lg mb-1 uppercase tracking-wider">THÔNG BÁO NHẮC NỢ TỪ QUẢN LÝ</h3>
+                                <p className="text-rose-900 font-medium text-sm leading-relaxed">Bạn đang có hóa đơn bị trễ hạn hoặc cần thanh toán gấp. Vui lòng hoàn thành nghĩa vụ tài chính cuối tháng để tránh phát sinh chi phí phạt hoặc bị gián đoạn dịch vụ thuê phòng!</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {tongChuaThu > 0 && !invoices.some(i => !i.is_paid && i.is_reminded) && (
                         <div className="bg-white border border-rose-200 rounded-2xl p-5 shadow-sm flex items-start gap-4 relative overflow-hidden">
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-rose-500"></div>
                             <div className="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 text-xl font-bold shrink-0">!</div>
