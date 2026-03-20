@@ -32,7 +32,7 @@ function Navbar({ name, phone, logo_image }) {
 
   const links = [
     { label: 'Giới thiệu', href: '#about' },
-    { label: 'Danh sách phòng', href: '#rooms' },
+    { label: 'Danh sách phòng', href: '/danh-sach-phong' },
     { label: 'Tin tức & Lưu trú', href: '/tin-tuc-quy-dinh' },
     { label: 'Tiện ích', href: '#features' },
     { label: 'Liên hệ', href: '#contact' },
@@ -90,14 +90,14 @@ function Navbar({ name, phone, logo_image }) {
               {phone}
             </a>
           )}
-          <a href="#rooms" style={{
+          <Link to="/danh-sach-phong" style={{
             background: '#f5f3ff', color: '#6366f1',
             padding: '8px 18px', borderRadius: 999, fontSize: 13, fontWeight: 600,
             textDecoration: 'none', transition: 'all 0.2s', border: '1px solid #e0e7ff'
           }}
             onMouseEnter={e => { e.currentTarget.style.background = '#ede9fe'; }}
             onMouseLeave={e => { e.currentTarget.style.background = '#f5f3ff'; }}
-          >Xem phòng</a>
+          >Xem phòng</Link>
           <a href="#faq" style={{
             background: 'transparent', color: '#6b7280',
             padding: '8px 18px', borderRadius: 999, fontSize: 13, fontWeight: 600,
@@ -142,10 +142,10 @@ function Navbar({ name, phone, logo_image }) {
               }}>{l.label}</a>
             ))}
             <div style={{ paddingTop: 12, display: 'flex', gap: 8 }}>
-              <a href="#rooms" onClick={() => setMobileOpen(false)} style={{
+              <Link to="/danh-sach-phong" onClick={() => setMobileOpen(false)} style={{
                 flex: 1, textAlign: 'center', background: '#f5f3ff', color: '#6366f1',
                 padding: '10px', borderRadius: 999, fontWeight: 600, textDecoration: 'none', border: '1px solid #e0e7ff'
-              }}>Xem phòng</a>
+              }}>Xem phòng</Link>
               <a href="#faq" onClick={() => setMobileOpen(false)} style={{
                 flex: 1, textAlign: 'center', background: '#f8fafc', color: '#475569',
                 padding: '10px', borderRadius: 999, fontWeight: 600, textDecoration: 'none'
@@ -224,7 +224,7 @@ function HeroSection({ settings, availableCount }) {
 
           {/* Buttons */}
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
-            <a href="#rooms" style={{
+            <Link to="/danh-sach-phong" style={{
               background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: '#fff',
               padding: '14px 32px', borderRadius: 999, fontSize: 15, fontWeight: 700,
               textDecoration: 'none', boxShadow: '0 4px 14px rgba(99, 102, 241, 0.35)',
@@ -232,7 +232,7 @@ function HeroSection({ settings, availableCount }) {
             }}
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(99, 102, 241, 0.45)'; }}
               onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 14px rgba(99, 102, 241, 0.35)'; }}
-            >Xem phòng ngay →</a>
+            >Xem phòng ngay →</Link>
             {settings.phone && (
               <a href={`tel:${settings.phone}`} style={{
                 background: '#fff', color: '#374151',
@@ -811,7 +811,7 @@ function CTASection({ nhaName, phone, owner }) {
               Đừng ngần ngại liên hệ hoặc đến xem trực tiếp tại {nhaName}. Chúng tôi luôn sẵn sàng hỗ trợ bạn.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <a href="#rooms" style={{
+              <Link to="/danh-sach-phong" style={{
                 background: '#fff', color: '#4338ca',
                 padding: '13px 28px', borderRadius: 999, fontSize: 15, fontWeight: 700,
                 textDecoration: 'none', boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
@@ -819,7 +819,7 @@ function CTASection({ nhaName, phone, owner }) {
               }}
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = ''; }}
-              >Xem phòng ngay →</a>
+              >Xem phòng ngay →</Link>
               {phone && (
                 <a href={`tel:${phone}`} style={{
                   border: '1.5px solid rgba(255,255,255,0.4)', color: '#fff',
@@ -990,11 +990,11 @@ function Footer({ settings }) {
           <div>
             <h4 style={{ margin: '0 0 16px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'hsla(30,15%,90%,0.6)' }}>Điều hướng</h4>
             <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {[['#about', 'Giới thiệu'], ['#rooms', 'Danh sách phòng'], ['#features', 'Tính năng']].map(([href, label]) => (
-                <li key={href}><a href={href} style={{ fontSize: 13, color: 'hsla(30,15%,90%,0.55)', textDecoration: 'none', transition: 'color 0.2s' }}
+              {[['#about', 'Giới thiệu'], ['/danh-sach-phong', 'Danh sách phòng'], ['#features', 'Tính năng']].map(([href, label]) => (
+                <li key={href}><Link to={href} style={{ fontSize: 13, color: 'hsla(30,15%,90%,0.55)', textDecoration: 'none', transition: 'color 0.2s' }}
                   onMouseEnter={e => e.target.style.color = '#fff'}
                   onMouseLeave={e => e.target.style.color = 'hsla(30,15%,90%,0.55)'}
-                >{label}</a></li>
+                >{label}</Link></li>
               ))}
             </ul>
           </div>
@@ -1068,16 +1068,8 @@ const LandingPage = () => {
       <Navbar name={settings.nha_tro_name} phone={settings.phone} logo_image={settings.logo_image} />
       <HeroSection settings={settings} availableCount={availableCount} />
       <FeaturesSection />
-      <RoomsSection rooms={rooms} loading={loading} onRoomClick={setSelectedRoom} />
-      
-      {/* Quảng Cáo hiển thị bên dưới danh sách phòng */}
-      <section style={{ background: '#fff' }} className="section-padding">
-        <div className="container-tight">
-          <AdsBanner layout="banner" />
-        </div>
-      </section>
 
-      <LocationSection address={settings.address} buildings_info={settings.buildings_info} />
+      {/* Rooms and Location sections have been moved to RoomsPage */}
 
       <FAQSection />
 
