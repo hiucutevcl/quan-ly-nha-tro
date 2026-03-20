@@ -37,6 +37,7 @@ const SettingsPage = () => {
     const [settings, setSettings] = useState(defaultSettings);
     const [saved, setSaved] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [pwdData, setPwdData] = useState({ old_password: '', new_password: '', confirm_password: '' });
     const navigate = useNavigate();
 
     const axiosAuth = axios.create({
@@ -80,6 +81,20 @@ const SettingsPage = () => {
             setTimeout(() => setSaved(false), 2500);
         } catch (error) {
             alert('Lỗi khi lưu cài đặt: ' + (error.response?.data?.message || error.message));
+        }
+    };
+
+    const handleChangePassword = async (e) => {
+        e.preventDefault();
+        if (pwdData.new_password !== pwdData.confirm_password) {
+            return alert('Mật khẩu mới không khớp!');
+        }
+        try {
+            const res = await axiosAuth.put('/auth/change-password', pwdData);
+            alert(res.data.message);
+            setPwdData({ old_password: '', new_password: '', confirm_password: '' });
+        } catch (error) {
+            alert('Lỗi: ' + (error.response?.data?.message || error.message));
         }
     };
 
@@ -462,6 +477,28 @@ const SettingsPage = () => {
                         ✅ Đã lưu cài đặt thành công!
                     </div>
                 )}
+            </form>
+
+            {/* Đổi mật khẩu Admin */}
+            <form onSubmit={handleChangePassword} className="mt-8 bg-white p-6 rounded-xl shadow border-t-4 border-slate-700">
+                <h2 className="text-lg font-bold text-gray-700 mb-4">🔐 Đổi Mật Khẩu Đăng Nhập</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label className="block text-sm font-bold text-gray-600 mb-1">Mật khẩu cũ</label>
+                        <input type="password" value={pwdData.old_password} onChange={(e) => setPwdData({...pwdData, old_password: e.target.value})} className="w-full border rounded p-2 focus:ring-2 focus:ring-slate-400" required />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-600 mb-1">Mật khẩu mới</label>
+                        <input type="password" value={pwdData.new_password} onChange={(e) => setPwdData({...pwdData, new_password: e.target.value})} className="w-full border rounded p-2 focus:ring-2 focus:ring-slate-400" minLength={4} required />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-600 mb-1">Xác nhận mật khẩu mới</label>
+                        <input type="password" value={pwdData.confirm_password} onChange={(e) => setPwdData({...pwdData, confirm_password: e.target.value})} className="w-full border rounded p-2 focus:ring-2 focus:ring-slate-400" minLength={4} required />
+                    </div>
+                </div>
+                <button type="submit" className="mt-4 bg-slate-700 hover:bg-slate-800 text-white font-bold py-2 px-6 rounded-xl shadow transition">
+                    Cập nhật mật khẩu
+                </button>
             </form>
         </div>
     );

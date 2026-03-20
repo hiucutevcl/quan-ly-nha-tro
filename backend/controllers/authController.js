@@ -155,4 +155,32 @@ const getMe = async (req, res) => {
     }
 };
 
-module.exports = { register, login, getAllUsers, deleteUser, updateUser, resetPassword, getMe };
+// API: Đổi mật khẩu cá nhân
+const changePassword = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { old_password, new_password } = req.body;
+
+        if (!old_password || !new_password || new_password.length < 4) {
+            return res.status(400).json({ message: 'Vui lòng nhập đầy đủ và mật khẩu mới phải từ 4 ký tự trở lên!' });
+        }
+
+        const [users] = await db.query('SELECT password FROM Users WHERE id = ?', [userId]);
+        if (users.length === 0) return res.status(404).json({ message: 'Không tìm thấy người dùng!' });
+        
+        const validPassword = await bcrypt.compare(old_password, users[0].password);
+        if (!validPassword) {
+            return res.status(400).json({ message: 'Mật khẩu cũ không chính xác!' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(new_password, salt);
+        await db.query('UPDATE Users SET password = ? WHERE id = ?', [hashedPassword, userId]);
+
+        res.status(200).json({ message: 'Đổi mật khẩu thành công!' });
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi server: ' + error.message });
+    }
+};
+
+module.exports = { register, login, getAllUsers, deleteUser, updateUser, resetPassword, getMe, changePassword };
