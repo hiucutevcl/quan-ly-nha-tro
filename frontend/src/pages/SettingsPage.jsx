@@ -38,6 +38,7 @@ const SettingsPage = () => {
     const [saved, setSaved] = useState(false);
     const [loading, setLoading] = useState(true);
     const [pwdData, setPwdData] = useState({ old_password: '', new_password: '', confirm_password: '' });
+    const [activeTab, setActiveTab] = useState('general');
     const navigate = useNavigate();
 
     const axiosAuth = axios.create({
@@ -98,12 +99,40 @@ const SettingsPage = () => {
         }
     };
 
-    return (
-        <div className="max-w-3xl mx-auto pb-10">
-            <h1 className="text-2xl font-black text-gray-800 mb-6 uppercase text-center mt-6">⚙️ Cài Đặt Nhà Trọ</h1>
+    const SaveBtn = () => (
+        <div className="mt-8">
+            <button type="button" onClick={handleSave} className="w-full bg-indigo-700 hover:bg-blue-800 text-white font-black py-4 rounded-xl shadow-lg transition text-lg">
+                💾 LƯU CÀI ĐẠT
+            </button>
+            {saved && (
+                <div className="text-center mt-3 text-emerald-700 font-bold bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+                    ✅ Đã lưu cài đặt thành công!
+                </div>
+            )}
+        </div>
+    );
 
-            <form onSubmit={handleSave} className="space-y-6">
-                {/* Thông tin cơ bản */}
+    return (
+        <div className="max-w-6xl mx-auto pb-10 px-4">
+            <h1 className="text-3xl font-black text-gray-800 mb-8 uppercase mt-6">⚙️ Cài Đặt Hệ Thống</h1>
+
+            <div className="flex flex-col md:flex-row gap-8 items-start">
+                <div className="w-full md:w-72 shrink-0 md:sticky top-20">
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 flex flex-col gap-2">
+                        <button onClick={() => setActiveTab('general')} className={`text-left px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'general' ? 'bg-indigo-600 text-white shadow-md transform scale-[1.02]' : 'text-gray-600 hover:bg-indigo-50'}`}>🏠 Thông tin chung</button>
+                        <button onClick={() => setActiveTab('buildings')} className={`text-left px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'buildings' ? 'bg-teal-600 text-white shadow-md transform scale-[1.02]' : 'text-gray-600 hover:bg-teal-50'}`}>🏢 Quản lý Cơ sở</button>
+                        <button onClick={() => setActiveTab('chatbot')} className={`text-left px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'chatbot' ? 'bg-indigo-500 text-white shadow-md transform scale-[1.02]' : 'text-gray-600 hover:bg-indigo-50'}`}>🤖 Nút Chatbot</button>
+                        <button onClick={() => setActiveTab('ads')} className={`text-left px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'ads' ? 'bg-rose-600 text-white shadow-md transform scale-[1.02]' : 'text-gray-600 hover:bg-rose-50'}`}>📢 Banner Quảng Cáo</button>
+                        <button onClick={() => setActiveTab('security')} className={`text-left px-4 py-3 rounded-xl font-bold transition-all border-t border-gray-100 mt-2 ${activeTab === 'security' ? 'bg-slate-700 text-white shadow-md transform scale-[1.02]' : 'text-gray-600 hover:bg-slate-50'}`}>🔐 Đổi Mật Khẩu</button>
+                    </div>
+                </div>
+
+                <div className="flex-1 w-full min-w-0">
+                    <form className="space-y-6">
+                        
+                        {activeTab === 'general' && (
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                                {/* Thông tin cơ bản */}
                 <div className="bg-white p-6 rounded-xl shadow border-t-4 border-indigo-500">
                     <h2 className="text-lg font-bold text-gray-700 mb-4">Thông tin nhà trọ</h2>
                     <div className="grid grid-cols-1 gap-4">
@@ -228,7 +257,12 @@ const SettingsPage = () => {
                         value={settings.note} onChange={handleChange}
                         placeholder="Nhập nội quy, thông báo hiển thị trên cộng đồng..." />
                 </div>
+                <SaveBtn />
+                </div>
+                )}
 
+                {activeTab === 'buildings' && (
+                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
                 {/* --- QUẢN LÝ CƠ SỞ / CHI NHÁNH --- */}
                 <div className="bg-white p-6 rounded-xl shadow border-t-4 border-teal-500">
                     <h2 className="text-lg font-bold text-indigo-700 mb-4">🏢 Quản lý Các Cơ Sở (Chi nhánh) & Bản đồ</h2>
@@ -297,7 +331,12 @@ const SettingsPage = () => {
                         );
                     })()}
                 </div>
+                <SaveBtn />
+                </div>
+                )}
 
+                {activeTab === 'chatbot' && (
+                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
                 {/* --- QUẢN LÝ NÚT CHATBOT ĐỘNG (CUSTOM QUICK REPLIES) --- */}
                 <div className="bg-white p-6 rounded-xl shadow border-t-4 border-indigo-500">
                     <h2 className="text-lg font-bold text-gray-700 mb-4">🤖 Quản lý Nút Hỏi Nhanh (Chatbot Quick Replies)</h2>
@@ -366,7 +405,12 @@ const SettingsPage = () => {
                         );
                     })()}
                 </div>
+                <SaveBtn />
+                </div>
+                )}
 
+                {activeTab === 'ads' && (
+                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
                 {/* --- QUẢN LÝ QUẢNG CÁO ĐỘNG (ADS BANNER) --- */}
                 <div className="bg-white p-6 rounded-xl shadow border-t-4 border-rose-500">
                     <h2 className="text-lg font-bold text-gray-700 mb-4">📢 Quản lý Cấu hình Quảng Cáo (Ads Banner)</h2>
@@ -467,17 +511,14 @@ const SettingsPage = () => {
                         );
                     })()}
                 </div>
-
-                <button type="submit" className="w-full bg-indigo-700 hover:bg-blue-800 text-white font-black py-3 rounded-xl shadow-lg transition text-lg mt-6">
-                    💾 LƯU CÀI ĐẶT
-                </button>
-
-                {saved && (
-                    <div className="text-center text-emerald-700 font-bold bg-emerald-50 p-3 rounded-xl border border-emerald-200">
-                        ✅ Đã lưu cài đặt thành công!
-                    </div>
+                <SaveBtn />
+                </div>
                 )}
+
             </form>
+
+            {activeTab === 'security' && (
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
 
             {/* Đổi mật khẩu Admin */}
             <form onSubmit={handleChangePassword} className="mt-8 bg-white p-6 rounded-xl shadow border-t-4 border-slate-700">
@@ -500,6 +541,11 @@ const SettingsPage = () => {
                     Cập nhật mật khẩu
                 </button>
             </form>
+            </div>
+            )}
+
+            </div>
+            </div>
         </div>
     );
 };
