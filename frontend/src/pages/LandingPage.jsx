@@ -31,7 +31,7 @@ function Navbar({ name, phone, logo_image }) {
   }, []);
 
   const links = [
-    { label: 'Giới thiệu', href: '#about' },
+    { label: 'Giới thiệu', href: '/gioi-thieu' },
     { label: 'Danh sách phòng', href: '/danh-sach-phong' },
     { label: 'Tin tức & Lưu trú', href: '/tin-tuc-quy-dinh' },
     { label: 'Tiện ích', href: '#features' },
@@ -990,7 +990,7 @@ function Footer({ settings }) {
           <div>
             <h4 style={{ margin: '0 0 16px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'hsla(30,15%,90%,0.6)' }}>Điều hướng</h4>
             <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {[['#about', 'Giới thiệu'], ['/danh-sach-phong', 'Danh sách phòng'], ['#features', 'Tính năng']].map(([href, label]) => (
+              {[['/gioi-thieu', 'Giới thiệu'], ['/danh-sach-phong', 'Danh sách phòng'], ['#features', 'Tính năng']].map(([href, label]) => (
                 <li key={href}><Link to={href} style={{ fontSize: 13, color: 'hsla(30,15%,90%,0.55)', textDecoration: 'none', transition: 'color 0.2s' }}
                   onMouseEnter={e => e.target.style.color = '#fff'}
                   onMouseLeave={e => e.target.style.color = 'hsla(30,15%,90%,0.55)'}

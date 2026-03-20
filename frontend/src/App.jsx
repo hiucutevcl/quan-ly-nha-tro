@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 import Login from './pages/Login'
 import LandingPage from './pages/LandingPage'
+import AboutPage from './pages/AboutPage'
 import RoomsPage from './pages/RoomsPage'
 import NewsPage from './pages/NewsPage'
 import ArticleDetail from './pages/ArticleDetail'
@@ -16,6 +17,9 @@ function App() {
         {/* Trang chủ - Landing Page */}
         <Route path="/" element={<LandingPage />} />
         
+        {/* Trang Giới Thiệu */}
+        <Route path="/gioi-thieu" element={<AboutPage />} />
+
         {/* Trang Danh sách Phòng */}
         <Route path="/danh-sach-phong" element={<RoomsPage />} />
         
