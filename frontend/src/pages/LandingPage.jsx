@@ -1067,6 +1067,13 @@ const LandingPage = () => {
     <div style={{ fontFamily: "'Inter', sans-serif", minHeight: '100vh' }}>
       <Navbar name={settings.nha_tro_name} phone={settings.phone} logo_image={settings.logo_image} />
       <HeroSection settings={settings} availableCount={availableCount} />
+
+      <section style={{ background: '#f8fafc', paddingTop: '3.5rem', paddingBottom: '0.5rem' }}>
+        <div className="container-tight">
+          <AdsBanner layout="banner" />
+        </div>
+      </section>
+
       <FeaturesSection />
 
       {/* Rooms and Location sections have been moved to RoomsPage */}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
 const Login = () => {
@@ -40,8 +40,23 @@ const Login = () => {
     return (
         <div style={{
             minHeight: '100vh', display: 'flex',
-            background: '#f1f5f9', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif"
+            background: '#f1f5f9', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+            position: 'relative'
         }}>
+            {/* Back Home Button Floating */}
+            <Link to="/" style={{
+                position: 'absolute', top: 24, right: 24, zIndex: 10,
+                display: 'flex', alignItems: 'center', gap: 6,
+                padding: '8px 16px', borderRadius: 999, background: 'white',
+                color: '#475569', fontSize: 13, fontWeight: 700, textDecoration: 'none',
+                boxShadow: '0 2px 10px rgba(15,23,42,0.06)', border: '1px solid #e2e8f0', transition: 'all 0.2s'
+            }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#0f172a'; e.currentTarget.style.borderColor = '#cbd5e1'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#475569'; e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.transform = ''; }}
+            >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Về Trang chủ
+            </Link>
             {/* Left Panel - Branding */}
             <div style={{
                 flex: 1, display: 'none',
