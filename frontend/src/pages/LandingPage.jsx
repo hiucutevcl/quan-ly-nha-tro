@@ -88,21 +88,21 @@ function Navbar({ name, phone, logo_image }) {
             </a>
           )}
           <a href="#faq" style={{
-            background: 'hsl(215,100%,96%)', color: 'hsl(215,100%,45%)',
-            padding: '8px 20px', borderRadius: 10, fontSize: 13, fontWeight: 700,
-            textDecoration: 'none', transition: 'all 0.2s'
+            background: '#f1f5f9', color: '#374151',
+            padding: '8px 20px', borderRadius: 999, fontSize: 13, fontWeight: 600,
+            textDecoration: 'none', transition: 'all 0.2s', border: '1px solid #e2e8f0'
           }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'hsl(215,100%,92%)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'hsl(215,100%,96%)'; }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#e2e8f0'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#f1f5f9'; }}
           >Đăng ký</a>
           <Link to="/login" style={{
-            background: 'var(--gradient-primary)', color: '#fff',
-            padding: '8px 20px', borderRadius: 10, fontSize: 13, fontWeight: 700,
-            textDecoration: 'none', boxShadow: '0 4px 12px hsla(24,80%,55%,0.3)',
+            background: '#2563eb', color: '#fff',
+            padding: '8px 20px', borderRadius: 999, fontSize: 13, fontWeight: 600,
+            textDecoration: 'none', boxShadow: '0 2px 8px rgba(37, 99, 235, 0.25)',
             transition: 'all 0.2s'
           }}
-            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 6px 18px hsla(24,80%,55%,0.4)'; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 12px hsla(24,80%,55%,0.3)'; }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(37, 99, 235, 0.35)'; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 8px rgba(37, 99, 235, 0.25)'; }}
           >Đăng nhập</Link>
         </div>
 
@@ -128,12 +128,12 @@ function Navbar({ name, phone, logo_image }) {
             ))}
             <div style={{ paddingTop: 12, display: 'flex', gap: 8 }}>
               <a href="#faq" onClick={() => setMobileOpen(false)} style={{
-                flex: 1, textAlign: 'center', background: 'hsl(215,100%,96%)', color: 'hsl(215,100%,45%)',
-                padding: '10px', borderRadius: 10, fontWeight: 700, textDecoration: 'none'
+                flex: 1, textAlign: 'center', background: '#f1f5f9', color: '#374151',
+                padding: '10px', borderRadius: 999, fontWeight: 600, textDecoration: 'none', border: '1px solid #e2e8f0'
               }}>Đăng ký</a>
               <Link to="/login" style={{
-                flex: 1, textAlign: 'center', background: 'var(--gradient-primary)', color: '#fff',
-                padding: '10px', borderRadius: 10, fontWeight: 700, textDecoration: 'none'
+                flex: 1, textAlign: 'center', background: '#2563eb', color: '#fff',
+                padding: '10px', borderRadius: 999, fontWeight: 600, textDecoration: 'none'
               }}>Đăng nhập</Link>
             </div>
           </nav>
@@ -319,20 +319,32 @@ function HeroSection({ settings, availableCount }) {
 /** Features Section */
 function FeaturesSection() {
   const features = [
-    { icon: '🛡️', title: 'An toàn tuyệt đối', desc: 'Camera giám sát, cửa từ vân tay, bảo vệ toàn thời gian.' },
-    { icon: '👁️', title: 'Minh bạch 100%', desc: 'Giá niêm yết rõ ràng, hóa đơn điện tử, không phí ẩn.' },
-    { icon: '⚡', title: 'Quản lý tự động', desc: 'Hệ thống điện nước tự động, thông báo kịp thời.' },
-    { icon: '🎧', title: 'Hỗ trợ 24/7', desc: 'Đội ngũ quản lý luôn sẵn sàng giải quyết mọi vấn đề.' },
+    { 
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>,
+      title: 'An toàn tuyệt đối', desc: 'Camera giám sát, cửa từ vân tay, bảo vệ toàn thời gian.' 
+    },
+    { 
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>,
+      title: 'Minh bạch 100%', desc: 'Giá niêm yết rõ ràng, hóa đơn điện tử, không phí ẩn.' 
+    },
+    { 
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>,
+      title: 'Quản lý tự động', desc: 'Hệ thống điện nước tự động, thông báo kịp thời.' 
+    },
+    { 
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>,
+      title: 'Hỗ trợ 24/7', desc: 'Đội ngũ quản lý luôn sẵn sàng giải quyết mọi vấn đề.' 
+    },
   ];
 
   return (
-    <section id="features" style={{ background: 'hsl(30,15%,96%)' }} className="section-padding">
+    <section id="features" style={{ background: '#f8fafc' }} className="section-padding">
       <div className="container-tight">
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <p style={{ fontSize: 12, fontWeight: 700, color: 'hsl(215,100%,35%)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+          <p style={{ fontSize: 12, fontWeight: 700, color: '#2563eb', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
             TẠI SAO CHỌN CHÚNG TÔI
           </p>
-          <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.5rem)', fontWeight: 800, margin: '0 0 12px', letterSpacing: '-0.02em' }}>
+          <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.5rem)', fontWeight: 800, margin: '0 0 12px', letterSpacing: '-0.02em', color: '#0f172a' }}>
             Trải nghiệm thuê phòng{' '}
             <span className="gradient-text">vượt trội</span>
           </h2>
@@ -340,16 +352,23 @@ function FeaturesSection() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem' }}>
           {features.map((f, i) => (
-            <div key={f.title} className="glass-card-hover animate-fade-up"
-              style={{ padding: '2rem 1.5rem', textAlign: 'center', animationDelay: `${i * 0.1}s` }}>
+            <div key={f.title} style={{
+              padding: '2rem 1.75rem', background: '#fff', borderRadius: 20,
+              border: '1px solid #e2e8f0',
+              boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+              transition: 'all 0.3s ease'
+            }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)'; e.currentTarget.style.borderColor = '#dbeafe'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; e.currentTarget.style.borderColor = '#e2e8f0'; }}
+            >
               <div style={{
-                width: 56, height: 56, borderRadius: 16,
-                background: 'hsla(24,80%,55%,0.1)',
+                width: 48, height: 48, borderRadius: 14,
+                background: '#eff6ff', color: '#2563eb',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 24, margin: '0 auto 1rem'
+                marginBottom: '1.25rem'
               }}>{f.icon}</div>
-              <h3 style={{ fontSize: 15, fontWeight: 700, margin: '0 0 8px', color: 'hsl(220,20%,10%)' }}>{f.title}</h3>
-              <p style={{ fontSize: 13, color: 'hsl(220,10%,50%)', lineHeight: 1.65, margin: 0 }}>{f.desc}</p>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 8px', color: '#0f172a' }}>{f.title}</h3>
+              <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.65, margin: 0 }}>{f.desc}</p>
             </div>
           ))}
         </div>
@@ -576,11 +595,14 @@ function RulesSection({ note }) {
   return (
     <section className="section-padding" style={{ background: '#fff' }}>
       <div className="container-tight">
-        <div style={{ background: 'hsl(30,15%,98%)', padding: 'clamp(2rem, 5vw, 3rem)', borderRadius: 24, border: '1px solid hsl(30,15%,92%)' }}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 28 }}>📋</span> Nội quy nhà trọ
-          </h2>
-          <div style={{ fontSize: 15, color: 'hsl(220,15%,35%)', lineHeight: 1.8, whiteSpace: 'pre-line' }}>
+        <div style={{ maxWidth: 760, margin: '0 auto', padding: 'clamp(2rem, 5vw, 3rem)', borderRadius: 20, border: '1px solid #e2e8f0', background: '#f8fafc' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: '1.5rem' }}>
+            <div style={{ width: 40, height: 40, borderRadius: 12, background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2563eb', flexShrink: 0 }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <h2 style={{ fontSize: 20, fontWeight: 800, margin: 0, color: '#0f172a', letterSpacing: '-0.02em' }}>Nội quy nhà trọ</h2>
+          </div>
+          <div style={{ fontSize: 15, color: '#374151', lineHeight: 1.8, whiteSpace: 'pre-line' }}>
             {note}
           </div>
         </div>
@@ -723,6 +745,7 @@ function LocationSection({ address, buildings_info }) {
 
 /** FAQ Section */
 function FAQSection() {
+  const [openIdx, setOpenIdx] = React.useState(null);
   const faqs = [
     {
       q: 'Làm thế nào để đăng ký tài khoản trên hệ thống?',
@@ -742,23 +765,36 @@ function FAQSection() {
     <section id="faq" className="section-padding" style={{ background: '#fff' }}>
       <div className="container-tight">
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <p style={{ fontSize: 12, fontWeight: 700, color: 'hsl(215,100%,35%)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+          <p style={{ fontSize: 12, fontWeight: 700, color: '#2563eb', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
             HỎI ĐÁP PHỔ BIẾN
           </p>
-          <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.5rem)', fontWeight: 800, margin: '0 0 12px', letterSpacing: '-0.02em' }}>
+          <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.5rem)', fontWeight: 800, margin: '0 0 12px', letterSpacing: '-0.02em', color: '#0f172a' }}>
             Thông tin <span className="gradient-text">hữu ích</span>
           </h2>
         </div>
 
-        <div style={{ maxWidth: 800, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {faqs.map((faq, idx) => (
-            <div key={idx} style={{ padding: '1.5rem', border: '1px solid hsl(210,16%,92%)', borderRadius: '16px', background: 'hsl(210,20%,98%)' }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: 'hsl(220,20%,10%)', marginBottom: '0.5rem', display: 'flex', gap: 12 }}>
-                <span style={{ color: 'hsl(215,100%,45%)' }}>{idx + 1}.</span> {faq.q}
-              </h3>
-              <p style={{ margin: 0, fontSize: 14, color: 'hsl(220,10%,46%)', lineHeight: 1.6, paddingLeft: '1.5rem' }}>
-                {faq.a}
-              </p>
+            <div key={idx}
+              onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
+              style={{
+                padding: '1.25rem 1.5rem', border: '1.5px solid', borderRadius: 16,
+                cursor: 'pointer', transition: 'all 0.2s',
+                borderColor: openIdx === idx ? '#dbeafe' : '#e2e8f0',
+                background: openIdx === idx ? '#f8fafc' : '#fff'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
+                <h3 style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', margin: 0, lineHeight: 1.4 }}>
+                  {faq.q}
+                </h3>
+                <span style={{ color: '#2563eb', fontSize: 18, transition: 'transform 0.2s', transform: openIdx === idx ? 'rotate(45deg)' : 'rotate(0deg)', flexShrink: 0 }}>+</span>
+              </div>
+              {openIdx === idx && (
+                <p style={{ margin: '12px 0 0', fontSize: 14, color: '#475569', lineHeight: 1.75 }}>
+                  {faq.a}
+                </p>
+              )}
             </div>
           ))}
         </div>
@@ -770,24 +806,27 @@ function FAQSection() {
 /** CTA Section */
 function CTASection({ nhaName, phone, owner }) {
   return (
-    <section className="section-padding" style={{ background: 'hsl(30,15%,96%)' }}>
+    <section className="section-padding" style={{ background: '#f8fafc' }}>
       <div className="container-tight">
         <div style={{
-          position: 'relative', borderRadius: 28, overflow: 'hidden',
+          position: 'relative', borderRadius: 24, overflow: 'hidden',
           padding: 'clamp(2.5rem,6vw,4rem)',
-          background: 'var(--gradient-cta)', textAlign: 'center'
+          background: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #2563eb 100%)',
+          textAlign: 'center'
         }}>
+          {/* Subtle decoration */}
+          <div style={{ position: 'absolute', top: '-50%', right: '-10%', width: '50%', height: '200%', background: 'radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
           <div style={{ position: 'relative', maxWidth: 560, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
-            <h2 style={{ fontSize: 'clamp(1.6rem,4vw,2.5rem)', fontWeight: 800, color: '#fff', margin: 0, lineHeight: 1.2 }}>
+            <h2 style={{ fontSize: 'clamp(1.6rem,4vw,2.4rem)', fontWeight: 800, color: '#fff', margin: 0, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
               Sẵn sàng trở thành cư dân tiếp theo?
             </h2>
-            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.82)', margin: 0, lineHeight: 1.65 }}>
+            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: 1.65 }}>
               Đừng ngần ngại liên hệ hoặc đến xem trực tiếp tại {nhaName}. Chúng tôi luôn sẵn sàng hỗ trợ bạn.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               <a href="#rooms" style={{
-                background: '#fff', color: 'hsl(215,100%,35%)',
-                padding: '12px 28px', borderRadius: 12, fontSize: 15, fontWeight: 700,
+                background: '#fff', color: '#1d4ed8',
+                padding: '13px 28px', borderRadius: 999, fontSize: 15, fontWeight: 700,
                 textDecoration: 'none', boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
                 transition: 'all 0.25s', display: 'inline-flex', alignItems: 'center', gap: 8
               }}
@@ -796,13 +835,16 @@ function CTASection({ nhaName, phone, owner }) {
               >Xem phòng ngay →</a>
               {phone && (
                 <a href={`tel:${phone}`} style={{
-                  border: '2px solid rgba(255,255,255,0.5)', color: '#fff',
-                  padding: '12px 28px', borderRadius: 12, fontSize: 15, fontWeight: 600,
+                  border: '1.5px solid rgba(255,255,255,0.4)', color: '#fff',
+                  padding: '13px 28px', borderRadius: 999, fontSize: 15, fontWeight: 600,
                   textDecoration: 'none', transition: 'all 0.25s', display: 'inline-flex', alignItems: 'center', gap: 8
                 }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; }}
                   onMouseLeave={e => { e.currentTarget.style.background = ''; }}
-                >📞 Gọi {owner || 'tư vấn'}</a>
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  Gọi {owner || 'tư vấn'}
+                </a>
               )}
             </div>
           </div>
