@@ -7,22 +7,23 @@
   --foreground: 220 20% 10%;
   --card: 0 0% 100%;
   --card-foreground: 220 20% 10%;
-  --primary: 215 100% 45%;
+  /* ── Primary: Violet / Indigo ── */
+  --primary: 239 84% 67%;              /* #6366f1 indigo */
   --primary-foreground: 0 0% 100%;
-  --secondary: 210 20% 98%;
-  --secondary-foreground: 220 20% 10%;
-  --muted: 210 16% 96%;
-  --muted-foreground: 220 10% 46%;
-  --accent: 215 100% 45%;
+  --secondary: 240 20% 98%;            /* near-white with violet tint */
+  --secondary-foreground: 240 10% 10%;
+  --muted: 240 12% 96%;
+  --muted-foreground: 240 8% 50%;
+  --accent: 270 76% 61%;               /* #8b5cf6 violet */
   --accent-foreground: 0 0% 100%;
-  --border: 210 16% 92%;
-  --success: 152 60% 45%;
+  --border: 240 10% 90%;
+  --success: 142 71% 45%;
   --success-foreground: 0 0% 100%;
   --radius: 0.5rem;
 
-  --gradient-primary: #2563eb;
-  --gradient-hero: linear-gradient(145deg, #f8fafc 0%, #ffffff 100%);
-  --gradient-cta: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --gradient-hero: linear-gradient(145deg, #f8f7ff 0%, #ffffff 100%);
+  --gradient-cta: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #4338ca 100%);
   --gradient-glass: rgba(255,255,255,0.95);
 
   --shadow-sm: 0 1px 2px 0 hsla(220, 20%, 10%, 0.04);
@@ -85,9 +86,9 @@ body {
   border-bottom: 1px solid hsla(30, 15%, 90%, 0.5);
 }
 
-/* Gradient text */
+/* Gradient text - violet */
 .gradient-text {
-  background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;

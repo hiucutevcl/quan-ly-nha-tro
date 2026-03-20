@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -24,7 +24,7 @@ const Login = () => {
             if (decoded.role === 'Admin') navigate('/admin-dashboard');
             else navigate('/my-invoices');
         } catch (error) {
-            setErrorMsg(error.response?.data?.message || 'Không thể kết nối đến máy chủ. Vui lòng thử lại!');
+            setErrorMsg(error.response?.data?.message || 'KhÃ´ng thá»ƒ káº¿t ná»‘i Ä‘áº¿n mÃ¡y chá»§. Vui lÃ²ng thá»­ láº¡i!');
         } finally {
             setIsLoading(false);
         }
@@ -38,14 +38,14 @@ const Login = () => {
             {/* Left Panel - Branding */}
             <div style={{
                 flex: 1, display: 'none',
-                background: 'linear-gradient(145deg, #0f172a 0%, #1e3a5f 60%, #1d4ed8 100%)',
+                background: 'linear-gradient(145deg, #0f0f1a 0%, #1e1b4b 60%, #4338ca 100%)',
                 padding: '3rem', flexDirection: 'column', justifyContent: 'space-between',
                 position: 'relative', overflow: 'hidden'
             }} className="login-left-panel">
                 {/* Decorative circles */}
                 <div style={{
                     position: 'absolute', top: '-80px', right: '-80px', width: '320px', height: '320px',
-                    borderRadius: '50%', background: 'rgba(59, 130, 246, 0.12)', pointerEvents: 'none'
+                    borderRadius: '50%', background: 'rgba(139, 92, 246, 0.15)', pointerEvents: 'none'
                 }} />
                 <div style={{
                     position: 'absolute', bottom: '-40px', left: '-60px', width: '220px', height: '220px',
@@ -56,7 +56,7 @@ const Login = () => {
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: '3rem' }}>
                         <div style={{
-                            width: 44, height: 44, background: '#2563eb', borderRadius: 12,
+                            width: 44, height: 44, background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', borderRadius: 12,
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                         }}>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -64,20 +64,20 @@ const Login = () => {
                                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
                             </svg>
                         </div>
-                        <span style={{ color: 'white', fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em' }}>Nhà Trọ Minh Hiếu</span>
+                        <span style={{ color: 'white', fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em' }}>NhÃ  Trá» Minh Hiáº¿u</span>
                     </div>
 
                     <h1 style={{ color: 'white', fontSize: 38, fontWeight: 800, lineHeight: 1.15, letterSpacing: '-0.03em', marginBottom: 16 }}>
-                        Quản lý nhà trọ<br />chưa bao giờ dễ đến vậy.
+                        Quáº£n lÃ½ nhÃ  trá»<br />chÆ°a bao giá» dá»… Ä‘áº¿n váº­y.
                     </h1>
                     <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 16, lineHeight: 1.6, maxWidth: 340 }}>
-                        Hệ thống quản lý phòng trọ tích hợp đầy đủ: hóa đơn, chỉ số điện nước, hợp đồng và báo cáo.
+                        Há»‡ thá»‘ng quáº£n lÃ½ phÃ²ng trá» tÃ­ch há»£p Ä‘áº§y Ä‘á»§: hÃ³a Ä‘Æ¡n, chá»‰ sá»‘ Ä‘iá»‡n nÆ°á»›c, há»£p Ä‘á»“ng vÃ  bÃ¡o cÃ¡o.
                     </p>
                 </div>
 
                 {/* Stats */}
                 <div style={{ display: 'flex', gap: '2rem' }}>
-                    {[{ v: '100+', l: 'Phòng trọ' }, { v: '24/7', l: 'Hỗ trợ' }, { v: '3+', l: 'Cơ sở' }].map(s => (
+                    {[{ v: '100+', l: 'PhÃ²ng trá»' }, { v: '24/7', l: 'Há»— trá»£' }, { v: '3+', l: 'CÆ¡ sá»Ÿ' }].map(s => (
                         <div key={s.l}>
                             <div style={{ fontSize: 26, fontWeight: 800, color: 'white', letterSpacing: '-0.02em' }}>{s.v}</div>
                             <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>{s.l}</div>
@@ -97,7 +97,7 @@ const Login = () => {
                     {/* Mobile Logo */}
                     <div style={{ textAlign: 'center', marginBottom: '2.5rem' }} className="login-mobile-logo">
                         <div style={{
-                            width: 52, height: 52, background: '#2563eb', borderRadius: 14,
+                            width: 52, height: 52, background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', borderRadius: 14,
                             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16
                         }}>
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -105,8 +105,8 @@ const Login = () => {
                                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
                             </svg>
                         </div>
-                        <h2 style={{ fontSize: 20, fontWeight: 800, color: '#0f172a', margin: 0 }}>Nhà Trọ Minh Hiếu</h2>
-                        <p style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>Hệ thống quản lý phòng trọ</p>
+                        <h2 style={{ fontSize: 20, fontWeight: 800, color: '#0f172a', margin: 0 }}>NhÃ  Trá» Minh Hiáº¿u</h2>
+                        <p style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>Há»‡ thá»‘ng quáº£n lÃ½ phÃ²ng trá»</p>
                     </div>
 
                     {/* Card */}
@@ -116,8 +116,8 @@ const Login = () => {
                         border: '1px solid #e2e8f0'
                     }}>
                         <div style={{ marginBottom: '1.75rem' }}>
-                            <h3 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', margin: 0, letterSpacing: '-0.02em' }}>Đăng nhập</h3>
-                            <p style={{ fontSize: 14, color: '#64748b', marginTop: 6 }}>Chào mừng bạn quay lại!</p>
+                            <h3 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', margin: 0, letterSpacing: '-0.02em' }}>ÄÄƒng nháº­p</h3>
+                            <p style={{ fontSize: 14, color: '#64748b', marginTop: 6 }}>ChÃ o má»«ng báº¡n quay láº¡i!</p>
                         </div>
 
                         {errorMsg && (
@@ -135,11 +135,11 @@ const Login = () => {
                         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                             <div>
                                 <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 8 }}>
-                                    Tên đăng nhập
+                                    TÃªn Ä‘Äƒng nháº­p
                                 </label>
                                 <input
                                     type="text"
-                                    placeholder="Nhập tên đăng nhập hoặc số điện thoại"
+                                    placeholder="Nháº­p tÃªn Ä‘Äƒng nháº­p hoáº·c sá»‘ Ä‘iá»‡n thoáº¡i"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
                                     required
@@ -149,19 +149,19 @@ const Login = () => {
                                         color: '#0f172a', background: '#f8fafc', outline: 'none',
                                         transition: 'all 0.2s'
                                     }}
-                                    onFocus={e => { e.target.style.borderColor = '#2563eb'; e.target.style.background = '#fff'; }}
+                                    onFocus={e => { e.target.style.borderColor = '#6366f1'; e.target.style.background = '#fff'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
                                     onBlur={e => { e.target.style.borderColor = '#e2e8f0'; e.target.style.background = '#f8fafc'; }}
                                 />
                             </div>
 
                             <div>
                                 <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 8 }}>
-                                    Mật khẩu
+                                    Máº­t kháº©u
                                 </label>
                                 <div style={{ position: 'relative' }}>
                                     <input
                                         type={showPass ? 'text' : 'password'}
-                                        placeholder="Nhập mật khẩu của bạn"
+                                        placeholder="Nháº­p máº­t kháº©u cá»§a báº¡n"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
@@ -171,8 +171,8 @@ const Login = () => {
                                             color: '#0f172a', background: '#f8fafc', outline: 'none',
                                             transition: 'all 0.2s'
                                         }}
-                                        onFocus={e => { e.target.style.borderColor = '#2563eb'; e.target.style.background = '#fff'; }}
-                                        onBlur={e => { e.target.style.borderColor = '#e2e8f0'; e.target.style.background = '#f8fafc'; }}
+                                        onFocus={e => { e.target.style.borderColor = '#6366f1'; e.target.style.background = '#fff'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+                                        onBlur={e => { e.target.style.borderColor = '#e2e8f0'; e.target.style.background = '#f8fafc'; e.target.style.boxShadow = 'none'; }}
                                     />
                                     <button type="button"
                                         onClick={() => setShowPass(!showPass)}
@@ -194,29 +194,29 @@ const Login = () => {
                                 type="submit"
                                 disabled={isLoading}
                                 style={{
-                                    width: '100%', padding: '13px', borderRadius: 10,
-                                    background: isLoading ? '#93c5fd' : '#2563eb', color: 'white',
+                                    width: '100%', padding: '13px', borderRadius: 12,
+                                    background: isLoading ? '#c4b5fd' : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: 'white',
                                     fontWeight: 700, fontSize: 15, border: 'none', cursor: isLoading ? 'not-allowed' : 'pointer',
                                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                                     transition: 'all 0.2s', letterSpacing: '0.01em',
-                                    boxShadow: isLoading ? 'none' : '0 4px 12px rgba(37, 99, 235, 0.25)'
+                                    boxShadow: isLoading ? 'none' : '0 4px 14px rgba(99, 102, 241, 0.35)'
                                 }}
-                                onMouseEnter={e => { if (!isLoading) { e.currentTarget.style.background = '#1d4ed8'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(37, 99, 235, 0.3)'; }}}
-                                onMouseLeave={e => { if (!isLoading) { e.currentTarget.style.background = '#2563eb'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(37, 99, 235, 0.25)'; }}}
+                                onMouseEnter={e => { if (!isLoading) { e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(99,102,241,0.45)'; }}}
+                                onMouseLeave={e => { if (!isLoading) { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 14px rgba(99, 102, 241, 0.35)'; }}}
                             >
                                 {isLoading ? (
                                     <>
                                         <div style={{ width: 18, height: 18, border: '2px solid rgba(255,255,255,0.4)', borderTopColor: 'white', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-                                        Đang đăng nhập...
+                                        Äang Ä‘Äƒng nháº­p...
                                     </>
-                                ) : 'Đăng nhập'}
+                                ) : 'ÄÄƒng nháº­p'}
                             </button>
                         </form>
 
                         <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid #f1f5f9', textAlign: 'center' }}>
                             <p style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>
-                                Hệ thống chỉ cấp tài khoản sau khi ký hợp đồng thuê phòng.
-                                <br />Liên hệ chủ nhà để được hỗ trợ.
+                                Há»‡ thá»‘ng chá»‰ cáº¥p tÃ i khoáº£n sau khi kÃ½ há»£p Ä‘á»“ng thuÃª phÃ²ng.
+                                <br />LiÃªn há»‡ chá»§ nhÃ  Ä‘á»ƒ Ä‘Æ°á»£c há»— trá»£.
                             </p>
                         </div>
                     </div>
@@ -236,3 +236,4 @@ const Login = () => {
 };
 
 export default Login;
+
