@@ -95,7 +95,10 @@ const payInvoice = async (req, res) => {
 const remindInvoice = async (req, res) => {
     const { id } = req.params;
     try {
-        await db.query('ALTER TABLE Invoices ADD COLUMN IF NOT EXISTS is_reminded BOOLEAN DEFAULT FALSE');
+        const [cols] = await db.query("SHOW COLUMNS FROM Invoices LIKE 'is_reminded'");
+        if (cols.length === 0) {
+            await db.query("ALTER TABLE Invoices ADD COLUMN is_reminded BOOLEAN DEFAULT FALSE");
+        }
         await db.query('UPDATE Invoices SET is_reminded = TRUE WHERE id = ?', [id]);
         res.status(200).json({ message: 'Đã gửi thông báo nhắc nợ đến hệ thống của khách hàng!' });
     } catch (error) {

@@ -22,6 +22,14 @@ const getRevenue = async (req, res) => {
 // API 2: Lấy danh sách Nợ (Hóa đơn CHƯA THANH TOÁN)
 const getDebtList = async (req, res) => {
     try {
+        // Đảm bảo cột is_reminded tồn tại để không bị lỗi
+        try {
+            const [cols] = await db.query("SHOW COLUMNS FROM Invoices LIKE 'is_reminded'");
+            if (cols.length === 0) {
+                await db.query("ALTER TABLE Invoices ADD COLUMN is_reminded BOOLEAN DEFAULT FALSE");
+            }
+        } catch(e) { console.error(e); }
+
         const sql = `
             SELECT i.id, i.month_year, i.total_amount, i.is_reminded, r.room_name, u.full_name as tenant_name, u.username as phone
             FROM Invoices i
