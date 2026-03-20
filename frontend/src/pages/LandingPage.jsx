@@ -486,7 +486,7 @@ function RoomsSection({ rooms, loading, onRoomClick }) {
                 boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
                 transition: 'border-color 0.2s, box-shadow 0.2s'
               }}
-              onFocus={e => { e.target.style.borderColor = '#6366f1'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+              onFocus={e => { e.target.style.borderColor = '#6366f1'; e.target.style.boxShadow = '0 0 0 3px rgba(99, 102, 241,0.1)'; }}
               onBlur={e => { e.target.style.borderColor = '#e2e8f0'; e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)'; }}
             />
             {search && (
