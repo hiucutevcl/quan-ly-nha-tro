@@ -31,87 +31,206 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900">
-            <div className="w-full max-w-md px-4">
-                {/* Logo & Tiêu đề */}
-                <div className="text-center mb-8">
-                    <div className="text-6xl mb-3">🏠</div>
-                    <h1 className="text-3xl font-black text-white tracking-wide">QUẢN LÝ NHÀ TRỌ</h1>
-                    <p className="text-blue-300 mt-1 text-sm">Hệ thống quản lý phòng trọ thông minh</p>
-                </div>
+        <div style={{
+            minHeight: '100vh', display: 'flex',
+            background: '#f1f5f9', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif"
+        }}>
+            {/* Left Panel - Branding */}
+            <div style={{
+                flex: 1, display: 'none',
+                background: 'linear-gradient(145deg, #0f172a 0%, #1e3a5f 60%, #1d4ed8 100%)',
+                padding: '3rem', flexDirection: 'column', justifyContent: 'space-between',
+                position: 'relative', overflow: 'hidden'
+            }} className="login-left-panel">
+                {/* Decorative circles */}
+                <div style={{
+                    position: 'absolute', top: '-80px', right: '-80px', width: '320px', height: '320px',
+                    borderRadius: '50%', background: 'rgba(59, 130, 246, 0.12)', pointerEvents: 'none'
+                }} />
+                <div style={{
+                    position: 'absolute', bottom: '-40px', left: '-60px', width: '220px', height: '220px',
+                    borderRadius: '50%', background: 'rgba(99, 102, 241, 0.12)', pointerEvents: 'none'
+                }} />
 
-                {/* Form đăng nhập */}
-                <div className="bg-white rounded-2xl shadow-2xl p-8">
-                    <h2 className="text-xl font-bold text-gray-700 mb-6 text-center">Đăng nhập vào hệ thống</h2>
-
-                    {errorMsg && (
-                        <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-5 flex items-start gap-2">
-                            <span className="text-lg">⚠️</span>
-                            <span className="text-sm font-medium">{errorMsg}</span>
+                {/* Logo */}
+                <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: '3rem' }}>
+                        <div style={{
+                            width: 44, height: 44, background: '#2563eb', borderRadius: 12,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
                         </div>
-                    )}
-
-                    <form onSubmit={handleLogin} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-bold text-gray-600 mb-1.5">
-                                Tên đăng nhập
-                            </label>
-                            <input
-                                type="text"
-                                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-blue-500 transition text-gray-800"
-                                placeholder="Nhập tên đăng nhập hoặc số điện thoại..."
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-bold text-gray-600 mb-1.5">
-                                Mật khẩu
-                            </label>
-                            <div className="relative">
-                                <input
-                                    type={showPass ? 'text' : 'password'}
-                                    className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-blue-500 transition text-gray-800 pr-12"
-                                    placeholder="Nhập mật khẩu..."
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                />
-                                <button type="button" 
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                    onClick={() => setShowPass(!showPass)}
-                                >
-                                    {showPass ? '🙈' : '👁️'}
-                                </button>
-                            </div>
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className={`w-full py-3 rounded-xl text-white font-bold text-lg flex justify-center items-center gap-2 transition
-                                ${isLoading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 active:scale-95'}`}
-                        >
-                            {isLoading ? (
-                                <><span className="animate-spin inline-block">⭮</span> Đang xử lý...</>
-                            ) : (
-                                '🔐 ĐĂNG NHẬP'
-                            )}
-                        </button>
-                    </form>
-
-                    {/* Hướng dẫn đăng ký */}
-                    <div className="mt-6 pt-6 border-t border-gray-100 text-center">
-                        <p className="text-sm text-gray-500 font-medium">Bạn chưa có tài khoản?</p>
-                        <p className="text-xs text-gray-400 mt-1 leading-relaxed">
-                            Trang web không hỗ trợ tự đăng ký. Việc cấp tài khoản chỉ thực hiện <strong className="text-blue-500">sau khi thuê nhà</strong> và được <strong className="text-blue-500">quản lý trực tiếp bởi chủ trọ</strong> để đảm bảo an ninh và thông tin chính xác.
-                        </p>
+                        <span style={{ color: 'white', fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em' }}>Nhà Trọ Minh Hiếu</span>
                     </div>
 
+                    <h1 style={{ color: 'white', fontSize: 38, fontWeight: 800, lineHeight: 1.15, letterSpacing: '-0.03em', marginBottom: 16 }}>
+                        Quản lý nhà trọ<br />chưa bao giờ dễ đến vậy.
+                    </h1>
+                    <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 16, lineHeight: 1.6, maxWidth: 340 }}>
+                        Hệ thống quản lý phòng trọ tích hợp đầy đủ: hóa đơn, chỉ số điện nước, hợp đồng và báo cáo.
+                    </p>
+                </div>
+
+                {/* Stats */}
+                <div style={{ display: 'flex', gap: '2rem' }}>
+                    {[{ v: '100+', l: 'Phòng trọ' }, { v: '24/7', l: 'Hỗ trợ' }, { v: '3+', l: 'Cơ sở' }].map(s => (
+                        <div key={s.l}>
+                            <div style={{ fontSize: 26, fontWeight: 800, color: 'white', letterSpacing: '-0.02em' }}>{s.v}</div>
+                            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>{s.l}</div>
+                        </div>
+                    ))}
                 </div>
             </div>
+
+            {/* Right Panel - Form */}
+            <div style={{
+                width: '100%', maxWidth: 480,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                padding: '2rem',
+                margin: '0 auto'
+            }}>
+                <div style={{ width: '100%' }}>
+                    {/* Mobile Logo */}
+                    <div style={{ textAlign: 'center', marginBottom: '2.5rem' }} className="login-mobile-logo">
+                        <div style={{
+                            width: 52, height: 52, background: '#2563eb', borderRadius: 14,
+                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16
+                        }}>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                        </div>
+                        <h2 style={{ fontSize: 20, fontWeight: 800, color: '#0f172a', margin: 0 }}>Nhà Trọ Minh Hiếu</h2>
+                        <p style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>Hệ thống quản lý phòng trọ</p>
+                    </div>
+
+                    {/* Card */}
+                    <div style={{
+                        background: 'white', borderRadius: 20,
+                        padding: '2.5rem', boxShadow: '0 4px 24px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04)',
+                        border: '1px solid #e2e8f0'
+                    }}>
+                        <div style={{ marginBottom: '1.75rem' }}>
+                            <h3 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', margin: 0, letterSpacing: '-0.02em' }}>Đăng nhập</h3>
+                            <p style={{ fontSize: 14, color: '#64748b', marginTop: 6 }}>Chào mừng bạn quay lại!</p>
+                        </div>
+
+                        {errorMsg && (
+                            <div style={{
+                                background: '#fef2f2', border: '1px solid #fecaca',
+                                color: '#dc2626', padding: '12px 16px', borderRadius: 10,
+                                fontSize: 14, display: 'flex', gap: 8, alignItems: 'flex-start',
+                                marginBottom: '1.25rem'
+                            }}>
+                                <svg width="18" height="18" style={{ flexShrink: 0, marginTop: 1 }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                <span>{errorMsg}</span>
+                            </div>
+                        )}
+
+                        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                            <div>
+                                <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 8 }}>
+                                    Tên đăng nhập
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="Nhập tên đăng nhập hoặc số điện thoại"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                    style={{
+                                        width: '100%', padding: '12px 16px', boxSizing: 'border-box',
+                                        border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 15,
+                                        color: '#0f172a', background: '#f8fafc', outline: 'none',
+                                        transition: 'all 0.2s'
+                                    }}
+                                    onFocus={e => { e.target.style.borderColor = '#2563eb'; e.target.style.background = '#fff'; }}
+                                    onBlur={e => { e.target.style.borderColor = '#e2e8f0'; e.target.style.background = '#f8fafc'; }}
+                                />
+                            </div>
+
+                            <div>
+                                <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 8 }}>
+                                    Mật khẩu
+                                </label>
+                                <div style={{ position: 'relative' }}>
+                                    <input
+                                        type={showPass ? 'text' : 'password'}
+                                        placeholder="Nhập mật khẩu của bạn"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                        style={{
+                                            width: '100%', padding: '12px 48px 12px 16px', boxSizing: 'border-box',
+                                            border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: 15,
+                                            color: '#0f172a', background: '#f8fafc', outline: 'none',
+                                            transition: 'all 0.2s'
+                                        }}
+                                        onFocus={e => { e.target.style.borderColor = '#2563eb'; e.target.style.background = '#fff'; }}
+                                        onBlur={e => { e.target.style.borderColor = '#e2e8f0'; e.target.style.background = '#f8fafc'; }}
+                                    />
+                                    <button type="button"
+                                        onClick={() => setShowPass(!showPass)}
+                                        style={{
+                                            position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
+                                            background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8',
+                                            display: 'flex', alignItems: 'center', padding: 0
+                                        }}>
+                                        {showPass ? (
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                                        ) : (
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                style={{
+                                    width: '100%', padding: '13px', borderRadius: 10,
+                                    background: isLoading ? '#93c5fd' : '#2563eb', color: 'white',
+                                    fontWeight: 700, fontSize: 15, border: 'none', cursor: isLoading ? 'not-allowed' : 'pointer',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                                    transition: 'all 0.2s', letterSpacing: '0.01em',
+                                    boxShadow: isLoading ? 'none' : '0 4px 12px rgba(37, 99, 235, 0.25)'
+                                }}
+                                onMouseEnter={e => { if (!isLoading) { e.currentTarget.style.background = '#1d4ed8'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(37, 99, 235, 0.3)'; }}}
+                                onMouseLeave={e => { if (!isLoading) { e.currentTarget.style.background = '#2563eb'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(37, 99, 235, 0.25)'; }}}
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <div style={{ width: 18, height: 18, border: '2px solid rgba(255,255,255,0.4)', borderTopColor: 'white', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+                                        Đang đăng nhập...
+                                    </>
+                                ) : 'Đăng nhập'}
+                            </button>
+                        </form>
+
+                        <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid #f1f5f9', textAlign: 'center' }}>
+                            <p style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>
+                                Hệ thống chỉ cấp tài khoản sau khi ký hợp đồng thuê phòng.
+                                <br />Liên hệ chủ nhà để được hỗ trợ.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+                @keyframes spin { to { transform: rotate(360deg); } }
+                @media (min-width: 800px) {
+                    .login-left-panel { display: flex !important; }
+                    .login-mobile-logo { display: none !important; }
+                }
+            `}</style>
         </div>
     );
 };
