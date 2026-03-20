@@ -59,15 +59,15 @@ const PaymentCalendar = () => {
                         type="month"
                         value={selectedMonth}
                         onChange={e => setSelectedMonth(e.target.value)}
-                        className="border-2 rounded-lg px-3 py-1.5 text-sm font-mono focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                        className="border-2 rounded-lg px-3 py-1.5 text-sm font-mono focus:ring-2 focus:ring-indigo-400 focus:outline-none"
                     />
                 </div>
             </div>
 
             {/* Thống kê nhanh */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-                <div className="bg-white rounded-xl p-4 text-center shadow border-t-4 border-blue-500">
-                    <p className="text-2xl font-black text-blue-600">{filtered.length}</p>
+                <div className="bg-white rounded-xl p-4 text-center shadow border-t-4 border-indigo-500">
+                    <p className="text-2xl font-black text-indigo-600">{filtered.length}</p>
                     <p className="text-xs text-gray-500 mt-1">Tổng hóa đơn</p>
                 </div>
                 <div className="bg-white rounded-xl p-4 text-center shadow border-t-4 border-red-500">
@@ -75,10 +75,10 @@ const PaymentCalendar = () => {
                     <p className="text-xs text-gray-500 mt-1">Chưa thu</p>
                     <p className="text-xs text-red-500 font-bold">{Number(tongChuaThu).toLocaleString('vi-VN')}đ</p>
                 </div>
-                <div className="bg-white rounded-xl p-4 text-center shadow border-t-4 border-green-500">
-                    <p className="text-2xl font-black text-green-600">{daThu.length}</p>
+                <div className="bg-white rounded-xl p-4 text-center shadow border-t-4 border-indigo-500">
+                    <p className="text-2xl font-black text-indigo-600">{daThu.length}</p>
                     <p className="text-xs text-gray-500 mt-1">Đã thu</p>
-                    <p className="text-xs text-green-600 font-bold">{Number(tongDaThu).toLocaleString('vi-VN')}đ</p>
+                    <p className="text-xs text-indigo-600 font-bold">{Number(tongDaThu).toLocaleString('vi-VN')}đ</p>
                 </div>
                 <div className="bg-white rounded-xl p-4 text-center shadow border-t-4 border-orange-400">
                     <p className="text-2xl font-black text-orange-500">{missingInvoice.length}</p>
@@ -109,7 +109,7 @@ const PaymentCalendar = () => {
                                         <p className="font-black text-red-600">{fmt(inv.total_amount)}</p>
                                         <button
                                             onClick={() => handlePayInvoice(inv.id)}
-                                            className="text-xs bg-green-600 text-white px-2 py-0.5 rounded font-bold hover:bg-green-700 transition mt-1"
+                                            className="text-xs bg-indigo-600 text-white px-2 py-0.5 rounded font-bold hover:bg-indigo-700 transition mt-1"
                                         >
                                             ✅ Thu tiền
                                         </button>
@@ -124,20 +124,20 @@ const PaymentCalendar = () => {
                 <div className="space-y-4">
                     {/* Đã thu */}
                     <div className="bg-white rounded-xl shadow overflow-hidden">
-                        <div className="bg-green-600 text-white px-4 py-3 font-bold flex items-center gap-2">
+                        <div className="bg-indigo-600 text-white px-4 py-3 font-bold flex items-center gap-2">
                             <span>✅ Đã Thu ({daThu.length})</span>
                         </div>
                         {daThu.length === 0 ? (
-                            <div className="text-center py-4 text-gray-400 text-sm">Chưa thu được phòng nào</div>
+                            <div className="text-center py-4 text-slate-400 text-sm">Chưa thu được phòng nào</div>
                         ) : (
                             <div className="divide-y max-h-48 overflow-y-auto">
                                 {daThu.map(inv => (
                                     <div key={inv.id} className="px-4 py-2 flex justify-between items-center">
                                         <div>
                                             <p className="font-semibold text-sm text-gray-800">🏠 {inv.room_name}</p>
-                                            <p className="text-xs text-gray-400">{inv.tenant_name}</p>
+                                            <p className="text-xs text-slate-400">{inv.tenant_name}</p>
                                         </div>
-                                        <p className="font-bold text-green-600 text-sm">{fmt(inv.total_amount)}</p>
+                                        <p className="font-bold text-indigo-600 text-sm">{fmt(inv.total_amount)}</p>
                                     </div>
                                 ))}
                             </div>

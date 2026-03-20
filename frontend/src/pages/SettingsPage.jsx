@@ -88,28 +88,28 @@ const SettingsPage = () => {
 
             <form onSubmit={handleSave} className="space-y-6">
                 {/* Thông tin cơ bản */}
-                <div className="bg-white p-6 rounded-xl shadow border-t-4 border-blue-500">
+                <div className="bg-white p-6 rounded-xl shadow border-t-4 border-indigo-500">
                     <h2 className="text-lg font-bold text-gray-700 mb-4">Thông tin nhà trọ</h2>
                     <div className="grid grid-cols-1 gap-4">
                         <div>
                             <label className="block text-sm font-bold text-gray-600 mb-1">Tên nhà trọ</label>
-                            <input type="text" name="nha_tro_name" className="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400"
+                            <input type="text" name="nha_tro_name" className="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-400"
                                 value={settings.nha_tro_name} onChange={handleChange} placeholder="VD: Nhà trọ Thành Công" />
                         </div>
                         <div>
                             <label className="block text-sm font-bold text-gray-600 mb-1">Địa chỉ chính</label>
-                            <input type="text" name="address" className="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400"
+                            <input type="text" name="address" className="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-400"
                                 value={settings.address} onChange={handleChange} placeholder="Số nhà, đường, phường, quận..." />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-bold text-gray-600 mb-1">Số điện thoại Hotline</label>
-                                <input type="text" name="phone" className="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400"
+                                <input type="text" name="phone" className="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-400"
                                     value={settings.phone} onChange={handleChange} placeholder="0912 345 678" />
                             </div>
                             <div>
                                 <label className="block text-sm font-bold text-gray-600 mb-1">Tên chủ trọ</label>
-                                <input type="text" name="owner" className="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400"
+                                <input type="text" name="owner" className="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-400"
                                     value={settings.owner} onChange={handleChange} placeholder="Nguyễn Văn A" />
                             </div>
                         </div>
@@ -117,9 +117,9 @@ const SettingsPage = () => {
                             <div>
                                 <label className="block text-sm font-bold text-gray-600 mb-1">Ảnh Nền (Hero Image)</label>
                                 <div className="flex gap-2">
-                                    <input type="text" name="hero_image" className="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400"
+                                    <input type="text" name="hero_image" className="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-400"
                                         value={settings.hero_image || ''} onChange={handleChange} placeholder="Link ảnh nền trang chủ" />
-                                    <label className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-2 rounded font-bold cursor-pointer text-sm whitespace-nowrap flex items-center justify-center transition-colors">
+                                    <label className="bg-indigo-100 hover:bg-blue-200 text-indigo-700 px-3 py-2 rounded font-bold cursor-pointer text-sm whitespace-nowrap flex items-center justify-center transition-colors">
                                         <span>📸 Tải Xếp</span>
                                         <input 
                                             type="file" className="hidden" accept="image/*"
@@ -146,9 +146,9 @@ const SettingsPage = () => {
                             <div>
                                 <label className="block text-sm font-bold text-gray-600 mb-1">Logo Nhà Trọ</label>
                                 <div className="flex gap-2">
-                                    <input type="text" name="logo_image" className="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400"
+                                    <input type="text" name="logo_image" className="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-400"
                                         value={settings.logo_image || ''} onChange={handleChange} placeholder="Link logo nhà trọ" />
-                                    <label className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-2 rounded font-bold cursor-pointer text-sm whitespace-nowrap flex items-center justify-center transition-colors">
+                                    <label className="bg-indigo-100 hover:bg-blue-200 text-indigo-700 px-3 py-2 rounded font-bold cursor-pointer text-sm whitespace-nowrap flex items-center justify-center transition-colors">
                                         <span>📸 Tải Ảnh</span>
                                         <input 
                                             type="file" className="hidden" accept="image/*"
@@ -186,7 +186,7 @@ const SettingsPage = () => {
 
                 {/* --- QUẢN LÝ CƠ SỞ / CHI NHÁNH --- */}
                 <div className="bg-white p-6 rounded-xl shadow border-t-4 border-teal-500">
-                    <h2 className="text-lg font-bold text-teal-700 mb-4">🏢 Quản lý Các Cơ Sở (Chi nhánh) & Bản đồ</h2>
+                    <h2 className="text-lg font-bold text-indigo-700 mb-4">🏢 Quản lý Các Cơ Sở (Chi nhánh) & Bản đồ</h2>
                     <p className="text-sm text-gray-500 mb-6">
                         Thêm tên cơ sở và địa chỉ cụ thể để khách hàng có thể xem bản đồ dẫn đường của từng khu nhà trên trang chủ.
                         Danh sách tên sẽ được đồng bộ sang trang Quản lý phòng.
@@ -223,21 +223,21 @@ const SettingsPage = () => {
                         return (
                             <div className="space-y-4">
                                 {buildInfoList.map((build, idx) => (
-                                    <div key={idx} className="border border-teal-100 p-4 rounded-xl bg-teal-50 relative">
+                                    <div key={idx} className="border border-teal-100 p-4 rounded-xl bg-indigo-50/50 relative">
                                         <button type="button" onClick={() => removeBuild(idx)} 
                                             className="absolute top-2 right-2 text-teal-500 hover:text-rose-500 font-bold bg-white px-2 py-0.5 rounded shadow-sm text-xs">
                                             Xoá Cơ Sở
                                         </button>
-                                        <h3 className="text-xs font-bold text-teal-800 mb-3 uppercase tracking-wide">📍 Cơ sở #{idx + 1}</h3>
+                                        <h3 className="text-xs font-bold text-slate-700 mb-3 uppercase tracking-wide">📍 Cơ sở #{idx + 1}</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label className="block text-xs font-bold text-gray-600 mb-1">Tên cơ sở (VD: Cơ sở Đống Đa)</label>
-                                                <input type="text" className="w-full border border-teal-200 rounded p-2 text-sm focus:ring-2 focus:ring-teal-400"
+                                                <input type="text" className="w-full border border-indigo-200/50 rounded p-2 text-sm focus:ring-2 focus:ring-teal-400"
                                                     value={build.name} onChange={(e) => handleBuildChange(idx, 'name', e.target.value)} placeholder="Tên để phân loại phòng..." />
                                             </div>
                                             <div>
                                                 <label className="block text-xs font-bold text-gray-600 mb-1">Địa chỉ chi tiết (Dùng để tìm Google Maps)</label>
-                                                <input type="text" className="w-full border border-teal-200 rounded p-2 text-sm focus:ring-2 focus:ring-teal-400"
+                                                <input type="text" className="w-full border border-indigo-200/50 rounded p-2 text-sm focus:ring-2 focus:ring-teal-400"
                                                     value={build.address} onChange={(e) => handleBuildChange(idx, 'address', e.target.value)} placeholder="VD: 123 Phố X, Phường Y..." />
                                             </div>
                                         </div>
@@ -245,7 +245,7 @@ const SettingsPage = () => {
                                 ))}
                                 
                                 <button type="button" onClick={addBuild} 
-                                    className="w-full py-3 border-2 border-dashed border-teal-300 text-teal-600 font-bold rounded-xl hover:bg-teal-100 transition">
+                                    className="w-full py-3 border-2 border-dashed border-teal-300 text-indigo-600 font-bold rounded-xl hover:bg-teal-100 transition">
                                     + THÊM CƠ SỞ MỚI
                                 </button>
                             </div>
@@ -423,12 +423,12 @@ const SettingsPage = () => {
                     })()}
                 </div>
 
-                <button type="submit" className="w-full bg-blue-700 hover:bg-blue-800 text-white font-black py-3 rounded-xl shadow-lg transition text-lg mt-6">
+                <button type="submit" className="w-full bg-indigo-700 hover:bg-blue-800 text-white font-black py-3 rounded-xl shadow-lg transition text-lg mt-6">
                     💾 LƯU CÀI ĐẶT
                 </button>
 
                 {saved && (
-                    <div className="text-center text-green-700 font-bold bg-green-100 p-3 rounded-xl border border-green-300">
+                    <div className="text-center text-emerald-700 font-bold bg-emerald-50 p-3 rounded-xl border border-emerald-200">
                         ✅ Đã lưu cài đặt thành công!
                     </div>
                 )}

@@ -199,13 +199,13 @@ const RoomManagement = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6">
-            <h1 className="text-2xl font-bold text-green-700 mb-6 uppercase text-center">Quản Lý Phòng Trọ & Tiện Nghi</h1>
+        <div className="min-h-screen bg-slate-50 p-6">
+            <h1 className="text-2xl font-bold text-indigo-700 mb-6 uppercase text-center">Quản Lý Phòng Trọ & Tiện Nghi</h1>
 
 
 
             {/* Khung Thêm Phòng */}
-            <div className="bg-white p-6 rounded-lg shadow-md mb-8 max-w-2xl mx-auto border-t-4 border-green-500">
+            <div className="bg-white p-6 rounded-lg shadow-md mb-8 max-w-2xl mx-auto border-t-4 border-indigo-500">
                 <h2 className="text-lg font-semibold mb-3">Tạo Phòng Mới</h2>
                 <form onSubmit={handleAddRoom} className="flex flex-col gap-4">
                     <div className="grid grid-cols-2 gap-4">
@@ -213,7 +213,7 @@ const RoomManagement = () => {
                             <label className="block text-sm font-bold text-gray-700 mb-1">Tên phòng (vd: P.101)</label>
                             <input 
                                 type="text" required
-                                className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+                                className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                 value={newRoom.room_name} onChange={e => setNewRoom({...newRoom, room_name: e.target.value})}
                             />
                         </div>
@@ -221,7 +221,7 @@ const RoomManagement = () => {
                             <label className="block text-sm font-bold text-gray-700 mb-1">Giá thuê/tháng (VNĐ)</label>
                             <input 
                                 type="number" required
-                                className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+                                className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                 value={newRoom.price} onChange={e => setNewRoom({...newRoom, price: e.target.value})}
                             />
                         </div>
@@ -230,7 +230,7 @@ const RoomManagement = () => {
                             <input 
                                 type="number" min="1"
                                 placeholder="VD: 25"
-                                className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+                                className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                 value={newRoom.area} onChange={e => setNewRoom({...newRoom, area: e.target.value})}
                             />
                         </div>
@@ -239,19 +239,19 @@ const RoomManagement = () => {
                             <input 
                                 type="text"
                                 placeholder="VD: Tầng 2, Góc trái"
-                                className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+                                className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                 value={newRoom.floor} onChange={e => setNewRoom({...newRoom, floor: e.target.value})}
                             />
                         </div>
                     </div>
                     
-                    <div className="bg-gray-50 p-3 rounded border border-gray-200">
+                    <div className="bg-slate-50 p-3 rounded border border-gray-200">
                         <label className="block text-sm font-bold text-gray-700 mb-2">Đánh dấu những tiện nghi có trong phòng:</label>
                         <div className="flex flex-wrap gap-3">
                             {amenityOptions.map(item => (
-                                <label key={item} className="flex items-center gap-1 cursor-pointer text-sm hover:text-green-600 transition">
+                                <label key={item} className="flex items-center gap-1 cursor-pointer text-sm hover:text-indigo-600 transition">
                                     <input type="checkbox" 
-                                        className="w-4 h-4 text-green-600 cursor-pointer"
+                                        className="w-4 h-4 text-indigo-600 cursor-pointer"
                                         checked={(newRoom.amenities||'').includes(item)}
                                         onChange={() => setNewRoom({ ...newRoom, amenities: toggleAmenity(newRoom.amenities, item) })}
                                     />
@@ -262,18 +262,18 @@ const RoomManagement = () => {
                     </div>
 
                     {/* Chọn Khu Nhà / Cơ sở - luôn hiển thị */}
-                    <div className="bg-teal-50 p-3 rounded border border-teal-200">
-                        <label className="block text-sm font-bold text-teal-800 mb-2">🏢 Chọn Cơ Sở / Khu Nhà:</label>
+                    <div className="bg-indigo-50/50 p-3 rounded border border-indigo-200/50">
+                        <label className="block text-sm font-bold text-slate-700 mb-2">🏢 Chọn Cơ Sở / Khu Nhà:</label>
                         <div className="flex flex-wrap gap-3">
                             {buildingsList.map(b => (
-                                <label key={b} className="flex items-center gap-1.5 cursor-pointer text-sm hover:text-teal-700 transition">
-                                    <input type="radio" name="new_building" className="w-4 h-4 text-teal-600 cursor-pointer"
+                                <label key={b} className="flex items-center gap-1.5 cursor-pointer text-sm hover:text-indigo-700 transition">
+                                    <input type="radio" name="new_building" className="w-4 h-4 text-indigo-600 cursor-pointer"
                                         checked={newRoom.building_name === b}
                                         onChange={() => setNewRoom({ ...newRoom, building_name: b })} />
                                     <span>{b}</span>
                                 </label>
                             ))}
-                            <label className="flex items-center gap-1.5 cursor-pointer text-sm text-gray-400 hover:text-gray-600 transition">
+                            <label className="flex items-center gap-1.5 cursor-pointer text-sm text-slate-400 hover:text-gray-600 transition">
                                 <input type="radio" name="new_building" className="w-4 h-4"
                                     checked={newRoom.building_name === ''}
                                     onChange={() => setNewRoom({ ...newRoom, building_name: '' })} />
@@ -287,12 +287,12 @@ const RoomManagement = () => {
                         <input
                             type="text"
                             placeholder="VD: 25 Xuân Thủy, Cầu Giấy, Hà Nội"
-                            className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+                            className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
                             value={newRoom.room_address} onChange={e => setNewRoom({...newRoom, room_address: e.target.value})}
                         />
                     </div>
                     
-                    <button type="submit" className="bg-green-600 text-white font-bold py-2 px-6 rounded hover:bg-green-700 transition">Lưu Thông Tin</button>
+                    <button type="submit" className="bg-indigo-600 text-white font-bold py-2 px-6 rounded hover:bg-indigo-700 transition">Lưu Thông Tin</button>
                 </form>
             </div>
 
@@ -301,7 +301,7 @@ const RoomManagement = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
                     {rooms.map(room => (
                         <div key={room.id} className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden hover:shadow-lg transition">
-                            <div className={`p-4 text-white font-bold flex justify-between items-center ${room.status === 'Available' ? 'bg-gray-400' : 'bg-blue-600'}`}>
+                            <div className={`p-4 text-white font-bold flex justify-between items-center ${room.status === 'Available' ? 'bg-slate-400' : 'bg-indigo-600'}`}>
                                 <span className="text-xl">{room.room_name}</span>
                                 <div className="flex items-center gap-1.5 flex-wrap justify-end">
                                     <button onClick={() => setHistoryRoom(room)}
@@ -364,16 +364,16 @@ const RoomManagement = () => {
 
                                             <div className="mt-2 flex items-center gap-2">
                                                 {images.length < 5 ? (
-                                                    <label className={`flex-1 flex justify-center items-center gap-2 border-2 border-dashed ${uploadingRoomId === room.id ? 'border-gray-300 bg-gray-50' : 'border-blue-200 hover:border-blue-400 hover:bg-blue-50 cursor-pointer'} rounded-lg p-2 transition`}>
+                                                    <label className={`flex-1 flex justify-center items-center gap-2 border-2 border-dashed ${uploadingRoomId === room.id ? 'border-gray-300 bg-slate-50' : 'border-indigo-200 hover:border-blue-400 hover:bg-indigo-50 cursor-pointer'} rounded-lg p-2 transition`}>
                                                         {uploadingRoomId === room.id ? (
                                                             <>
-                                                                <div className="animate-spin rounded-full h-5 w-5 border-2 border-blue-500 border-t-transparent"></div>
-                                                                <span className="text-sm text-blue-500 font-medium">Đang tải ảnh...</span>
+                                                                <div className="animate-spin rounded-full h-5 w-5 border-2 border-indigo-500 border-t-transparent"></div>
+                                                                <span className="text-sm text-indigo-500 font-medium">Đang tải ảnh...</span>
                                                             </>
                                                         ) : (
                                                             <>
                                                                 <span className="text-lg">📷</span>
-                                                                <span className="text-sm font-medium text-blue-600">
+                                                                <span className="text-sm font-medium text-indigo-600">
                                                                     {images.length === 0 ? 'Thêm ảnh cho phòng (Tối đa 5)' : `Thêm ảnh (Còn ${5 - images.length}/5)`}
                                                                 </span>
                                                                 <input type="file" accept="image/*" multiple className="hidden"
@@ -393,7 +393,7 @@ const RoomManagement = () => {
 
                                 {/* Chế độ xem hoặc Chế độ Sửa */}
                                 {editData.roomId === room.id ? (
-                                    <form onSubmit={handleUpdateRoom} className="bg-blue-50 p-3 rounded border border-blue-200 mb-3">
+                                    <form onSubmit={handleUpdateRoom} className="bg-indigo-50 p-3 rounded border border-indigo-200 mb-3">
                                         <div className="grid grid-cols-2 gap-2 mb-3">
                                             <div>
                                                 <label className="block text-xs font-bold mb-1">Giá Mới (VNĐ/tháng)</label>
@@ -415,8 +415,8 @@ const RoomManagement = () => {
                                         <label className="block text-xs font-bold mb-2">Cập nhật Tiện nghi:</label>
                                         <div className="grid grid-cols-2 gap-2 mb-3">
                                             {amenityOptions.map(item => (
-                                                <label key={item} className="flex items-center gap-1 cursor-pointer text-xs bg-white p-1 rounded border hover:bg-blue-50">
-                                                    <input type="checkbox" className="w-3 h-3 text-blue-600"
+                                                <label key={item} className="flex items-center gap-1 cursor-pointer text-xs bg-white p-1 rounded border hover:bg-indigo-50">
+                                                    <input type="checkbox" className="w-3 h-3 text-indigo-600"
                                                         checked={(editData.amenities||'').includes(item)}
                                                         onChange={() => setEditData({ ...editData, amenities: toggleAmenity(editData.amenities, item) })}
                                                     />
@@ -428,17 +428,17 @@ const RoomManagement = () => {
                                         {/* Chọn Khu Nhà khi Sửa */}
                                         {buildingsList.length > 0 && (
                                             <div className="mb-3">
-                                                <label className="block text-xs font-bold text-teal-700 mb-1">🏢 Khu Nhà / Cơ Sở:</label>
+                                                <label className="block text-xs font-bold text-indigo-700 mb-1">🏢 Khu Nhà / Cơ Sở:</label>
                                                 <div className="flex flex-wrap gap-2">
                                                     {buildingsList.map(b => (
-                                                        <label key={b} className="flex items-center gap-1 cursor-pointer text-xs bg-teal-50 px-2 py-1 rounded border border-teal-200 hover:bg-teal-100">
-                                                            <input type="radio" name="edit_building" className="w-3 h-3 text-teal-600"
+                                                        <label key={b} className="flex items-center gap-1 cursor-pointer text-xs bg-indigo-50/50 px-2 py-1 rounded border border-indigo-200/50 hover:bg-teal-100">
+                                                            <input type="radio" name="edit_building" className="w-3 h-3 text-indigo-600"
                                                                 checked={editData.building_name === b}
                                                                 onChange={() => setEditData({ ...editData, building_name: b })} />
                                                             <span>{b}</span>
                                                         </label>
                                                     ))}
-                                                    <label className="flex items-center gap-1 cursor-pointer text-xs bg-gray-50 px-2 py-1 rounded border hover:bg-gray-100">
+                                                    <label className="flex items-center gap-1 cursor-pointer text-xs bg-slate-50 px-2 py-1 rounded border hover:bg-gray-100">
                                                         <input type="radio" name="edit_building" className="w-3 h-3"
                                                             checked={!editData.building_name}
                                                             onChange={() => setEditData({ ...editData, building_name: '' })} />
@@ -456,7 +456,7 @@ const RoomManagement = () => {
                                         
                                         <div className="flex justify-between gap-2 mt-2">
                                             <button type="button" onClick={() => setEditData({roomId: null})} className="w-1/2 bg-gray-300 py-1 rounded text-xs font-bold">Hủy</button>
-                                            <button type="submit" className="w-1/2 bg-blue-600 text-white font-bold py-1 rounded text-xs">Lưu</button>
+                                            <button type="submit" className="w-1/2 bg-indigo-600 text-white font-bold py-1 rounded text-xs">Lưu</button>
                                         </div>
                                     </form>
                                 ) : (
@@ -466,7 +466,7 @@ const RoomManagement = () => {
                                             {room.area && <p className="text-gray-500 text-sm">📐 <b>{room.area} m²</b></p>}
                                             {room.floor && <p className="text-gray-500 text-sm">🏢 <b>{room.floor}</b></p>}
                                             {room.building_name && (
-                                                <span className="inline-flex items-center gap-1 bg-teal-100 text-teal-800 text-xs font-bold px-2 py-0.5 rounded-full border border-teal-200">🏢 {room.building_name}</span>
+                                                <span className="inline-flex items-center gap-1 bg-teal-100 text-slate-700 text-xs font-bold px-2 py-0.5 rounded-full border border-indigo-200/50">🏢 {room.building_name}</span>
                                             )}
                                             {room.room_address && (
                                                 <p className="w-full text-gray-500 text-xs">📍 {room.room_address}</p>
@@ -477,7 +477,7 @@ const RoomManagement = () => {
                                                 <span className="text-gray-500 text-xs">Phòng bao gồm:</span>
                                                 <div className="flex flex-wrap gap-1 mt-1">
                                                     {room.amenities.split(',').map(a => a.trim()).filter(Boolean).map(a => (
-                                                        <span key={a} className="text-[10px] bg-green-100 text-green-800 px-2 py-0.5 rounded-full border border-green-200 font-bold">{a}</span>
+                                                        <span key={a} className="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-200 font-bold">{a}</span>
                                                     ))}
                                                 </div>
                                             </div>
@@ -509,10 +509,10 @@ const RoomManagement = () => {
                                                 </div>
                                             </form>
                                         ) : (
-                                            <div className="bg-gray-50 rounded-lg p-2.5 mt-3 mb-2 border border-gray-200 flex items-center justify-between">
+                                            <div className="bg-slate-50 rounded-lg p-2.5 mt-3 mb-2 border border-gray-200 flex items-center justify-between">
                                                 <div className="flex gap-4 text-sm">
-                                                    <span>⚡ <b>{room.current_elec ?? 0}</b> <span className="text-xs text-gray-400">kWh</span></span>
-                                                    <span>💧 <b>{room.current_water ?? 0}</b> <span className="text-xs text-gray-400">m³</span></span>
+                                                    <span>⚡ <b>{room.current_elec ?? 0}</b> <span className="text-xs text-slate-400">kWh</span></span>
+                                                    <span>💧 <b>{room.current_water ?? 0}</b> <span className="text-xs text-slate-400">m³</span></span>
                                                 </div>
                                                 <button
                                                     onClick={() => setMeterData({roomId: room.id, current_elec: room.current_elec ?? '', current_water: room.current_water ?? ''})}
@@ -524,13 +524,13 @@ const RoomManagement = () => {
                                         )}
 
                                         {room.status === 'Occupied' ? (
-                                            <div className="bg-blue-50 p-3 rounded text-sm mb-3 border border-blue-100 mt-3">
+                                            <div className="bg-indigo-50 p-3 rounded text-sm mb-3 border border-blue-100 mt-3">
                                                 <p className="mb-1">👤 Khách: <b>{room.tenant_name}</b></p>
                                                 <p className="mb-1">📅 Bắt đầu: <b>{room.start_date ? new Date(room.start_date).toLocaleDateString('vi-VN') : '?'}</b></p>
                                                 <p>⏳ Kết thúc: <b className="text-red-600">{room.end_date ? new Date(room.end_date).toLocaleDateString('vi-VN') : '?'}</b></p>
                                             </div>
                                         ) : (
-                                            <div className="bg-gray-50 p-3 rounded text-sm mb-3 text-gray-500 italic mt-3">
+                                            <div className="bg-slate-50 p-3 rounded text-sm mb-3 text-gray-500 italic mt-3">
                                                 Đang chờ khách thuê...
                                             </div>
                                         )}
@@ -594,7 +594,7 @@ const RoomManagement = () => {
                                         <div className="flex gap-3">
                                             <button 
                                                 onClick={() => setEditData({roomId: room.id, price: room.price, area: room.area || '', floor: room.floor || '', amenities: room.amenities || '', building_name: room.building_name || '', room_address: room.room_address || ''})}
-                                                className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1"
+                                                className="text-indigo-500 hover:text-indigo-700 text-sm flex items-center gap-1"
                                                 title="Sửa phòng"
                                             >
                                                 ✏️ Sửa

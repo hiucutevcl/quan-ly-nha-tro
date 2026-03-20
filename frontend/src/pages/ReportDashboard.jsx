@@ -61,7 +61,7 @@ const ReportDashboard = () => {
     if (loading) return <div className="text-center mt-10 p-5 font-bold">Đang tổng hợp số liệu báo cáo...</div>;
 
     return (
-        <div className="bg-gray-50 min-h-screen">
+        <div className="bg-slate-50 min-h-screen">
             <h1 className="text-2xl font-black text-blue-900 mb-6 uppercase text-center tracking-wide">
                 BÁO CÁO KINH DOANH & CÔNG NỢ
             </h1>
@@ -74,7 +74,7 @@ const ReportDashboard = () => {
                     </h2>
                     
                     {revenueData.length === 0 ? (
-                        <div className="h-64 flex items-center justify-center text-gray-400 italic">Chưa có dữ liệu doanh thu phát sinh</div>
+                        <div className="h-64 flex items-center justify-center text-slate-400 italic">Chưa có dữ liệu doanh thu phát sinh</div>
                     ) : (
                         <div className="h-80 w-full mt-4">
                             <ResponsiveContainer width="100%" height="100%">
@@ -104,7 +104,7 @@ const ReportDashboard = () => {
                             <button
                                 onClick={exportDebtToExcel}
                                 disabled={debtList.length === 0}
-                                className="bg-green-600 hover:bg-green-700 text-white font-bold px-3 py-1 rounded-lg text-sm transition disabled:opacity-40"
+                                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1 rounded-lg text-sm transition disabled:opacity-40"
                             >
                                 📤 Xuất Excel
                             </button>
@@ -118,7 +118,7 @@ const ReportDashboard = () => {
                         {debtList.length === 0 ? (
                             <div className="text-center py-10">
                                 <span className="text-4xl block mb-2">🎉</span>
-                                <p className="text-green-600 font-bold text-lg">Tuyệt vời! Tất cả các phòng đều đã đóng tiền đầy đủ.</p>
+                                <p className="text-indigo-600 font-bold text-lg">Tuyệt vời! Tất cả các phòng đều đã đóng tiền đầy đủ.</p>
                             </div>
                         ) : (
                             <div className="space-y-3">

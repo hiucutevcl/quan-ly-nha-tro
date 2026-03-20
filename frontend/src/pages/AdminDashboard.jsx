@@ -30,78 +30,81 @@ const AdminDashboard = () => {
     const currentTab = TABS.find(t => t.key === activeTab);
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row">
+        <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans text-slate-800">
             {/* ===== SIDEBAR ===== */}
-            <div className="w-full md:w-60 bg-blue-950 text-white shadow-2xl flex flex-col md:min-h-screen">
+            <div className="w-full md:w-64 bg-white border-r border-slate-200 flex flex-col md:min-h-screen z-10 shadow-sm relative">
                 {/* Logo - chỉ hiện trên PC */}
-                <div className="hidden md:flex flex-col items-center py-6 px-4 border-b border-blue-800">
-                    <span className="text-4xl mb-1">🏠</span>
-                    <h1 className="text-lg font-black tracking-wider text-center leading-tight">
-                        QUẢN LÝ<br/><span className="text-blue-300">NHÀ TRỌ</span>
+                <div className="hidden md:flex flex-col items-center py-8 px-4 border-b border-slate-100">
+                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-violet-600 outline outline-4 outline-indigo-50 rounded-xl flex items-center justify-center text-white text-2xl font-black mb-3 shadow-md">
+                        H
+                    </div>
+                    <h1 className="text-[17px] font-extrabold tracking-tight text-center leading-tight text-slate-900">
+                        Quản lý <span className="text-indigo-600">Nhà Trọ</span>
                     </h1>
                 </div>
 
                 {/* Menu */}
-                <nav className="flex flex-row md:flex-col overflow-x-auto md:overflow-visible flex-shrink-0 py-2 md:py-4">
+                <nav className="flex flex-row md:flex-col overflow-x-auto md:overflow-visible flex-shrink-0 py-2 md:py-6 gap-1 px-3">
                     {TABS.map(tab => (
                         <button
                             key={tab.key}
                             onClick={() => setActiveTab(tab.key)}
-                            className={`flex items-center gap-3 py-3 px-4 md:px-5 text-sm font-semibold whitespace-nowrap transition
-                                hover:bg-blue-800 md:w-full text-left
+                            className={`flex items-center gap-3 py-3 px-4 text-sm font-semibold rounded-xl whitespace-nowrap transition-all duration-200
                                 ${activeTab === tab.key
-                                    ? 'bg-blue-700 md:border-l-4 border-yellow-400 text-white'
-                                    : 'text-blue-200 hover:text-white'
+                                    ? 'bg-indigo-50 text-indigo-700 shadow-sm ring-1 ring-indigo-100/50'
+                                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                                 }`}
                         >
-                            <span className="text-xl flex-shrink-0">{tab.icon}</span>
+                            <span className={`text-xl flex-shrink-0 transition-transform ${activeTab === tab.key ? 'scale-110' : ''}`}>{tab.icon}</span>
                             <span className="hidden md:inline">{tab.label}</span>
                         </button>
                     ))}
                 </nav>
 
                 {/* Footer Sidebar - chỉ hiện trên PC */}
-                <div className="hidden md:block mt-auto p-4 border-t border-blue-800">
-                    <div className="flex items-center gap-3 mb-3">
-                        <div className="w-9 h-9 rounded-full bg-blue-700 flex items-center justify-center text-lg font-black">
+                <div className="hidden md:block mt-auto p-5 border-t border-slate-100 bg-slate-50/50">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-100 to-violet-100 flex items-center justify-center text-indigo-700 text-lg font-black border border-indigo-200/50">
                             {(user.full_name || 'A')[0]}
                         </div>
-                        <div>
-                            <p className="text-sm font-bold text-white leading-tight">{user.full_name || 'Admin'}</p>
-                            <p className="text-xs text-blue-300">Quản trị viên</p>
+                        <div className="overflow-hidden">
+                            <p className="text-sm font-bold text-slate-900 leading-tight truncate">{user.full_name || 'Admin'}</p>
+                            <p className="text-xs text-slate-500 truncate">Quản trị viên</p>
                         </div>
                     </div>
                     <button
                         onClick={handleLogout}
-                        className="w-full bg-red-600 hover:bg-red-700 py-2 rounded-lg font-bold text-sm transition flex items-center justify-center gap-2"
+                        className="w-full bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-sm"
                     >
-                        🚪 Đăng Xuất
+                        Đăng Xuất
                     </button>
                 </div>
             </div>
 
             {/* ===== NỘI DUNG CHÍNH ===== */}
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col min-w-0">
                 {/* Topbar Mobile */}
-                <div className="md:hidden bg-blue-950 px-4 py-3 flex justify-between items-center text-white">
+                <div className="md:hidden bg-white border-b border-slate-200 px-4 py-3 flex justify-between items-center z-20 sticky top-0">
                     <div className="flex items-center gap-2">
-                        <span>🏠</span>
-                        <span className="font-bold text-sm">{user.full_name || 'Admin'}</span>
+                        <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-lg flex items-center justify-center text-white text-sm font-bold">
+                            H
+                        </div>
+                        <span className="font-bold text-sm text-slate-800">{user.full_name || 'Admin'}</span>
                     </div>
-                    <button onClick={handleLogout} className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg text-xs font-bold transition">
+                    <button onClick={handleLogout} className="bg-rose-50 text-rose-600 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-xs font-bold transition">
                         Đăng xuất
                     </button>
                 </div>
 
                 {/* Breadcrumb tiêu đề trang */}
-                <div className="bg-white border-b px-6 py-3 hidden md:flex items-center gap-2 text-gray-600 text-sm">
-                    <span className="font-bold text-blue-800">Trang chủ</span>
-                    <span>›</span>
-                    <span className="font-semibold text-gray-800">{currentTab?.icon} {currentTab?.label}</span>
+                <div className="bg-white/60 backdrop-blur-md border-b border-slate-200 px-8 py-4 hidden md:flex items-center gap-2.5 text-slate-500 text-sm sticky top-0 z-10">
+                    <span className="font-bold text-indigo-600">Trang chủ</span>
+                    <span className="text-slate-300">/</span>
+                    <span className="font-semibold text-slate-800 flex items-center gap-2">{currentTab?.icon} {currentTab?.label}</span>
                 </div>
 
                 {/* Nội dung Tab */}
-                <div className="flex-1 p-4 md:p-6">
+                <div className="flex-1 p-4 md:p-8">
                     {activeTab === 'rooms'    && <RoomManagement />}
                     {activeTab === 'users'    && <UserManagement />}
                     {activeTab === 'invoices' && <InvoiceManagement />}

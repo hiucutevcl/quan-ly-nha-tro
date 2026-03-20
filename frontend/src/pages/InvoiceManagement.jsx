@@ -124,13 +124,13 @@ const InvoiceManagement = () => {
     if (loading) return <div className="text-center mt-10">Đang tải dữ liệu hóa đơn...</div>;
 
     return (
-        <div className="bg-gray-50 min-h-screen">
+        <div className="bg-slate-50 min-h-screen">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold text-blue-800 uppercase">Nghiệp vụ Hóa Đơn & Thu Tiền</h1>
+                <h1 className="text-2xl font-bold text-indigo-800 uppercase">Nghiệp vụ Hóa Đơn & Thu Tiền</h1>
                 <button
                     onClick={exportToExcel}
                     disabled={filteredInvoices.length === 0}
-                    className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition disabled:opacity-40"
+                    className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition disabled:opacity-40"
                 >
                     📤 Xuất Excel ({filteredInvoices.length} HĐ)
                 </button>
@@ -138,12 +138,12 @@ const InvoiceManagement = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
                 {/* Cột 1: Form Tạo Hóa Đơn Mới */}
-                <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500 lg:col-span-1 border">
+                <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-500 lg:col-span-1 border">
                     <h2 className="text-lg font-bold mb-4 text-gray-700">LẬP HÓA ĐƠN THÁNG</h2>
                     <form onSubmit={handleCreateInvoice}>
                         <div className="mb-3">
                             <label className="block text-xs font-bold mb-1 text-gray-600">Phòng Khách</label>
-                            <select className="w-full border p-2 rounded focus:ring-2 focus:ring-blue-400" required
+                            <select className="w-full border p-2 rounded focus:ring-2 focus:ring-indigo-400" required
                                 name="room_id" value={invoiceData.room_id} onChange={handleRoomSelect}>
                                 <option value="">- Chọn Phòng -</option>
                                 {rooms.filter(r => r.status === 'Occupied').map(room => (
@@ -169,7 +169,7 @@ const InvoiceManagement = () => {
                             <div>
                                 <label className="block text-xs font-bold mb-1 text-gray-600 flex justify-between">
                                     <span>⚡ Điện MỚI</span>
-                                    <span className="text-blue-600 font-normal">4.000đ/kWh</span>
+                                    <span className="text-indigo-600 font-normal">4.000đ/kWh</span>
                                 </label>
                                 <input type="number" className="w-full border p-2 rounded bg-yellow-50" required
                                     name="new_elec" value={invoiceData.new_elec} onChange={handleInputChange} />
@@ -187,9 +187,9 @@ const InvoiceManagement = () => {
                             <div>
                                 <label className="block text-xs font-bold mb-1 text-gray-600 flex justify-between">
                                     <span>💧 Nước MỚI</span>
-                                    <span className="text-blue-600 font-normal">30.000đ/m³</span>
+                                    <span className="text-indigo-600 font-normal">30.000đ/m³</span>
                                 </label>
-                                <input type="number" className="w-full border p-2 rounded bg-blue-50" required
+                                <input type="number" className="w-full border p-2 rounded bg-indigo-50" required
                                     name="new_water" value={invoiceData.new_water} onChange={handleInputChange} />
                             </div>
                         </div>
@@ -212,7 +212,7 @@ const InvoiceManagement = () => {
                             </div>
                         </div>
 
-                        <button type="submit" className="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded shadow-lg transition">
+                        <button type="submit" className="w-full bg-indigo-700 hover:bg-blue-800 text-white font-bold py-3 rounded shadow-lg transition">
                             PHÁT HÀNH HÓA ĐƠN
                         </button>
                     </form>
@@ -253,12 +253,12 @@ const InvoiceManagement = () => {
                             </thead>
                             <tbody>
                                 {filteredInvoices.length === 0 && (
-                                    <tr><td colSpan={4} className="text-center py-10 text-gray-400">Không tìm thấy hóa đơn.</td></tr>
+                                    <tr><td colSpan={4} className="text-center py-10 text-slate-400">Không tìm thấy hóa đơn.</td></tr>
                                 )}
                                 {filteredInvoices.map(inv => (
-                                    <tr key={inv.id} className="hover:bg-gray-50 border-b border-gray-200">
+                                    <tr key={inv.id} className="hover:bg-slate-50 border-b border-gray-200">
                                         <td className="px-3 py-4 text-sm">
-                                            <p className="font-bold text-blue-700 text-lg">{inv.room_name}</p>
+                                            <p className="font-bold text-indigo-700 text-lg">{inv.room_name}</p>
                                             <p className="text-gray-500 text-xs">{inv.tenant_name}</p>
                                             <p className="text-gray-500">T{inv.month_year.split('-')[1]}/{inv.month_year.split('-')[0]}</p>
                                         </td>
@@ -276,7 +276,7 @@ const InvoiceManagement = () => {
                                         <td className="px-3 py-4 text-sm text-center">
                                             <div className="flex flex-col gap-2 items-center">
                                                 {inv.is_paid ? (
-                                                    <span className="bg-green-100 text-green-800 py-1 px-3 rounded-full font-bold text-xs">ĐÃ THU</span>
+                                                    <span className="bg-emerald-50 text-emerald-700 py-1 px-3 rounded-full font-bold text-xs">ĐÃ THU</span>
                                                 ) : (
                                                     <>
                                                         <span className="bg-red-100 text-red-800 py-1 px-3 rounded-full font-bold text-xs">CHƯA THU</span>

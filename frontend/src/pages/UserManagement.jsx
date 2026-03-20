@@ -105,7 +105,7 @@ const UserManagement = () => {
     if (loading) return <div className="text-center mt-10 text-gray-500">Đang tải...</div>;
 
     return (
-        <div className="bg-gray-50 min-h-screen">
+        <div className="bg-slate-50 min-h-screen">
 
             {/* ===== MODAL PHIẾU ĐĂNG NHẬP ===== */}
             {credCard && (
@@ -114,26 +114,26 @@ const UserManagement = () => {
                         <div className="text-5xl mb-2">🎉</div>
                         <h2 className="text-xl font-black text-gray-800 mb-1">Tài khoản sẵn sàng!</h2>
                         <p className="text-gray-500 text-sm mb-5">Giao phiếu này cho khách thuê</p>
-                        <div className="bg-blue-50 border-2 border-dashed border-blue-300 rounded-xl p-4 text-left space-y-3 mb-5">
+                        <div className="bg-indigo-50 border-2 border-dashed border-blue-300 rounded-xl p-4 text-left space-y-3 mb-5">
                             <div className="flex justify-between items-center">
                                 <span className="text-xs text-gray-500 font-bold uppercase">Họ tên</span>
                                 <span className="font-bold text-gray-800">{credCard.full_name}</span>
                             </div>
                             <div className="flex justify-between items-center border-t pt-2">
                                 <span className="text-xs text-gray-500 font-bold uppercase">Tên đăng nhập</span>
-                                <span className="font-mono font-black text-blue-700 text-lg">{credCard.username}</span>
+                                <span className="font-mono font-black text-indigo-700 text-lg">{credCard.username}</span>
                             </div>
                             <div className="flex justify-between items-center border-t pt-2">
                                 <span className="text-xs text-gray-500 font-bold uppercase">Mật khẩu</span>
                                 <span className="font-mono font-black text-red-600 text-lg">{credCard.password}</span>
                             </div>
                             <div className="border-t pt-2 text-center">
-                                <p className="text-xs text-gray-400">🌐 Đăng nhập tại: <b>localhost:5173</b></p>
+                                <p className="text-xs text-slate-400">🌐 Đăng nhập tại: <b>localhost:5173</b></p>
                             </div>
                         </div>
                         <button
                             onClick={() => setCredCard(null)}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl transition"
+                            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl transition"
                         >
                             ✅ Đã hiểu, đóng lại
                         </button>
@@ -147,13 +147,13 @@ const UserManagement = () => {
                     <button
                         onClick={exportToExcel}
                         disabled={users.length === 0}
-                        className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition disabled:opacity-40"
+                        className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition disabled:opacity-40"
                     >
                         📤 Xuất Excel ({users.length})
                     </button>
                     <button
                         onClick={() => { setShowAddForm(!showAddForm); setEditUser(null); }}
-                        className={`px-4 py-2 rounded-lg font-bold transition text-sm ${showAddForm ? 'bg-gray-400 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
+                        className={`px-4 py-2 rounded-lg font-bold transition text-sm ${showAddForm ? 'bg-slate-400 text-white' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}
                     >
                         {showAddForm ? '✕ Đóng' : '+ Thêm Khách Mới'}
                     </button>
@@ -162,47 +162,47 @@ const UserManagement = () => {
 
             {/* ===== FORM THÊM MỚI ===== */}
             {showAddForm && (
-                <div className="bg-white p-5 rounded-xl shadow mb-6 border-t-4 border-green-500">
+                <div className="bg-white p-5 rounded-xl shadow mb-6 border-t-4 border-indigo-500">
                     <h2 className="text-lg font-bold text-gray-700 mb-4">📋 Tạo Tài Khoản Khách Thuê Mới</h2>
                     <form onSubmit={handleAddUser} className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
                             <label className="block text-xs font-bold text-gray-600 mb-1">Họ và Tên <span className="text-red-500">*</span></label>
                             <input type="text" required placeholder="Nguyễn Văn A"
-                                className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none"
+                                className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
                                 value={newUser.full_name} onChange={e => setNewUser({...newUser, full_name: e.target.value})} />
                         </div>
                         <div>
                             <label className="block text-xs font-bold text-gray-600 mb-1">Số điện thoại</label>
                             <input type="text" placeholder="0912 345 678"
-                                className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none"
+                                className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
                                 value={newUser.phone} onChange={e => setNewUser({...newUser, phone: e.target.value})} />
                         </div>
                         <div>
                             <label className="block text-xs font-bold text-gray-600 mb-1">Tên đăng nhập <span className="text-red-500">*</span></label>
                             <input type="text" required placeholder="VD: 0912345678 hoặc tên bất kỳ"
-                                className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none"
+                                className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
                                 value={newUser.username} onChange={e => setNewUser({...newUser, username: e.target.value})} />
                         </div>
                         <div>
                             <label className="block text-xs font-bold text-gray-600 mb-1">Mật khẩu <span className="text-red-500">*</span></label>
                             <input type="text" required placeholder="Mật khẩu ban đầu"
-                                className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none"
+                                className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
                                 value={newUser.password} onChange={e => setNewUser({...newUser, password: e.target.value})} />
                         </div>
                         <div>
                             <label className="block text-xs font-bold text-gray-600 mb-1">Số CCCD/CMND</label>
                             <input type="text" placeholder="012345678901"
-                                className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none"
+                                className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
                                 value={newUser.id_card} onChange={e => setNewUser({...newUser, id_card: e.target.value})} />
                         </div>
                         <div>
                             <label className="block text-xs font-bold text-gray-600 mb-1">Quê quán / Địa chỉ thường trú</label>
                             <input type="text" placeholder="Tỉnh/Thành phố..."
-                                className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none"
+                                className="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
                                 value={newUser.hometown} onChange={e => setNewUser({...newUser, hometown: e.target.value})} />
                         </div>
                         <div className="md:col-span-2 flex gap-2 pt-1">
-                            <button type="submit" className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition text-sm">
+                            <button type="submit" className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg transition text-sm">
                                 ✅ Tạo Tài Khoản
                             </button>
                             <button type="button" onClick={() => setShowAddForm(false)} className="px-4 bg-gray-200 hover:bg-gray-300 rounded-lg font-bold text-sm transition">
@@ -220,7 +220,7 @@ const UserManagement = () => {
                 </div>
 
                 {users.length === 0 ? (
-                    <div className="text-center py-12 text-gray-400">
+                    <div className="text-center py-12 text-slate-400">
                         <span className="text-4xl block mb-2">👤</span>
                         <p>Chưa có khách thuê nào.</p>
                     </div>
@@ -229,24 +229,24 @@ const UserManagement = () => {
                         {users.map((user, idx) => (
                             <div key={user.id} className="border-b border-gray-100 last:border-0">
                                 {/* Dòng chính */}
-                                <div className="flex items-center px-4 py-3 hover:bg-gray-50 transition">
-                                    <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-black text-sm flex-shrink-0">
+                                <div className="flex items-center px-4 py-3 hover:bg-slate-50 transition">
+                                    <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm flex-shrink-0">
                                         {idx + 1}
                                     </div>
                                     <div className="flex-1 ml-3 grid grid-cols-2 md:grid-cols-4 gap-2 items-center">
                                         <div>
                                             <p className="font-bold text-gray-800 text-sm">{user.full_name}</p>
-                                            <p className="text-xs text-gray-400 font-mono">{user.username}</p>
+                                            <p className="text-xs text-slate-400 font-mono">{user.username}</p>
                                         </div>
                                         <div>
                                             <p className="text-sm text-gray-600">{user.phone || <span className="text-gray-300 text-xs">Chưa có SĐT</span>}</p>
-                                            <p className="text-xs text-gray-400">{user.id_card ? `CCCD: ${user.id_card}` : ''}</p>
+                                            <p className="text-xs text-slate-400">{user.id_card ? `CCCD: ${user.id_card}` : ''}</p>
                                         </div>
                                         <div className="hidden md:block">
                                             <p className="text-xs text-gray-500">{user.hometown || <span className="text-gray-300">—</span>}</p>
                                         </div>
                                         <div>
-                                            <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${user.room_name ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-400'}`}>
+                                            <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${user.room_name ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-slate-400'}`}>
                                                 {user.room_name ? `🏠 ${user.room_name}` : 'Chưa có phòng'}
                                             </span>
                                         </div>
@@ -254,7 +254,7 @@ const UserManagement = () => {
                                     <div className="flex items-center gap-1 ml-2 flex-shrink-0">
                                         <button
                                             onClick={() => { setEditUser(editUser?.id === user.id ? null : { ...user }); setResetPassUser(null); }}
-                                            className="text-blue-500 hover:text-blue-700 text-xs font-bold hover:bg-blue-50 px-2 py-1 rounded transition"
+                                            className="text-indigo-500 hover:text-indigo-700 text-xs font-bold hover:bg-indigo-50 px-2 py-1 rounded transition"
                                         >✏️ Sửa</button>
                                         <button
                                             onClick={() => { setResetPassUser(resetPassUser?.id === user.id ? null : { id: user.id, full_name: user.full_name, username: user.username, newPass: '' }); setEditUser(null); }}
@@ -287,9 +287,9 @@ const UserManagement = () => {
                                 {/* Panel Sửa thông tin */}
                                 {editUser?.id === user.id && (
                                     <form onSubmit={handleUpdateUser}
-                                        className="bg-blue-50 border-t border-blue-100 p-4 grid grid-cols-1 md:grid-cols-2 gap-3"
+                                        className="bg-indigo-50 border-t border-blue-100 p-4 grid grid-cols-1 md:grid-cols-2 gap-3"
                                     >
-                                        <h3 className="md:col-span-2 text-sm font-bold text-blue-800 mb-1">📝 Sửa thông tin: {user.full_name}</h3>
+                                        <h3 className="md:col-span-2 text-sm font-bold text-indigo-800 mb-1">📝 Sửa thông tin: {user.full_name}</h3>
                                         <div>
                                             <label className="text-xs font-bold text-gray-600 block mb-1">Họ và Tên</label>
                                             <input type="text" required className="w-full border rounded p-2 text-sm"
@@ -311,10 +311,10 @@ const UserManagement = () => {
                                                 value={editUser.hometown || ''} onChange={e => setEditUser({...editUser, hometown: e.target.value})} />
                                         </div>
                                         <div className="md:col-span-2 flex gap-2">
-                                            <button type="submit" className="flex-1 bg-blue-600 text-white font-bold py-2 rounded text-sm hover:bg-blue-700 transition">
+                                            <button type="submit" className="flex-1 bg-indigo-600 text-white font-bold py-2 rounded text-sm hover:bg-indigo-700 transition">
                                                 💾 Lưu thay đổi
                                             </button>
-                                            <button type="button" onClick={() => setEditUser(null)} className="px-4 bg-gray-300 rounded text-sm font-bold hover:bg-gray-400 transition">
+                                            <button type="button" onClick={() => setEditUser(null)} className="px-4 bg-gray-300 rounded text-sm font-bold hover:bg-slate-400 transition">
                                                 Hủy
                                             </button>
                                         </div>
