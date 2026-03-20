@@ -87,6 +87,14 @@ function Navbar({ name, phone, logo_image }) {
               📞 {phone}
             </a>
           )}
+          <a href="#faq" style={{
+            background: 'hsl(215,100%,96%)', color: 'hsl(215,100%,45%)',
+            padding: '8px 20px', borderRadius: 10, fontSize: 13, fontWeight: 700,
+            textDecoration: 'none', transition: 'all 0.2s'
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'hsl(215,100%,92%)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'hsl(215,100%,96%)'; }}
+          >Đăng ký</a>
           <Link to="/login" style={{
             background: 'var(--gradient-primary)', color: '#fff',
             padding: '8px 20px', borderRadius: 10, fontSize: 13, fontWeight: 700,
@@ -118,12 +126,14 @@ function Navbar({ name, phone, logo_image }) {
                 borderBottom: '1px solid hsla(30,15%,90%,0.4)'
               }}>{l.label}</a>
             ))}
-            <div style={{ paddingTop: 12 }}>
+            <div style={{ paddingTop: 12, display: 'flex', gap: 8 }}>
+              <a href="#faq" onClick={() => setMobileOpen(false)} style={{
+                flex: 1, textAlign: 'center', background: 'hsl(215,100%,96%)', color: 'hsl(215,100%,45%)',
+                padding: '10px', borderRadius: 10, fontWeight: 700, textDecoration: 'none'
+              }}>Đăng ký</a>
               <Link to="/login" style={{
-                display: 'block', textAlign: 'center',
-                background: 'var(--gradient-primary)', color: '#fff',
-                padding: '10px', borderRadius: 10, fontWeight: 700,
-                textDecoration: 'none'
+                flex: 1, textAlign: 'center', background: 'var(--gradient-primary)', color: '#fff',
+                padding: '10px', borderRadius: 10, fontWeight: 700, textDecoration: 'none'
               }}>Đăng nhập</Link>
             </div>
           </nav>
@@ -616,7 +626,7 @@ function FAQSection() {
   ];
 
   return (
-    <section className="section-padding" style={{ background: '#fff' }}>
+    <section id="faq" className="section-padding" style={{ background: '#fff' }}>
       <div className="container-tight">
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <p style={{ fontSize: 12, fontWeight: 700, color: 'hsl(215,100%,35%)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
