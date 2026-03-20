@@ -98,7 +98,7 @@ function Navbar({ name, phone, logo_image }) {
             onMouseEnter={e => { e.currentTarget.style.background = '#ede9fe'; }}
             onMouseLeave={e => { e.currentTarget.style.background = '#f5f3ff'; }}
           >Xem phòng</a>
-          <a href="#contact" style={{
+          <a href="#info" style={{
             background: 'transparent', color: '#6b7280',
             padding: '8px 18px', borderRadius: 999, fontSize: 13, fontWeight: 600,
             textDecoration: 'none', transition: 'all 0.2s', border: '1px solid transparent'
@@ -146,7 +146,7 @@ function Navbar({ name, phone, logo_image }) {
                 flex: 1, textAlign: 'center', background: '#f5f3ff', color: '#6366f1',
                 padding: '10px', borderRadius: 999, fontWeight: 600, textDecoration: 'none', border: '1px solid #e0e7ff'
               }}>Xem phòng</a>
-              <a href="#contact" onClick={() => setMobileOpen(false)} style={{
+              <a href="#info" onClick={() => setMobileOpen(false)} style={{
                 flex: 1, textAlign: 'center', background: '#f8fafc', color: '#475569',
                 padding: '10px', borderRadius: 999, fontWeight: 600, textDecoration: 'none'
               }}>Đăng ký</a>
@@ -580,7 +580,7 @@ function RoomsSection({ rooms, loading, onRoomClick }) {
 function RulesSection({ note }) {
   if (!note) return null;
   return (
-    <section className="section-padding" style={{ background: '#fff' }}>
+    <section id="info" className="section-padding" style={{ background: '#fff' }}>
       <div className="container-tight">
         <div style={{ maxWidth: 760, margin: '0 auto', padding: 'clamp(2rem, 5vw, 3rem)', borderRadius: 20, border: '1px solid #e2e8f0', background: '#f8fafc' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: '1.5rem' }}>
