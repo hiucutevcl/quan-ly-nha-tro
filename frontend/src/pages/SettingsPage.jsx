@@ -26,7 +26,10 @@ const defaultSettings = {
       { title: '🌐 Lắp đặt Internet FPT Sinh Viên', desc: 'Giảm ngay 50% phí hòa mạng.', details: 'Chương trình cực HOT dành cho Tân sinh viên! Tặng thêm 2 tháng cước khi đóng trước 6 tháng. Ưu tiên lắp đặt hỏa tốc trong 24h vòng quanh hệ thống nhà trọ. Liên hệ ngay SĐT: 0988.xxx.xxx', image: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80' },
       { title: '📦 Dịch vụ chuyển trọ Thành Hưng', desc: 'Chỉ từ 299k trọn gói xe tải nhỏ.', details: 'Bạn cần chuyển trọ cuối tháng? Đã có Thành Hưng! Xe tải nhỏ 500kg chạy nội ô. Hỗ trợ bọc lót chống trầy xước tủ lạnh, tivi, đệm. Gọi trước 1 ngày để nhận ngay chiết khấu 100k cho khách quen nhà trọ.', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80' }
     ]),
-    buildings_list: JSON.stringify(['Cơ sở Cầu Giấy', 'Cơ sở Ba Đình'])
+    buildings_list: JSON.stringify(['Cơ sở Cầu Giấy', 'Cơ sở Ba Đình']),
+    buildings_info: JSON.stringify([
+      { name: 'Cơ sở Minh Hiếu 1', address: 'Xuân Thủy, Cầu Giấy, Hà Nội' }
+    ])
 };
 
 const SettingsPage = () => {
@@ -63,7 +66,15 @@ const SettingsPage = () => {
     const handleSave = async (e) => {
         e.preventDefault();
         try {
-            await axiosAuth.put('/settings', settings);
+            // Tự động đồng bộ mảng tên cơ sở (buidings_list) cho trang Quản lý Phòng 
+            let bInfo = [];
+            try { 
+                if (settings.buildings_info) bInfo = JSON.parse(settings.buildings_info); 
+            } catch(err) {}
+            const bList = bInfo.map(b => b.name).filter(Boolean);
+            const settingsToSave = { ...settings, buildings_list: JSON.stringify(bList) };
+
+            await axiosAuth.put('/settings', settingsToSave);
             setSaved(true);
             setTimeout(() => setSaved(false), 2500);
         } catch (error) {
@@ -171,6 +182,75 @@ const SettingsPage = () => {
                     <textarea name="note" rows={8} className="w-full border rounded p-2 focus:ring-2 focus:ring-gray-400"
                         value={settings.note} onChange={handleChange}
                         placeholder="Nhập nội quy, thông báo hiển thị trên cộng đồng..." />
+                </div>
+
+                {/* --- QUẢN LÝ CƠ SỞ / CHI NHÁNH --- */}
+                <div className="bg-white p-6 rounded-xl shadow border-t-4 border-teal-500">
+                    <h2 className="text-lg font-bold text-teal-700 mb-4">🏢 Quản lý Các Cơ Sở (Chi nhánh) & Bản đồ</h2>
+                    <p className="text-sm text-gray-500 mb-6">
+                        Thêm tên cơ sở và địa chỉ cụ thể để khách hàng có thể xem bản đồ dẫn đường của từng khu nhà trên trang chủ.
+                        Danh sách tên sẽ được đồng bộ sang trang Quản lý phòng.
+                    </p>
+                    
+                    {(() => {
+                        let buildInfoList = [];
+                        try {
+                            if (settings.buildings_info) {
+                                buildInfoList = JSON.parse(settings.buildings_info);
+                                if (!Array.isArray(buildInfoList)) buildInfoList = [];
+                            }
+                        } catch (e) {
+                            buildInfoList = [];
+                        }
+
+                        const handleBuildChange = (index, field, value) => {
+                            const newList = [...buildInfoList];
+                            newList[index][field] = value;
+                            setSettings({ ...settings, buildings_info: JSON.stringify(newList) });
+                        };
+
+                        const addBuild = () => {
+                            const newList = [...buildInfoList, { name: '', address: '' }];
+                            setSettings({ ...settings, buildings_info: JSON.stringify(newList) });
+                        };
+
+                        const removeBuild = (index) => {
+                            if (!window.confirm('Xóa cơ sở này? Sẽ mất địa chỉ hiển thị trên bản đồ!')) return;
+                            const newList = buildInfoList.filter((_, i) => i !== index);
+                            setSettings({ ...settings, buildings_info: JSON.stringify(newList) });
+                        };
+
+                        return (
+                            <div className="space-y-4">
+                                {buildInfoList.map((build, idx) => (
+                                    <div key={idx} className="border border-teal-100 p-4 rounded-xl bg-teal-50 relative">
+                                        <button type="button" onClick={() => removeBuild(idx)} 
+                                            className="absolute top-2 right-2 text-teal-500 hover:text-rose-500 font-bold bg-white px-2 py-0.5 rounded shadow-sm text-xs">
+                                            Xoá Cơ Sở
+                                        </button>
+                                        <h3 className="text-xs font-bold text-teal-800 mb-3 uppercase tracking-wide">📍 Cơ sở #{idx + 1}</h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-600 mb-1">Tên cơ sở (VD: Cơ sở Đống Đa)</label>
+                                                <input type="text" className="w-full border border-teal-200 rounded p-2 text-sm focus:ring-2 focus:ring-teal-400"
+                                                    value={build.name} onChange={(e) => handleBuildChange(idx, 'name', e.target.value)} placeholder="Tên để phân loại phòng..." />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-600 mb-1">Địa chỉ chi tiết (Dùng để tìm Google Maps)</label>
+                                                <input type="text" className="w-full border border-teal-200 rounded p-2 text-sm focus:ring-2 focus:ring-teal-400"
+                                                    value={build.address} onChange={(e) => handleBuildChange(idx, 'address', e.target.value)} placeholder="VD: 123 Phố X, Phường Y..." />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                                
+                                <button type="button" onClick={addBuild} 
+                                    className="w-full py-3 border-2 border-dashed border-teal-300 text-teal-600 font-bold rounded-xl hover:bg-teal-100 transition">
+                                    + THÊM CƠ SỞ MỚI
+                                </button>
+                            </div>
+                        );
+                    })()}
                 </div>
 
                 {/* --- QUẢN LÝ NÚT CHATBOT ĐỘNG (CUSTOM QUICK REPLIES) --- */}

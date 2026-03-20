@@ -467,8 +467,27 @@ function RulesSection({ note }) {
 }
 
 /** Location & Amenities Section */
-function LocationSection({ address }) {
-  const mapAddress = encodeURIComponent(address || 'Hà Nội, Việt Nam');
+function LocationSection({ address, buildings_info }) {
+  const [activeTab, setActiveTab] = React.useState(0);
+
+  let buildings = [];
+  try {
+    if (buildings_info) {
+      buildings = JSON.parse(buildings_info);
+      if (!Array.isArray(buildings)) buildings = [];
+    }
+  } catch(e) {}
+
+  if (buildings.length === 0) {
+    buildings = [{ name: 'Trụ sở chính', address: address || 'Hà Nội, Việt Nam' }];
+  }
+
+  // Lọc bớt các cơ sở bị trống địa chỉ
+  const validBuildings = buildings.filter(b => b.address?.trim() !== '');
+  const displayBuildings = validBuildings.length > 0 ? validBuildings : buildings;
+  const currentBuilding = displayBuildings[activeTab] || displayBuildings[0];
+
+  const mapAddress = encodeURIComponent(currentBuilding.address || 'Hà Nội, Việt Nam');
   const nearbyAmenities = [
     { icon: '🛒', title: 'Siêu thị & Chợ', desc: 'Bách Hóa, Vinmart, Chợ Dân Sinh...', search: 'Chợ Siêu thị' },
     { icon: '🏥', title: 'Cơ sở Y Tế', desc: 'Nhà thuốc báo quanh khu vực, Bệnh viện lớn.', search: 'Bệnh viện Nhà thuốc' },
@@ -479,7 +498,7 @@ function LocationSection({ address }) {
   return (
     <section id="location" style={{ background: 'hsl(30,15%,96%)' }} className="section-padding">
       <div className="container-tight">
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <p style={{ fontSize: 12, fontWeight: 700, color: 'hsl(215,100%,35%)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
             VỊ TRÍ & TIỆN ÍCH NGOẠI KHU
           </p>
@@ -487,6 +506,27 @@ function LocationSection({ address }) {
             Sinh hoạt <span className="gradient-text">thuận lợi</span>
           </h2>
         </div>
+
+        {displayBuildings.length > 1 && (
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
+            {displayBuildings.map((b, idx) => (
+              <button 
+                key={idx}
+                onClick={() => setActiveTab(idx)}
+                style={{
+                  padding: '10px 24px', borderRadius: '30px', fontWeight: 700, fontSize: 14,
+                  background: activeTab === idx ? 'hsl(215,100%,45%)' : '#fff',
+                  color: activeTab === idx ? '#fff' : 'hsl(220,10%,46%)',
+                  border: activeTab === idx ? 'none' : '1px solid hsl(210,16%,90%)',
+                  boxShadow: activeTab === idx ? '0 4px 12px hsla(215,100%,45%,0.3)' : '0 2px 6px rgba(0,0,0,0.04)',
+                  cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 6
+                }}
+              >
+                📍 {b.name || `Cơ sở ${idx + 1}`}
+              </button>
+            ))}
+          </div>
+        )}
 
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(250px, 1fr) minmax(250px, 1.25fr)', gap: '2rem', alignItems: 'center' }} className="location-grid">
           {/* Map */}
@@ -885,7 +925,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <LocationSection address={settings.address} />
+      <LocationSection address={settings.address} buildings_info={settings.buildings_info} />
 
       <FAQSection />
 

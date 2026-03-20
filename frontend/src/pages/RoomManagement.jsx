@@ -87,36 +87,8 @@ const RoomManagement = () => {
             .catch(() => setBuildingsList(['Cơ sở Cầu Giấy', 'Cơ sở Ba Đình']));
     }, []);
 
-    const [newBuildingInput, setNewBuildingInput] = useState('');
-    const [buildingSaving, setBuildingSaving] = useState(false);
-
-    const handleAddBuilding = async () => {
-        const name = newBuildingInput.trim();
-        if (!name) return;
-        const newList = [...buildingsList, name];
-        setBuildingsList(newList);
-        setNewBuildingInput('');
-        setBuildingSaving(true);
-        try {
-            await axios.put('https://api-quan-ly-nha-tro.onrender.com/api/settings',
-                { buildings_list: JSON.stringify(newList) },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-        } catch(e) { console.warn('Lỗi lưu danh sách cơ sở:', e.message); }
-        setBuildingSaving(false);
-    };
-
-    const handleRemoveBuilding = async (idx) => {
-        if (!window.confirm('Xóa cơ sở này?')) return;
-        const newList = buildingsList.filter((_, i) => i !== idx);
-        setBuildingsList(newList);
-        try {
-            await axios.put('https://api-quan-ly-nha-tro.onrender.com/api/settings',
-                { buildings_list: JSON.stringify(newList) },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-        } catch(e) { console.warn('Lỗi xóa cơ sở:', e.message); }
-    };
+    const handleAddBuilding = async () => {}; // Gỡ bỏ vì đã chuyển sang Settings
+    const handleRemoveBuilding = async (idx) => {};
 
     // 1. Thêm phòng mới
     const handleAddRoom = async (e) => {
@@ -207,34 +179,7 @@ const RoomManagement = () => {
         <div className="min-h-screen bg-gray-50 p-6">
             <h1 className="text-2xl font-bold text-green-700 mb-6 uppercase text-center">Quản Lý Phòng Trọ & Tiện Nghi</h1>
 
-            {/* Panel Quản lý Cơ sở / Khu nhà */}
-            <div className="bg-white p-4 rounded-lg shadow-md mb-6 max-w-2xl mx-auto border-t-4 border-teal-500">
-                <h2 className="text-base font-bold text-teal-700 mb-3">🏢 Danh Sách Cơ Sở / Khu Nhà</h2>
-                <div className="flex flex-wrap gap-2 mb-3">
-                    {buildingsList.map((b, idx) => (
-                        <div key={idx} className="flex items-center gap-1 bg-teal-50 border border-teal-200 rounded-full px-3 py-1">
-                            <span className="text-sm text-teal-800 font-semibold">{b}</span>
-                            <button type="button" onClick={() => handleRemoveBuilding(idx)}
-                                className="text-teal-400 hover:text-red-500 font-bold text-xs ml-1 transition">✕</button>
-                        </div>
-                    ))}
-                    {buildingsList.length === 0 && <p className="text-sm text-gray-400 italic">Chưa có cơ sở nào. Thêm mới bên dưới↓</p>}
-                </div>
-                <div className="flex gap-2">
-                    <input type="text"
-                        className="flex-1 border border-teal-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-teal-400 focus:outline-none"
-                        placeholder="VD: Cơ sở Đống Đa, Tòa nhà C..."
-                        value={newBuildingInput}
-                        onChange={e => setNewBuildingInput(e.target.value)}
-                        onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddBuilding())}
-                    />
-                    <button type="button" onClick={handleAddBuilding}
-                        disabled={buildingSaving}
-                        className="bg-teal-600 hover:bg-teal-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition disabled:opacity-50">
-                        {buildingSaving ? '...' : '+ Thêm'}
-                    </button>
-                </div>
-            </div>
+
 
             {/* Khung Thêm Phòng */}
             <div className="bg-white p-6 rounded-lg shadow-md mb-8 max-w-2xl mx-auto border-t-4 border-green-500">
