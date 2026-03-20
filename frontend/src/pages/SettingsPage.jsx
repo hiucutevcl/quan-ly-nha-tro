@@ -15,6 +15,7 @@ const defaultSettings = {
     bank_owner: '',
     hero_image: '',
     logo_image: '',
+    about_image: '',
     custom_quick_replies: JSON.stringify([
         { title: '🏠 Xem phòng trống', answer: 'Hiện tại nhà trọ đang có phòng trống. Vui lòng liên hệ số ĐT chủ trọ để xem phòng!' },
         { title: '💰 Báo giá thuê', answer: 'Giá thuê phòng từ 2.500.000đ - 3.500.000đ tùy diện tích. (Chưa bao gồm điện nước).' },
@@ -113,9 +114,9 @@ const SettingsPage = () => {
                                     value={settings.owner} onChange={handleChange} placeholder="Nguyễn Văn A" />
                             </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label className="block text-sm font-bold text-gray-600 mb-1">Ảnh Nền (Hero Image)</label>
+                                <label className="block text-sm font-bold text-gray-600 mb-1">Ảnh Nền (Trang chủ)</label>
                                 <div className="flex gap-2">
                                     <input type="text" name="hero_image" className="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-400"
                                         value={settings.hero_image || ''} onChange={handleChange} placeholder="Link ảnh nền trang chủ" />
@@ -165,6 +166,35 @@ const SettingsPage = () => {
                                                     setSettings(prev => ({ ...prev, logo_image: res.data.imageUrl }));
                                                 } catch (err) {
                                                     setSettings(prev => ({ ...prev, logo_image: '' }));
+                                                    alert('Lỗi tải ảnh: ' + (err.response?.data?.message || err.message));
+                                                }
+                                            }}
+                                        />
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-600 mb-1">Ảnh Nền (Giới thiệu)</label>
+                                <div className="flex gap-2">
+                                    <input type="text" name="about_image" className="w-full border rounded p-2 focus:ring-2 focus:ring-indigo-400"
+                                        value={settings.about_image || ''} onChange={handleChange} placeholder="Link ảnh About" />
+                                    <label className="bg-indigo-100 hover:bg-blue-200 text-indigo-700 px-3 py-2 rounded font-bold cursor-pointer text-sm whitespace-nowrap flex items-center justify-center transition-colors">
+                                        <span>📸 Tải Ảnh</span>
+                                        <input 
+                                            type="file" className="hidden" accept="image/*"
+                                            onChange={async (e) => {
+                                                const file = e.target.files[0];
+                                                if (!file) return;
+                                                const formData = new FormData();
+                                                formData.append('image', file);
+                                                try {
+                                                    setSettings(prev => ({ ...prev, about_image: 'Đang tải ảnh lên...' }));
+                                                    const res = await axiosAuth.post('/settings/upload-banner', formData, {
+                                                        headers: { 'Content-Type': 'multipart/form-data' }
+                                                    });
+                                                    setSettings(prev => ({ ...prev, about_image: res.data.imageUrl }));
+                                                } catch (err) {
+                                                    setSettings(prev => ({ ...prev, about_image: '' }));
                                                     alert('Lỗi tải ảnh: ' + (err.response?.data?.message || err.message));
                                                 }
                                             }}

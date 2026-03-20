@@ -68,7 +68,7 @@ export default function AboutPage() {
       desc: 'Tuyển chọn cư dân kỹ lưỡng tạo nên một không gian sống văn hóa, thân thiện và tôn trọng lẫn nhau.' 
     },
     { 
-      icon: 'شف', title: 'Minh Bạch 100%', 
+      icon: '🔍', title: 'Minh Bạch 100%', 
       desc: 'Mọi chi phí điện, nước, dịch vụ được quản lý công khai, rõ ràng trên hệ thống phần mềm chuyên nghiệp.' 
     }
   ];
@@ -139,7 +139,7 @@ export default function AboutPage() {
                 <div className="w-full md:w-1/2 relative">
                     <div className="aspect-square rounded-[3rem] overflow-hidden bg-slate-200">
                         <img 
-                            src="https://images.unsplash.com/photo-1556761175-5973dc0f32b7?auto=format&fit=crop&w=800&q=80" 
+                            src={settings.about_image || "https://images.unsplash.com/photo-1556761175-5973dc0f32b7?auto=format&fit=crop&w=800&q=80"} 
                             alt="Cộng đồng nhà trọ văn minh" 
                             className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700 hover:scale-105"
                         />

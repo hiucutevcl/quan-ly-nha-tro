@@ -38,7 +38,7 @@ const updateSettings = async (req, res) => {
 const getPublicSettings = async (req, res) => {
     try {
         // Chỉ trả về những trường không nhạy cảm
-        const publicKeys = ['nha_tro_name', 'address', 'phone', 'note', 'owner', 'elec_price', 'water_price', 'quick_replies', 'ads_config', 'custom_quick_replies', 'buildings_list', 'buildings_info', 'hero_image', 'logo_image'];
+        const publicKeys = ['nha_tro_name', 'address', 'phone', 'note', 'owner', 'elec_price', 'water_price', 'quick_replies', 'ads_config', 'custom_quick_replies', 'buildings_list', 'buildings_info', 'hero_image', 'logo_image', 'about_image'];
         const publicSettings = {};
         const [settings] = await db.query(
             'SELECT setting_key, setting_value FROM AppSettings WHERE setting_key IN (?)',
