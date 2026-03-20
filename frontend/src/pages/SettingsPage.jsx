@@ -102,7 +102,7 @@ const SettingsPage = () => {
     const SaveBtn = () => (
         <div className="mt-8">
             <button type="button" onClick={handleSave} className="w-full bg-indigo-700 hover:bg-blue-800 text-white font-black py-4 rounded-xl shadow-lg transition text-lg">
-                💾 LƯU CÀI ĐẠT
+                💾 LƯU CÀI ĐẶT
             </button>
             {saved && (
                 <div className="text-center mt-3 text-emerald-700 font-bold bg-emerald-50 p-3 rounded-xl border border-emerald-200">
