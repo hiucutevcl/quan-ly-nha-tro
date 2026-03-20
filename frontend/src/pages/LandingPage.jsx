@@ -164,81 +164,74 @@ function HeroSection({ settings, availableCount }) {
         }} className="hero-grid">
 
           {/* Left */}
-          <div className="animate-fade-up" style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+          <div className="animate-fade-up" style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
             {/* Badge */}
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, alignSelf: 'flex-start' }}>
               <span style={{
-                padding: '6px 16px', borderRadius: 999,
-                background: 'hsla(24,80%,55%,0.1)',
-                color: 'hsl(24,80%,45%)', fontSize: 12, fontWeight: 700,
-                letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: 8
+                padding: '6px 14px', borderRadius: 999,
+                background: 'hsl(215,100%,96%)', border: '1px solid hsl(215,100%,90%)',
+                color: 'hsl(215,100%,40%)', fontSize: 12, fontWeight: 700,
+                letterSpacing: '0.02em', display: 'flex', alignItems: 'center', gap: 6
               }}>
                 <span className="animate-pulse-dot" style={{
-                  width: 7, height: 7, borderRadius: '50%',
-                  background: 'hsl(152,60%,45%)', display: 'inline-block'
+                  width: 6, height: 6, borderRadius: '50%',
+                  background: 'hsl(215,100%,50%)', display: 'inline-block'
                 }} />
-                {availableCount > 0 ? `Còn ${availableCount} phòng trống hôm nay` : 'Nền tảng quản lý nhà trọ #1'}
+                {availableCount > 0 ? `Hiện đang trống ${availableCount} phòng` : 'Hệ thống phòng trọ hiện đại'}
               </span>
             </div>
 
             {/* Headline */}
             <h1 style={{
-              fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 800,
-              lineHeight: 1.1, letterSpacing: '-0.03em', margin: 0,
-              color: 'hsl(220,20%,10%)'
+              fontSize: 'clamp(2.5rem, 5vw, 3.8rem)', fontWeight: 800,
+              lineHeight: 1.15, letterSpacing: '-0.03em', margin: 0,
+              color: 'hsl(220,20%,12%)'
             }}>
-              Tìm phòng trọ{' '}
-              <span className="gradient-text">chất lượng</span>
-              <br />chỉ trong vài phút
+              Tìm phòng trọ <br/>
+              <span style={{ color: 'hsl(215, 100%, 45%)' }}>chất lượng</span> nhanh chóng
             </h1>
 
             {/* Subtitle */}
             <p style={{
-              fontSize: 17, color: 'hsl(220,10%,46%)', lineHeight: 1.7,
-              margin: 0, maxWidth: 480
+              fontSize: 16, color: 'hsl(220,10%,40%)', lineHeight: 1.6,
+              margin: 0, maxWidth: 480, fontWeight: 400
             }}>
-              {settings.nha_tro_name} cung cấp phòng trọ cao cấp, được xác minh, giá minh bạch. An tâm thuê, dễ dàng theo dõi.
+              {settings.nha_tro_name} mang đến trải nghiệm lưu trú an toàn, tiện nghi và minh bạch. 
+              Môi trường sống lý tưởng dành cho bạn.
             </p>
 
             {/* Buttons */}
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 8 }}>
               <a href="#rooms" style={{
-                background: 'var(--gradient-primary)', color: '#fff',
-                padding: '13px 28px', borderRadius: 12, fontSize: 15, fontWeight: 700,
-                textDecoration: 'none', boxShadow: '0 6px 20px hsla(24,80%,55%,0.35)',
+                background: 'hsl(215, 100%, 45%)', color: '#fff',
+                padding: '14px 28px', borderRadius: 12, fontSize: 15, fontWeight: 700,
+                textDecoration: 'none', boxShadow: '0 8px 20px hsla(215, 100%, 45%, 0.25)',
                 transition: 'all 0.25s', display: 'inline-block'
               }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 28px hsla(24,80%,55%,0.45)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 6px 20px hsla(24,80%,55%,0.35)'; }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 24px hsla(215, 100%, 45%, 0.35)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 8px 20px hsla(215, 100%, 45%, 0.25)'; }}
               >Xem phòng ngay</a>
               <a href={`tel:${settings.phone}`} style={{
-                background: '#fff', color: 'hsl(220,20%,10%)',
-                padding: '13px 28px', borderRadius: 12, fontSize: 15, fontWeight: 600,
-                textDecoration: 'none', border: '1px solid hsl(30,15%,88%)',
-                boxShadow: 'var(--shadow-sm)', transition: 'all 0.25s', display: 'inline-flex', alignItems: 'center', gap: 8
+                background: '#fff', color: 'hsl(220,20%,20%)',
+                padding: '14px 28px', borderRadius: 12, fontSize: 15, fontWeight: 600,
+                textDecoration: 'none', border: '1px solid hsl(210,16%,88%)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.04)', transition: 'all 0.25s', display: 'inline-flex', alignItems: 'center', gap: 8
               }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'hsl(215,100%,45%)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'hsl(30,15%,88%)'; e.currentTarget.style.transform = ''; }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'hsl(210,16%,80%)'; e.currentTarget.style.background = 'hsl(210,16%,98%)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'hsl(210,16%,88%)'; e.currentTarget.style.background = '#fff'; }}
               >📞 Gọi {settings.owner || 'tư vấn'}</a>
             </div>
 
-            {/* Trust stats row */}
-            <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', paddingTop: 8 }}>
+            {/* Trust stats row (Minimalist) */}
+            <div style={{ display: 'flex', gap: '2.5rem', flexWrap: 'wrap', paddingTop: '1.5rem', marginTop: '1rem', borderTop: '1px solid hsl(210,16%,92%)' }}>
               {[
-                { icon: '🏠', bold: '100+ phòng', sub: 'Đa dạng lựa chọn' },
-                { icon: '🛡️', bold: 'An toàn', sub: 'Camera 24/7' },
-                { icon: '✅', bold: 'Minh bạch', sub: 'Giá rõ ràng' },
+                { label: 'Phòng tiện nghi', value: '100+' },
+                { label: 'An ninh 24/7', value: 'Bảo đảm' },
+                { label: 'Giá dịch vụ', value: 'Minh bạch' },
               ].map(s => (
-                <div key={s.bold} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{
-                    width: 40, height: 40, borderRadius: 10,
-                    background: 'hsla(24,80%,55%,0.1)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18
-                  }}>{s.icon}</div>
-                  <div>
-                    <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: 'hsl(220,20%,10%)' }}>{s.bold}</p>
-                    <p style={{ margin: 0, fontSize: 11, color: 'hsl(220,10%,56%)' }}>{s.sub}</p>
-                  </div>
+                <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                   <span style={{ fontSize: 20, fontWeight: 800, color: 'hsl(220,20%,15%)', letterSpacing: '-0.02em' }}>{s.value}</span>
+                   <span style={{ fontSize: 13, color: 'hsl(220,10%,50%)', fontWeight: 500 }}>{s.label}</span>
                 </div>
               ))}
             </div>
