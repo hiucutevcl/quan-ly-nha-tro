@@ -42,7 +42,7 @@ const ReportDashboard = () => {
 
     const handleRemind = async (id) => {
         try {
-            await axios.put(`https://api-quan-ly-nha-tro.onrender.com/api/invoices/${id}/remind`, {}, apiHeaders);
+            await axios.put(`https://api-quan-ly-nha-tro.onrender.com/api/invoices/remind/${id}`, {}, apiHeaders);
             alert(`Đã gửi thông báo nhắc nợ thành công đến màn hình ứng dụng của khách hàng!`);
             // Cập nhật lại list (nếu bạn muốn hiện thông báo đã nhắc) 
             setDebtList(debtList.map(item => item.id === id ? { ...item, is_reminded: 1 } : item));
