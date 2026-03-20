@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const defaultSettings = {
-    nha_tro_name: 'Nhà Trọ Gia Đình',
+    nha_tro_name: 'Nhà Trọ Minh Hiếu',
     address: '',
     phone: '',
     owner: '',

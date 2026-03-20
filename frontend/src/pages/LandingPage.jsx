@@ -470,10 +470,10 @@ function RulesSection({ note }) {
 function LocationSection({ address }) {
   const mapAddress = encodeURIComponent(address || 'Hà Nội, Việt Nam');
   const nearbyAmenities = [
-    { icon: '🛒', title: 'Siêu thị & Chợ', desc: 'Bách Hóa, Vinmart, Chợ Dân Sinh...' },
-    { icon: '🏥', title: 'Cơ sở Y Tế', desc: 'Nhà thuốc báo quanh khu vực, Bệnh viện lớn.' },
-    { icon: '🚌', title: 'Giao Thông', desc: 'Trạm xe bus gần kề, trục đường lớn dễ đi.' },
-    { icon: '🎓', title: 'Giáo Dục', desc: 'Gắn liền với cụm trường Đại học / Phổ thông.' }
+    { icon: '🛒', title: 'Siêu thị & Chợ', desc: 'Bách Hóa, Vinmart, Chợ Dân Sinh...', search: 'Chợ Siêu thị' },
+    { icon: '🏥', title: 'Cơ sở Y Tế', desc: 'Nhà thuốc báo quanh khu vực, Bệnh viện lớn.', search: 'Bệnh viện Nhà thuốc' },
+    { icon: '🚌', title: 'Giao Thông', desc: 'Trạm xe bus gần kề, trục đường lớn dễ đi.', search: 'Trạm xe buýt' },
+    { icon: '🎓', title: 'Giáo Dục', desc: 'Gắn liền với cụm trường Đại học / Phổ thông.', search: 'Trường học' }
   ];
 
   return (
@@ -490,29 +490,60 @@ function LocationSection({ address }) {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(250px, 1fr) minmax(250px, 1.25fr)', gap: '2rem', alignItems: 'center' }} className="location-grid">
           {/* Map */}
-          <div style={{ borderRadius: '24px', overflow: 'hidden', boxShadow: 'var(--shadow-md)', height: 400, background: '#e0e0e0' }}>
-            <iframe
-              title="Bản đồ nhà trọ"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              loading="lazy"
-              allowFullScreen
-              referrerPolicy="no-referrer-when-downgrade"
-              src={`https://maps.google.com/maps?q=${mapAddress}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
-            />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ borderRadius: '24px', overflow: 'hidden', boxShadow: 'var(--shadow-md)', height: 400, background: '#e0e0e0', position: 'relative' }}>
+              <iframe
+                title="Bản đồ nhà trọ"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+                src={`https://maps.google.com/maps?q=${mapAddress}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+              />
+            </div>
+            <a 
+              href={`https://www.google.com/maps/dir/?api=1&destination=${mapAddress}`} 
+              target="_blank" rel="noopener noreferrer"
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                background: 'hsl(215,100%,45%)', color: '#fff',
+                padding: '12px 24px', borderRadius: '12px', fontSize: 15, fontWeight: 700,
+                textDecoration: 'none', boxShadow: '0 4px 12px hsla(215,100%,45%,0.3)',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 16px hsla(215,100%,45%,0.4)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 12px hsla(215,100%,45%,0.3)'; }}
+            >
+               📍 Xem bản đồ đường đi chi tiết
+            </a>
           </div>
 
           {/* Amenities Grid */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }} className="amenities-grid">
             {nearbyAmenities.map((am, i) => (
-              <div key={am.title} style={{ padding: '1.25rem', background: '#fff', borderRadius: '16px', boxShadow: 'var(--shadow-sm)' }}>
-                <div style={{ width: 44, height: 44, borderRadius: '12px', background: 'hsl(30,15%,96%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: '0.75rem' }}>
+              <a 
+                key={am.title} 
+                href={`https://www.google.com/maps/search/${encodeURIComponent(am.search)}+gần+${mapAddress}`}
+                target="_blank" rel="noopener noreferrer"
+                style={{ 
+                  padding: '1.25rem', background: '#fff', borderRadius: '16px', 
+                  boxShadow: 'var(--shadow-sm)', textDecoration: 'none', display: 'block',
+                  transition: 'all 0.2s', border: '1px solid transparent'
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.borderColor = 'hsl(215,100%,80%)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; e.currentTarget.style.borderColor = 'transparent'; }}
+              >
+                <div style={{ width: 44, height: 44, borderRadius: '12px', background: 'hsl(210,16%,96%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: '0.75rem' }}>
                   {am.icon}
                 </div>
                 <h3 style={{ fontSize: 14, fontWeight: 700, color: 'hsl(220,20%,10%)', marginBottom: 4 }}>{am.title}</h3>
                 <p style={{ margin: 0, fontSize: 12, color: 'hsl(220,10%,56%)', lineHeight: 1.5 }}>{am.desc}</p>
-              </div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: 'hsl(215,100%,45%)', marginTop: 12, display: 'flex', alignItems: 'center', gap: 4 }}>
+                  Tìm trên Maps <span>→</span>
+                </div>
+              </a>
             ))}
           </div>
         </div>
