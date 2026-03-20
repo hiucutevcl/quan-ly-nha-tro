@@ -96,7 +96,7 @@ const updateMeterReadings = async (req, res) => {
     }
 };
 
-// Upload ảnh phòng
+// Upload ảnh phòng (Mở rộng/cộng dồn)
 const uploadRoomImage = async (req, res) => {
     const { id } = req.params;
     
@@ -104,15 +104,65 @@ const uploadRoomImage = async (req, res) => {
         return res.status(400).json({ message: 'Không có file ảnh nào được chọn!' });
     }
 
-    // Map qua danh sách files để lấy các đường dẫn URL trên Cloudinary
-    const imageUrls = req.files.map(file => file.path);
-    
-    // Chuyển mảng URL thành chuỗi JSON để lưu vào 1 cột image_url trong database
-    const imageUrlsString = JSON.stringify(imageUrls);
+    try {
+        // 1. Lấy mảng ảnh hiện tại của phòng
+        const [rows] = await db.query('SELECT image_url FROM Rooms WHERE id = ?', [id]);
+        let existingImages = [];
+        if (rows.length > 0 && rows[0].image_url) {
+            try {
+                existingImages = JSON.parse(rows[0].image_url);
+                if (!Array.isArray(existingImages)) existingImages = [];
+            } catch (e) {
+                // Nếu dữ liệu cũ là chuỗi không phải mảng, ép thành mảng
+                existingImages = [rows[0].image_url];
+            }
+        }
+
+        // 2. Map qua danh sách files mới
+        const newUrls = req.files.map(file => file.path);
+        
+        // 3. Hợp nhất mảng cũ & mới
+        let mergedImages = [...existingImages, ...newUrls];
+        if (mergedImages.length > 5) {
+            // Giữ lại 5 ảnh mới nhất bằng cách cắt bớt phần tử đầu (tuỳ chọn)
+            // Hoặc chặn luôn từ frontend là hợp lý nhất, ở đây backend có thể truncate để bảo vệ db.
+            mergedImages = mergedImages.slice(mergedImages.length - 5);
+        }
+
+        const imageUrlsString = JSON.stringify(mergedImages);
+
+        await db.query('UPDATE Rooms SET image_url = ? WHERE id = ?', [imageUrlsString, id]);
+        res.status(200).json({ message: 'Upload thêm ảnh thành công!', image_url: imageUrlsString });
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi Database: ' + error.message });
+    }
+};
+
+// Xóa 1 ảnh cụ thể khỏi phòng
+const deleteRoomImage = async (req, res) => {
+    const { id } = req.params;
+    const { imageUrl } = req.body;
+
+    if (!imageUrl) {
+        return res.status(400).json({ message: 'Vui lòng cung cấp URL ảnh cần xóa' });
+    }
 
     try {
+        const [rows] = await db.query('SELECT image_url FROM Rooms WHERE id = ?', [id]);
+        if (rows.length === 0) return res.status(404).json({ message: 'Không tìm thấy phòng' });
+        
+        let existingImages = [];
+        if (rows[0].image_url) {
+            try { existingImages = JSON.parse(rows[0].image_url); } 
+            catch (e) { existingImages = [rows[0].image_url]; }
+        }
+
+        // Lọc bỏ URL được yêu cầu xóa
+        const updatedImages = existingImages.filter(img => img !== imageUrl);
+        const imageUrlsString = JSON.stringify(updatedImages);
+
         await db.query('UPDATE Rooms SET image_url = ? WHERE id = ?', [imageUrlsString, id]);
-        res.status(200).json({ message: 'Upload các ảnh thành công!', image_url: imageUrlsString });
+        res.status(200).json({ message: 'Xóa ảnh thành công!', image_url: imageUrlsString });
     } catch (error) {
         res.status(500).json({ message: 'Lỗi Database: ' + error.message });
     }
@@ -129,4 +179,4 @@ const getPublicRooms = async (req, res) => {
     }
 };
 
-module.exports = { getAllRooms, createRoom, updateRoomPrice, deleteRoom, assignTenant, updateMeterReadings, uploadRoomImage, getPublicRooms };
+module.exports = { getAllRooms, createRoom, updateRoomPrice, deleteRoom, assignTenant, updateMeterReadings, uploadRoomImage, deleteRoomImage, getPublicRooms };

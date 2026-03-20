@@ -97,4 +97,7 @@ router.post('/upload-image/:id', verifyToken, checkAdmin, (req, res, next) => {
     });
 }, roomController.uploadRoomImage);
 
+// Xoá 1 ảnh lẻ của phòng
+router.delete('/delete-image/:id', verifyToken, checkAdmin, roomController.deleteRoomImage);
+
 module.exports = router;

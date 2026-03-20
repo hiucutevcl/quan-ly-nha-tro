@@ -31,27 +31,50 @@ const RoomManagement = () => {
     // State in hợp đồng
     const [contractRoom, setContractRoom] = useState(null);
 
+    // States loading cho ảnh
+    const [uploadingRoomId, setUploadingRoomId] = useState(null);
+    const [deletingImage, setDeletingImage] = useState(null);
+
     // Upload ảnh phòng
-    const handleUploadImages = async (roomId, files) => {
+    const handleUploadImages = async (roomId, files, currentCount = 0) => {
         if (!files || files.length === 0) return;
-        if (files.length > 5) {
-            alert('Chỉ được chọn tối đa 5 ảnh!');
+        if (files.length + currentCount > 5) {
+            alert(`Chỉ được phép có tối đa 5 ảnh! (Phòng này chỉ còn trống ${5 - currentCount} ảnh)`);
             return;
         }
 
+        setUploadingRoomId(roomId);
         const formData = new FormData();
         for (let i = 0; i < files.length; i++) {
             formData.append('images', files[i]);
         }
         
         try {
-            const res = await axios.post(`https://api-quan-ly-nha-tro.onrender.com/api/rooms/upload-image/${roomId}`, formData, {
+            await axios.post(`https://api-quan-ly-nha-tro.onrender.com/api/rooms/upload-image/${roomId}`, formData, {
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
             });
-            alert('✅ Upload ảnh thành công!');
             fetchData();
         } catch (error) {
             alert('❌ Lỗi upload: ' + (error.response?.data?.message || error.message));
+        } finally {
+            setUploadingRoomId(null);
+        }
+    };
+
+    // Xóa ảnh đơn lẻ
+    const handleDeleteImage = async (roomId, imageUrl) => {
+        if (!window.confirm('Bạn có chắc muốn xóa ảnh này khỏi phòng?')) return;
+        setDeletingImage(imageUrl);
+        try {
+            await axios.delete(`https://api-quan-ly-nha-tro.onrender.com/api/rooms/delete-image/${roomId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+                data: { imageUrl }
+            });
+            fetchData();
+        } catch (error) {
+            alert('❌ Lỗi xóa ảnh: ' + (error.response?.data?.message || error.message));
+        } finally {
+            setDeletingImage(null);
         }
     };
 
@@ -309,30 +332,62 @@ const RoomManagement = () => {
                                         }
                                     }
 
-                                    return images.length > 0 ? (
+                                    return (
                                         <div className="relative mb-3">
-                                            <div className="flex gap-2 overflow-x-auto pb-2 snap-x">
-                                                {images.map((imgUrl, idx) => (
-                                                    <img key={idx} src={imgUrl.startsWith('http') ? imgUrl : `https://api-quan-ly-nha-tro.onrender.com${imgUrl}`}
-                                                        alt={`Ảnh phòng ${idx + 1}`}
-                                                        className="w-2/3 h-32 flex-shrink-0 snap-center object-cover rounded-lg border"
-                                                        onError={e => e.target.style.display='none'}
-                                                    />
-                                                ))}
+                                            {images.length > 0 && (
+                                                <div className="flex gap-2 overflow-x-auto pb-2 snap-x">
+                                                    {images.map((imgUrl, idx) => (
+                                                        <div key={idx} className="relative w-2/3 h-32 flex-shrink-0 snap-center group">
+                                                            <img src={imgUrl.startsWith('http') ? imgUrl : `https://api-quan-ly-nha-tro.onrender.com${imgUrl}`}
+                                                                alt={`Ảnh phòng ${idx + 1}`}
+                                                                className={`w-full h-full object-cover rounded-lg border transition ${deletingImage === imgUrl ? 'opacity-50 grayscale' : ''}`}
+                                                                onError={e => e.target.style.display='none'}
+                                                            />
+                                                            {/* Delete Button */}
+                                                            {deletingImage === imgUrl ? (
+                                                                <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg">
+                                                                    <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent"></div>
+                                                                </div>
+                                                            ) : (
+                                                                <button
+                                                                    title="Xóa ảnh này"
+                                                                    onClick={() => handleDeleteImage(room.id, imgUrl)}
+                                                                    className="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow hover:bg-red-600 z-10"
+                                                                >
+                                                                    ×
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+
+                                            <div className="mt-2 flex items-center gap-2">
+                                                {images.length < 5 ? (
+                                                    <label className={`flex-1 flex justify-center items-center gap-2 border-2 border-dashed ${uploadingRoomId === room.id ? 'border-gray-300 bg-gray-50' : 'border-blue-200 hover:border-blue-400 hover:bg-blue-50 cursor-pointer'} rounded-lg p-2 transition`}>
+                                                        {uploadingRoomId === room.id ? (
+                                                            <>
+                                                                <div className="animate-spin rounded-full h-5 w-5 border-2 border-blue-500 border-t-transparent"></div>
+                                                                <span className="text-sm text-blue-500 font-medium">Đang tải ảnh...</span>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <span className="text-lg">📷</span>
+                                                                <span className="text-sm font-medium text-blue-600">
+                                                                    {images.length === 0 ? 'Thêm ảnh cho phòng (Tối đa 5)' : `Thêm ảnh (Còn ${5 - images.length}/5)`}
+                                                                </span>
+                                                                <input type="file" accept="image/*" multiple className="hidden"
+                                                                    onChange={e => handleUploadImages(room.id, e.target.files, images.length)} />
+                                                            </>
+                                                        )}
+                                                    </label>
+                                                ) : (
+                                                    <div className="flex-1 bg-gray-100 border border-gray-200 text-gray-500 text-sm p-2 rounded-lg text-center">
+                                                        ✅ Phòng đã đủ 5 ảnh tối đa
+                                                    </div>
+                                                )}
                                             </div>
-                                            <label className="absolute bottom-0 right-2 shadow bg-black/70 text-white text-xs px-2 py-1 rounded cursor-pointer hover:bg-black/90 transition">
-                                                📷 Đổi toàn bộ ảnh (tối đa 5)
-                                                <input type="file" accept="image/*" multiple className="hidden"
-                                                    onChange={e => handleUploadImages(room.id, e.target.files)} />
-                                            </label>
                                         </div>
-                                    ) : (
-                                        <label className="mb-3 flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 rounded-lg p-3 cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition">
-                                            <span className="text-2xl">📷</span>
-                                            <span className="text-sm text-gray-400">Click để upload ảnh (tối đa 5 ảnh)</span>
-                                            <input type="file" accept="image/*" multiple className="hidden"
-                                                onChange={e => handleUploadImages(room.id, e.target.files)} />
-                                        </label>
                                     );
                                 })()}
 
