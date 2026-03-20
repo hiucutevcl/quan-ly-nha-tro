@@ -43,96 +43,103 @@ function Navbar({ name, phone, logo_image }) {
       style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
         transition: 'all 0.3s ease',
+        background: scrolled ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0)',
+        backdropFilter: scrolled ? 'blur(20px)' : 'none',
+        borderBottom: scrolled ? '1px solid rgba(0,0,0,0.06)' : 'none',
       }}
-      className={scrolled ? 'glass-nav' : ''}
     >
       <div className="container-tight" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64, padding: '0 1.5rem' }}>
         {/* Logo */}
-        <a href="#" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <a href="#" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
           {logo_image ? (
             <img src={logo_image} alt="Logo" style={{ height: 34, borderRadius: 8, objectFit: 'contain' }} />
           ) : (
             <div style={{
               width: 34, height: 34, borderRadius: 10,
-              background: 'var(--gradient-primary)',
+              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#fff', fontWeight: 800, fontSize: 16, boxShadow: '0 4px 12px hsla(24,80%,55%,0.35)'
+              color: '#fff', fontWeight: 800, fontSize: 15
             }}>H</div>
           )}
-          <span style={{ fontWeight: 800, fontSize: 18, color: 'hsl(220,20%,10%)', letterSpacing: '-0.02em' }}>
+          <span style={{ fontWeight: 800, fontSize: 17, color: '#111827', letterSpacing: '-0.02em' }}>
             {name || 'Hệ thống Nhà trọ'}
           </span>
         </a>
 
         {/* Desktop nav */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: 32 }} className="desktop-nav">
+        <nav style={{ display: 'flex', alignItems: 'center', gap: 28 }} className="desktop-nav">
           {links.map(l => (
             <a key={l.href} href={l.href} style={{
-              fontSize: 14, fontWeight: 500, color: 'hsl(220,10%,46%)',
+              fontSize: 14, fontWeight: 500, color: '#6b7280',
               textDecoration: 'none', transition: 'color 0.2s'
             }}
-              onMouseEnter={e => e.target.style.color = 'hsl(215,100%,45%)'}
-              onMouseLeave={e => e.target.style.color = 'hsl(220,10%,46%)'}
+              onMouseEnter={e => e.target.style.color = '#111827'}
+              onMouseLeave={e => e.target.style.color = '#6b7280'}
             >{l.label}</a>
           ))}
         </nav>
 
         {/* Actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }} className="desktop-nav">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }} className="desktop-nav">
           {phone && (
             <a href={`tel:${phone}`} style={{
-              fontSize: 13, fontWeight: 600, color: 'hsl(220,10%,46%)',
-              textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6
+              fontSize: 13, fontWeight: 600, color: '#6b7280',
+              textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5
             }}>
-              📞 {phone}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+              {phone}
             </a>
           )}
-          <a href="#faq" style={{
-            background: '#f1f5f9', color: '#374151',
-            padding: '8px 20px', borderRadius: 999, fontSize: 13, fontWeight: 600,
-            textDecoration: 'none', transition: 'all 0.2s', border: '1px solid #e2e8f0'
+          <a href="#rooms" style={{
+            background: '#f5f3ff', color: '#6366f1',
+            padding: '8px 18px', borderRadius: 999, fontSize: 13, fontWeight: 600,
+            textDecoration: 'none', transition: 'all 0.2s', border: '1px solid #e0e7ff'
           }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#e2e8f0'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = '#f1f5f9'; }}
-          >Đăng ký</a>
+            onMouseEnter={e => { e.currentTarget.style.background = '#ede9fe'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#f5f3ff'; }}
+          >Xem phòng</a>
           <Link to="/login" style={{
-            background: '#2563eb', color: '#fff',
+            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: '#fff',
             padding: '8px 20px', borderRadius: 999, fontSize: 13, fontWeight: 600,
-            textDecoration: 'none', boxShadow: '0 2px 8px rgba(37, 99, 235, 0.25)',
+            textDecoration: 'none', boxShadow: '0 2px 8px rgba(99, 102, 241, 0.3)',
             transition: 'all 0.2s'
           }}
-            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(37, 99, 235, 0.35)'; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 8px rgba(37, 99, 235, 0.25)'; }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(99, 102, 241, 0.4)'; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 8px rgba(99, 102, 241, 0.3)'; }}
           >Đăng nhập</Link>
         </div>
 
         {/* Mobile toggle */}
         <button onClick={() => setMobileOpen(!mobileOpen)} style={{
           display: 'none', background: 'none', border: 'none',
-          fontSize: 22, cursor: 'pointer', padding: 4
+          cursor: 'pointer', padding: 4, color: '#374151'
         }} className="mobile-toggle">
-          {mobileOpen ? '✕' : '☰'}
+          {mobileOpen ? (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          ) : (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          )}
         </button>
       </div>
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="glass-nav animate-fade-in" style={{ borderTop: '1px solid hsla(30,15%,90%,0.5)' }}>
+        <div style={{ background: 'rgba(255,255,255,0.98)', backdropFilter: 'blur(20px)', borderTop: '1px solid #f3f4f6' }}>
           <nav style={{ display: 'flex', flexDirection: 'column', padding: '1rem 1.5rem', gap: 4 }}>
             {links.map(l => (
               <a key={l.href} href={l.href} onClick={() => setMobileOpen(false)} style={{
-                fontSize: 14, fontWeight: 500, color: 'hsl(220,10%,46%)',
+                fontSize: 14, fontWeight: 500, color: '#374151',
                 textDecoration: 'none', padding: '10px 0',
-                borderBottom: '1px solid hsla(30,15%,90%,0.4)'
+                borderBottom: '1px solid #f3f4f6'
               }}>{l.label}</a>
             ))}
             <div style={{ paddingTop: 12, display: 'flex', gap: 8 }}>
-              <a href="#faq" onClick={() => setMobileOpen(false)} style={{
-                flex: 1, textAlign: 'center', background: '#f1f5f9', color: '#374151',
-                padding: '10px', borderRadius: 999, fontWeight: 600, textDecoration: 'none', border: '1px solid #e2e8f0'
-              }}>Đăng ký</a>
+              <a href="#rooms" onClick={() => setMobileOpen(false)} style={{
+                flex: 1, textAlign: 'center', background: '#f5f3ff', color: '#6366f1',
+                padding: '10px', borderRadius: 999, fontWeight: 600, textDecoration: 'none', border: '1px solid #e0e7ff'
+              }}>Xem phòng</a>
               <Link to="/login" style={{
-                flex: 1, textAlign: 'center', background: '#2563eb', color: '#fff',
+                flex: 1, textAlign: 'center', background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: '#fff',
                 padding: '10px', borderRadius: 999, fontWeight: 600, textDecoration: 'none'
               }}>Đăng nhập</Link>
             </div>
@@ -143,7 +150,7 @@ function Navbar({ name, phone, logo_image }) {
       <style>{`
         @media (max-width: 768px) {
           .desktop-nav { display: none !important; }
-          .mobile-toggle { display: block !important; }
+          .mobile-toggle { display: flex !important; }
         }
       `}</style>
     </header>
@@ -157,112 +164,120 @@ function HeroSection({ settings, availableCount }) {
       background: '#fff', overflowX: 'hidden', position: 'relative',
       paddingTop: '7rem', paddingBottom: 0
     }}>
-      <div className="container-tight" style={{ padding: '0 1.5rem' }}>
+      {/* Soft radial bg blobs - Airbnb/Notion style */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
+        <div style={{ position: 'absolute', top: '-20%', left: '-10%', width: '60%', height: '80%', background: 'radial-gradient(ellipse, rgba(199,210,254,0.45) 0%, transparent 65%)', borderRadius: '50%' }} />
+        <div style={{ position: 'absolute', top: '10%', right: '-15%', width: '55%', height: '70%', background: 'radial-gradient(ellipse, rgba(221,214,254,0.35) 0%, transparent 65%)', borderRadius: '50%' }} />
+      </div>
+
+      <div className="container-tight" style={{ padding: '0 1.5rem', position: 'relative', zIndex: 1 }}>
         {/* Center content */}
-        <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
+        <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
 
           {/* Badge */}
           <div style={{ marginBottom: '1.5rem' }}>
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
-              padding: '5px 14px', borderRadius: 999,
-              background: '#eff6ff', border: '1px solid #dbeafe',
-              color: '#2563eb', fontSize: 13, fontWeight: 600
+              padding: '6px 16px', borderRadius: 999,
+              background: '#f5f3ff', border: '1px solid #ddd6fe',
+              color: '#6366f1', fontSize: 13, fontWeight: 600
             }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#3b82f6', display: 'inline-block', animation: 'pulse 2s infinite' }} />
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#a78bfa', display: 'inline-block', animation: 'hpulse 2s ease-in-out infinite' }} />
               {availableCount > 0 ? `${availableCount} phòng đang trống` : 'Hệ thống phòng trọ hiện đại'}
             </span>
           </div>
 
-          {/* Headline */}
+          {/* Headline - Airbnb/Linear style: very large, tight tracking */}
           <h1 style={{
-            fontSize: 'clamp(2.4rem, 5vw, 3.75rem)', fontWeight: 800,
-            lineHeight: 1.1, letterSpacing: '-0.04em', margin: '0 0 1.25rem',
-            color: '#0f172a'
+            fontSize: 'clamp(2.6rem, 5.5vw, 4rem)', fontWeight: 800,
+            lineHeight: 1.08, letterSpacing: '-0.05em', margin: '0 0 1.25rem',
+            color: '#111827'
           }}>
-            Tìm phòng trọ{' '}
-            <span style={{
-              background: 'linear-gradient(135deg, #2563eb 0%, #60a5fa 100%)',
+            Tìm phòng trọ
+            {' '}<span style={{
+              background: 'linear-gradient(135deg, #6366f1 0%, #a78bfa 60%, #ec4899 100%)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
-            }}>chất lượng</span>
-            {' '}nhanh chóng
+            }}>chất lượng</span>{' '}
+            nhanh chóng
           </h1>
 
           {/* Subtitle */}
           <p style={{
-            fontSize: 16, color: '#64748b', lineHeight: 1.7,
-            margin: '0 auto 2rem', maxWidth: 520
+            fontSize: 17, color: '#6b7280', lineHeight: 1.7,
+            margin: '0 auto 2rem', maxWidth: 500, fontWeight: 400
           }}>
-            Lưu trú an toàn, tiện nghi và minh bạch tại {settings.nha_tro_name || 'Nhà Trọ Minh Hiếu'}.
+            Lưu trú an toàn, tiện nghi, minh bạch tại{' '}
+            <strong style={{ color: '#374151' }}>{settings.nha_tro_name || 'Nhà Trọ Minh Hiếu'}</strong>.
           </p>
 
           {/* Buttons */}
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
             <a href="#rooms" style={{
-              background: '#2563eb', color: '#fff',
-              padding: '13px 28px', borderRadius: 999, fontSize: 15, fontWeight: 600,
-              textDecoration: 'none', boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
-              transition: 'all 0.25s'
+              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: '#fff',
+              padding: '14px 32px', borderRadius: 999, fontSize: 15, fontWeight: 700,
+              textDecoration: 'none', boxShadow: '0 4px 14px rgba(99, 102, 241, 0.35)',
+              transition: 'all 0.25s', letterSpacing: '-0.01em'
             }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(37, 99, 235, 0.35)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 12px rgba(37, 99, 235, 0.25)'; }}
-            >Xem phòng ngay</a>
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(99, 102, 241, 0.45)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 14px rgba(99, 102, 241, 0.35)'; }}
+            >Xem phòng ngay →</a>
             {settings.phone && (
               <a href={`tel:${settings.phone}`} style={{
-                background: '#fff', color: '#0f172a',
-                padding: '13px 28px', borderRadius: 999, fontSize: 15, fontWeight: 600,
-                textDecoration: 'none', border: '1.5px solid #e2e8f0', transition: 'all 0.25s',
+                background: '#fff', color: '#374151',
+                padding: '14px 28px', borderRadius: 999, fontSize: 15, fontWeight: 600,
+                textDecoration: 'none', border: '1.5px solid #e5e7eb', transition: 'all 0.25s',
                 display: 'inline-flex', alignItems: 'center', gap: 8
               }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = '#94a3b8'; e.currentTarget.style.background = '#f8fafc'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#fff'; }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = '#d1d5db'; e.currentTarget.style.background = '#f9fafb'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = '#e5e7eb'; e.currentTarget.style.background = '#fff'; }}
               >
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                 Gọi {settings.owner || 'Chủ trọ'}
               </a>
             )}
           </div>
 
-          {/* Trust bar */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 0, border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', background: '#f8fafc', flexWrap: 'wrap' }}>
+          {/* Trust bar - compact pill style */}
+          <div style={{ display: 'inline-flex', gap: 0, border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden', background: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(8px)', flexWrap: 'wrap' }}>
             {[
               { value: '100+', label: 'Phòng tiện nghi' },
               { value: 'An ninh', label: 'Bảo vệ 24/7' },
               { value: 'Minh bạch', label: 'Không phí ẩn' },
             ].map((s, i, arr) => (
               <div key={s.label} style={{
-                flex: '1 1 130px', padding: '14px 20px', textAlign: 'center',
-                borderRight: i < arr.length - 1 ? '1px solid #e2e8f0' : 'none'
+                flex: '1 1 130px', padding: '12px 24px', textAlign: 'center',
+                borderRight: i < arr.length - 1 ? '1px solid #e5e7eb' : 'none'
               }}>
-                <div style={{ fontSize: 17, fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>{s.value}</div>
-                <div style={{ fontSize: 12, color: '#64748b', marginTop: 2, fontWeight: 500 }}>{s.label}</div>
+                <div style={{ fontSize: 15, fontWeight: 800, color: '#111827', letterSpacing: '-0.02em' }}>{s.value}</div>
+                <div style={{ fontSize: 11.5, color: '#9ca3af', marginTop: 2, fontWeight: 500 }}>{s.label}</div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Hero Image — full width below */}
-        <div style={{ marginTop: '3rem', borderRadius: '24px 24px 0 0', overflow: 'hidden', position: 'relative', maxHeight: 480 }}>
+        {/* Hero Image */}
+        <div style={{ marginTop: '3.5rem', borderRadius: '28px 28px 0 0', overflow: 'hidden', position: 'relative' }}>
           <img
-            src={settings.hero_image || "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1400&q=80"}
+            src={settings.hero_image || "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1600&q=85"}
             alt="Phòng trọ tiện nghi"
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', maxHeight: 480 }}
+            style={{ width: '100%', maxHeight: 500, objectFit: 'cover', display: 'block' }}
           />
-          {/* Overlay gradient bottom */}
           <div style={{
-            position: 'absolute', bottom: 0, left: 0, right: 0, height: '40%',
-            background: 'linear-gradient(to top, rgba(255,255,255,0.85) 0%, transparent 100%)',
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(to top, rgba(255,255,255,0.7) 0%, transparent 50%)',
             pointerEvents: 'none'
           }} />
-          {/* Floating available badge on image */}
+          {/* Badge on image */}
           <div style={{
-            position: 'absolute', bottom: 24, left: '50%', transform: 'translateX(-50%)',
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: 'white', borderRadius: 999, padding: '10px 20px',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.1)', whiteSpace: 'nowrap'
+            position: 'absolute', bottom: 28, left: '50%', transform: 'translateX(-50%)',
+            display: 'inline-flex', alignItems: 'center', gap: 10,
+            background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(16px)',
+            borderRadius: 999, padding: '10px 22px',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.12)', whiteSpace: 'nowrap',
+            border: '1px solid rgba(255,255,255,0.8)'
           }}>
-            <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e' }} />
-            <span style={{ fontSize: 14, fontWeight: 700, color: '#0f172a' }}>
+            <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 0 3px rgba(34,197,94,0.2)' }} />
+            <span style={{ fontSize: 14, fontWeight: 700, color: '#111827' }}>
               {availableCount > 0 ? `${availableCount} phòng trống — sẵn sàng vào ở` : 'Cập nhật liên tục mỗi ngày'}
             </span>
           </div>
@@ -270,7 +285,7 @@ function HeroSection({ settings, availableCount }) {
       </div>
 
       <style>{`
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        @keyframes hpulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.3); } }
       `}</style>
     </section>
   );
