@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import RoomManagement from './RoomManagement';
 import UserManagement from './UserManagement';
 import InvoiceManagement from './InvoiceManagement';
@@ -19,7 +20,14 @@ const TABS = [
 const AdminDashboard = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('rooms');
+    const [settings, setSettings] = useState({});
     const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    useEffect(() => {
+        axios.get('https://api-quan-ly-nha-tro.onrender.com/api/settings/public')
+            .then(res => setSettings(res.data))
+            .catch(() => {});
+    }, []);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -28,6 +36,9 @@ const AdminDashboard = () => {
     };
 
     const currentTab = TABS.find(t => t.key === activeTab);
+    const siteName = settings.nha_tro_name || 'Nhà Trọ';
+    const logoImg = settings.logo_image;
+
 
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans text-slate-800">
@@ -35,11 +46,15 @@ const AdminDashboard = () => {
             <div className="w-full md:w-64 bg-white border-r border-slate-200 flex flex-col md:min-h-screen z-10 shadow-sm relative">
                 {/* Logo - chỉ hiện trên PC */}
                 <div className="hidden md:flex flex-col items-center py-8 px-4 border-b border-slate-100">
-                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-violet-600 outline outline-4 outline-indigo-50 rounded-xl flex items-center justify-center text-white text-2xl font-black mb-3 shadow-md">
-                        H
-                    </div>
+                    {logoImg ? (
+                        <img src={logoImg} alt="Logo" className="h-12 max-w-[140px] object-contain rounded-lg mb-3" />
+                    ) : (
+                        <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-violet-600 outline outline-4 outline-indigo-50 rounded-xl flex items-center justify-center text-white text-2xl font-black mb-3 shadow-md">
+                            H
+                        </div>
+                    )}
                     <h1 className="text-[17px] font-extrabold tracking-tight text-center leading-tight text-slate-900">
-                        Quản lý <span className="text-indigo-600">Nhà Trọ</span>
+                        Quản lý <span className="text-indigo-600">{siteName}</span>
                     </h1>
                 </div>
 
@@ -86,9 +101,13 @@ const AdminDashboard = () => {
                 {/* Topbar Mobile */}
                 <div className="md:hidden bg-white border-b border-slate-200 px-4 py-3 flex justify-between items-center z-20 sticky top-0">
                     <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-lg flex items-center justify-center text-white text-sm font-bold">
-                            H
-                        </div>
+                        {logoImg ? (
+                            <img src={logoImg} alt="Logo" className="h-8 max-w-[80px] object-contain rounded" />
+                        ) : (
+                            <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-lg flex items-center justify-center text-white text-sm font-bold">
+                                H
+                            </div>
+                        )}
                         <span className="font-bold text-sm text-slate-800">{user.full_name || 'Admin'}</span>
                     </div>
                     <button onClick={handleLogout} className="bg-rose-50 text-rose-600 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-xs font-bold transition">
