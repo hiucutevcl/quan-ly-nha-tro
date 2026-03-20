@@ -415,59 +415,134 @@ function RoomCard({ room, onClick }) {
 /** Rooms Section */
 function RoomsSection({ rooms, loading, onRoomClick }) {
   const [search, setSearch] = useState('');
+  const [activeArea, setActiveArea] = useState('');
   const availableRooms = rooms.filter(r => r.status === 'Available').length;
 
-  const filtered = rooms.filter(r =>
-    r.room_name?.toLowerCase().includes(search.toLowerCase())
-  );
+  // Trích xuất danh sách khu vực duy nhất từ dữ liệu phòng
+  const areas = React.useMemo(() => {
+    const set = new Set();
+    rooms.forEach(r => {
+      // Lấy từ building_name
+      if (r.building_name) set.add(r.building_name);
+      // Thử trích quận/huyện từ room_address (phần sau dấu phẩy cuối cùng trước "Hà Nội")
+      if (r.room_address) {
+        const keywords = ['Hoàng Mai', 'Cầu Giấy', 'Ba Đình', 'Đống Đa', 'Hai Bà Trưng', 'Thanh Xuân',
+          'Tây Hồ', 'Long Biên', 'Hà Đông', 'Nam Từ Liêm', 'Bắc Từ Liêm', 'Hoàn Kiếm'];
+        keywords.forEach(k => {
+          if (r.room_address.includes(k)) set.add(k);
+        });
+      }
+    });
+    return Array.from(set);
+  }, [rooms]);
+
+  const filtered = rooms.filter(r => {
+    const q = search.toLowerCase().trim();
+    const matchArea = !activeArea ||
+      r.building_name === activeArea ||
+      (r.room_address || '').includes(activeArea);
+    const matchSearch = !q || (
+      r.room_name?.toLowerCase().includes(q) ||
+      (r.room_address || '').toLowerCase().includes(q) ||
+      (r.building_name || '').toLowerCase().includes(q) ||
+      (r.amenities || '').toLowerCase().includes(q)
+    );
+    return matchArea && matchSearch;
+  });
 
   return (
-    <section id="rooms" className="section-padding" style={{ background: '#fff' }}>
+    <section id="rooms" className="section-padding" style={{ background: '#f8fafc' }}>
       <div className="container-tight">
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem', marginBottom: '2.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
           <div>
-            <p style={{ fontSize: 12, fontWeight: 700, color: 'hsl(215,100%,35%)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+            <p style={{ fontSize: 12, fontWeight: 700, color: '#2563eb', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
               DANH SÁCH PHÒNG
             </p>
-            <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.5rem)', fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>
+            <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.5rem)', fontWeight: 800, margin: 0, letterSpacing: '-0.02em', color: '#0f172a' }}>
               Phòng trọ <span className="gradient-text">nổi bật</span>
             </h2>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8,
             padding: '6px 14px', borderRadius: 999,
-            background: 'hsl(152,60%,95%)', border: '1px solid hsl(152,60%,85%)'
+            background: '#dcfce7', border: '1px solid #bbf7d0'
           }}>
-            <span className="animate-pulse-dot" style={{ width: 7, height: 7, borderRadius: '50%', background: 'hsl(152,60%,45%)', display: 'inline-block' }} />
-            <span style={{ fontSize: 12, fontWeight: 700, color: 'hsl(152,60%,35%)' }}>
+            <span className="animate-pulse-dot" style={{ width: 7, height: 7, borderRadius: '50%', background: '#16a34a', display: 'inline-block' }} />
+            <span style={{ fontSize: 12, fontWeight: 700, color: '#15803d' }}>
               CÒN {availableRooms} PHÒNG TRỐNG
             </span>
           </div>
         </div>
 
-        {/* Search */}
-        <div style={{ maxWidth: 440, marginBottom: '2rem', position: 'relative' }}>
-          <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 16 }}>🔍</span>
-          <input
-            value={search} onChange={e => setSearch(e.target.value)}
-            placeholder="Tìm kiếm phòng..."
-            style={{
-              width: '100%', padding: '11px 16px 11px 40px',
-              borderRadius: 12, border: '1px solid hsl(30,15%,88%)',
-              fontSize: 14, background: 'hsl(30,15%,98%)', outline: 'none',
-              boxSizing: 'border-box', fontFamily: 'inherit',
-              transition: 'border-color 0.2s'
-            }}
-            onFocus={e => e.target.style.borderColor = 'hsl(215,100%,45%)'}
-            onBlur={e => e.target.style.borderColor = 'hsl(30,15%,88%)'}
-          />
+        {/* Search + Filter Row */}
+        <div style={{ marginBottom: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {/* Search Input */}
+          <div style={{ maxWidth: 520, position: 'relative' }}>
+            <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </span>
+            <input
+              value={search} onChange={e => setSearch(e.target.value)}
+              placeholder="Tìm kiếm phòng, địa chỉ, khu vực (vd: Hoàng Mai, Cầu Giấy...)"
+              style={{
+                width: '100%', padding: '12px 40px 12px 44px', boxSizing: 'border-box',
+                borderRadius: 12, border: '1.5px solid #e2e8f0',
+                fontSize: 14, background: '#fff', outline: 'none',
+                fontFamily: 'inherit', color: '#0f172a',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+                transition: 'border-color 0.2s, box-shadow 0.2s'
+              }}
+              onFocus={e => { e.target.style.borderColor = '#2563eb'; e.target.style.boxShadow = '0 0 0 3px rgba(37,99,235,0.1)'; }}
+              onBlur={e => { e.target.style.borderColor = '#e2e8f0'; e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)'; }}
+            />
+            {search && (
+              <button onClick={() => setSearch('')} style={{
+                position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+                background: '#e2e8f0', border: 'none', borderRadius: '50%', width: 20, height: 20,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#64748b', fontSize: 12, fontWeight: 700, padding: 0
+              }}>×</button>
+            )}
+          </div>
+
+          {/* Area Filter Chips */}
+          {areas.length > 0 && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+              <span style={{ fontSize: 13, color: '#64748b', fontWeight: 500 }}>Khu vực:</span>
+              <button
+                onClick={() => setActiveArea('')}
+                style={{
+                  padding: '6px 14px', borderRadius: 999, fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                  border: '1.5px solid', transition: 'all 0.2s',
+                  background: !activeArea ? '#2563eb' : '#fff',
+                  color: !activeArea ? '#fff' : '#475569',
+                  borderColor: !activeArea ? '#2563eb' : '#e2e8f0',
+                }}>
+                Tất cả
+              </button>
+              {areas.map(area => (
+                <button
+                  key={area}
+                  onClick={() => setActiveArea(activeArea === area ? '' : area)}
+                  style={{
+                    padding: '6px 14px', borderRadius: 999, fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                    border: '1.5px solid', transition: 'all 0.2s',
+                    background: activeArea === area ? '#2563eb' : '#fff',
+                    color: activeArea === area ? '#fff' : '#475569',
+                    borderColor: activeArea === area ? '#2563eb' : '#e2e8f0',
+                  }}>
+                  {area}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Grid */}
         {loading ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
             {[1, 2, 3].map(i => (
-              <div key={i} style={{ aspectRatio: '4/3', background: 'hsl(30,10%,92%)', borderRadius: 16, animation: 'fadeIn 1s infinite alternate' }} />
+              <div key={i} style={{ aspectRatio: '4/3', background: '#f1f5f9', borderRadius: 16, animation: 'fadeIn 1s infinite alternate' }} />
             ))}
           </div>
         ) : (
@@ -479,9 +554,16 @@ function RoomsSection({ rooms, loading, onRoomClick }) {
         )}
 
         {!loading && filtered.length === 0 && (
-          <p style={{ textAlign: 'center', color: 'hsl(220,10%,56%)', padding: '3rem 0' }}>
-            Không tìm thấy phòng phù hợp. Thử tìm kiếm khác nhé!
-          </p>
+          <div style={{ textAlign: 'center', padding: '4rem 0' }}>
+            <div style={{ fontSize: 40, marginBottom: 12 }}>🏠</div>
+            <p style={{ color: '#64748b', fontSize: 15, margin: 0 }}>
+              Không tìm thấy phòng phù hợp với "<strong>{search || activeArea}</strong>".
+            </p>
+            <button onClick={() => { setSearch(''); setActiveArea(''); }}
+              style={{ marginTop: 16, padding: '8px 20px', borderRadius: 999, border: '1.5px solid #e2e8f0', background: 'white', color: '#2563eb', fontWeight: 600, cursor: 'pointer', fontSize: 14 }}>
+              Xem tất cả phòng
+            </button>
+          </div>
         )}
       </div>
     </section>
