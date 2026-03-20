@@ -20,7 +20,7 @@ const FALLBACK_IMG =
 /* ── sub-components ── */
 
 /** Navbar */
-function Navbar({ name, phone }) {
+function Navbar({ name, phone, logo_image }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -49,12 +49,16 @@ function Navbar({ name, phone }) {
       <div className="container-tight" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64, padding: '0 1.5rem' }}>
         {/* Logo */}
         <a href="#" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{
-            width: 34, height: 34, borderRadius: 10,
-            background: 'var(--gradient-primary)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fff', fontWeight: 800, fontSize: 16, boxShadow: '0 4px 12px hsla(24,80%,55%,0.35)'
-          }}>H</div>
+          {logo_image ? (
+            <img src={logo_image} alt="Logo" style={{ height: 34, borderRadius: 8, objectFit: 'contain' }} />
+          ) : (
+            <div style={{
+              width: 34, height: 34, borderRadius: 10,
+              background: 'var(--gradient-primary)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: '#fff', fontWeight: 800, fontSize: 16, boxShadow: '0 4px 12px hsla(24,80%,55%,0.35)'
+            }}>H</div>
+          )}
           <span style={{ fontWeight: 800, fontSize: 18, color: 'hsl(220,20%,10%)', letterSpacing: '-0.02em' }}>
             {name || 'Hệ thống Nhà trọ'}
           </span>
@@ -67,7 +71,7 @@ function Navbar({ name, phone }) {
               fontSize: 14, fontWeight: 500, color: 'hsl(220,10%,46%)',
               textDecoration: 'none', transition: 'color 0.2s'
             }}
-              onMouseEnter={e => e.target.style.color = 'hsl(24,80%,55%)'}
+              onMouseEnter={e => e.target.style.color = 'hsl(215,100%,45%)'}
               onMouseLeave={e => e.target.style.color = 'hsl(220,10%,46%)'}
             >{l.label}</a>
           ))}
@@ -143,18 +147,6 @@ function HeroSection({ settings, availableCount }) {
       minHeight: '100vh', display: 'flex', alignItems: 'center',
       background: 'var(--gradient-hero)', overflowX: 'hidden', position: 'relative'
     }}>
-      {/* Background blobs */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-        <div style={{
-          position: 'absolute', top: -80, right: -80, width: 500, height: 500,
-          borderRadius: '50%', background: 'hsla(24,80%,55%,0.06)', filter: 'blur(60px)'
-        }} />
-        <div style={{
-          position: 'absolute', bottom: -80, left: -80, width: 400, height: 400,
-          borderRadius: '50%', background: 'hsla(200,60%,50%,0.06)', filter: 'blur(60px)'
-        }} />
-      </div>
-
       <div className="container-tight" style={{ width: '100%', padding: '7rem 1.5rem 4rem' }}>
         <div style={{
           display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem',
@@ -215,7 +207,7 @@ function HeroSection({ settings, availableCount }) {
                 textDecoration: 'none', border: '1px solid hsl(30,15%,88%)',
                 boxShadow: 'var(--shadow-sm)', transition: 'all 0.25s', display: 'inline-flex', alignItems: 'center', gap: 8
               }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'hsl(24,80%,55%)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'hsl(215,100%,45%)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = 'hsl(30,15%,88%)'; e.currentTarget.style.transform = ''; }}
               >📞 Gọi {settings.owner || 'tư vấn'}</a>
             </div>
@@ -246,7 +238,7 @@ function HeroSection({ settings, availableCount }) {
           <div className="animate-fade-up hero-img-col" style={{ position: 'relative', animationDelay: '0.15s' }}>
             <div style={{ borderRadius: 24, overflow: 'hidden', boxShadow: '0 24px 64px hsla(220,20%,10%,0.14)' }}>
               <img
-                src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80"
+                src={settings.hero_image || "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80"}
                 alt="Phòng trọ hiện đại"
                 style={{ width: '100%', height: 440, objectFit: 'cover', display: 'block' }}
               />
@@ -296,7 +288,7 @@ function FeaturesSection() {
     <section id="features" style={{ background: 'hsl(30,15%,96%)' }} className="section-padding">
       <div className="container-tight">
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <p style={{ fontSize: 12, fontWeight: 700, color: 'hsl(24,80%,50%)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+          <p style={{ fontSize: 12, fontWeight: 700, color: 'hsl(215,100%,35%)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
             TẠI SAO CHỌN CHÚNG TÔI
           </p>
           <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.5rem)', fontWeight: 800, margin: '0 0 12px', letterSpacing: '-0.02em' }}>
@@ -366,7 +358,7 @@ function RoomCard({ room, onClick }) {
           )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
-          <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: 'hsl(24,80%,50%)' }}>
+          <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: 'hsl(215,100%,35%)' }}>
             {formatVND(room.price)}
           </p>
           <span style={{
@@ -394,7 +386,7 @@ function RoomsSection({ rooms, loading, onRoomClick }) {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem', marginBottom: '2.5rem' }}>
           <div>
-            <p style={{ fontSize: 12, fontWeight: 700, color: 'hsl(24,80%,50%)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+            <p style={{ fontSize: 12, fontWeight: 700, color: 'hsl(215,100%,35%)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
               DANH SÁCH PHÒNG
             </p>
             <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.5rem)', fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>
@@ -425,7 +417,7 @@ function RoomsSection({ rooms, loading, onRoomClick }) {
               boxSizing: 'border-box', fontFamily: 'inherit',
               transition: 'border-color 0.2s'
             }}
-            onFocus={e => e.target.style.borderColor = 'hsl(24,80%,55%)'}
+            onFocus={e => e.target.style.borderColor = 'hsl(215,100%,45%)'}
             onBlur={e => e.target.style.borderColor = 'hsl(30,15%,88%)'}
           />
         </div>
@@ -474,6 +466,113 @@ function RulesSection({ note }) {
   );
 }
 
+/** Location & Amenities Section */
+function LocationSection({ address }) {
+  const mapAddress = encodeURIComponent(address || 'Hà Nội, Việt Nam');
+  const nearbyAmenities = [
+    { icon: '🛒', title: 'Siêu thị & Chợ', desc: 'Bách Hóa, Vinmart, Chợ Dân Sinh...' },
+    { icon: '🏥', title: 'Cơ sở Y Tế', desc: 'Nhà thuốc báo quanh khu vực, Bệnh viện lớn.' },
+    { icon: '🚌', title: 'Giao Thông', desc: 'Trạm xe bus gần kề, trục đường lớn dễ đi.' },
+    { icon: '🎓', title: 'Giáo Dục', desc: 'Gắn liền với cụm trường Đại học / Phổ thông.' }
+  ];
+
+  return (
+    <section id="location" style={{ background: 'hsl(30,15%,96%)' }} className="section-padding">
+      <div className="container-tight">
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <p style={{ fontSize: 12, fontWeight: 700, color: 'hsl(215,100%,35%)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+            VỊ TRÍ & TIỆN ÍCH NGOẠI KHU
+          </p>
+          <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.5rem)', fontWeight: 800, margin: '0 0 12px', letterSpacing: '-0.02em' }}>
+            Sinh hoạt <span className="gradient-text">thuận lợi</span>
+          </h2>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(250px, 1fr) minmax(250px, 1.25fr)', gap: '2rem', alignItems: 'center' }} className="location-grid">
+          {/* Map */}
+          <div style={{ borderRadius: '24px', overflow: 'hidden', boxShadow: 'var(--shadow-md)', height: 400, background: '#e0e0e0' }}>
+            <iframe
+              title="Bản đồ nhà trọ"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+              src={`https://maps.google.com/maps?q=${mapAddress}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+            />
+          </div>
+
+          {/* Amenities Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }} className="amenities-grid">
+            {nearbyAmenities.map((am, i) => (
+              <div key={am.title} style={{ padding: '1.25rem', background: '#fff', borderRadius: '16px', boxShadow: 'var(--shadow-sm)' }}>
+                <div style={{ width: 44, height: 44, borderRadius: '12px', background: 'hsl(30,15%,96%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: '0.75rem' }}>
+                  {am.icon}
+                </div>
+                <h3 style={{ fontSize: 14, fontWeight: 700, color: 'hsl(220,20%,10%)', marginBottom: 4 }}>{am.title}</h3>
+                <p style={{ margin: 0, fontSize: 12, color: 'hsl(220,10%,56%)', lineHeight: 1.5 }}>{am.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <style>{`
+          @media (max-width: 768px) {
+            .location-grid { grid-template-columns: 1fr !important; }
+            .amenities-grid { grid-template-columns: 1fr !important; }
+          }
+        `}</style>
+      </div>
+    </section>
+  );
+}
+
+/** FAQ Section */
+function FAQSection() {
+  const faqs = [
+    {
+      q: 'Làm thế nào để đăng ký tài khoản trên hệ thống?',
+      a: 'Việc đăng ký tài khoản tự do không được hỗ trợ. Tài khoản sẽ được Ban quản lý tạo và cấp cho bạn ngay sau khi hoàn tất hợp đồng thuê phòng, nhằm mục đích bảo mật thông tin nội bộ.'
+    },
+    {
+      q: 'Hệ thống tài khoản quản lý những gì?',
+      a: 'Tài khoản giúp cư dân theo dõi số điện/nước từng tháng, xem hóa đơn tiền nhà chính xác, nhận thông báo quan trọng từ quản lý và báo cáo sự cố hư hỏng trực tuyến.'
+    },
+    {
+      q: 'Làm sao để xem phòng trực tiếp?',
+      a: 'Bạn vui lòng lựa chọn phòng trên website, sau đó liên hệ ngay qua số điện thoại đường dây nóng. Đội ngũ quản lý sẽ xếp lịch mở cửa đón bạn tới xem phòng bất cứ lúc nào.'
+    }
+  ];
+
+  return (
+    <section className="section-padding" style={{ background: '#fff' }}>
+      <div className="container-tight">
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <p style={{ fontSize: 12, fontWeight: 700, color: 'hsl(215,100%,35%)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+            HỎI ĐÁP PHỔ BIẾN
+          </p>
+          <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.5rem)', fontWeight: 800, margin: '0 0 12px', letterSpacing: '-0.02em' }}>
+            Thông tin <span className="gradient-text">hữu ích</span>
+          </h2>
+        </div>
+
+        <div style={{ maxWidth: 800, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {faqs.map((faq, idx) => (
+            <div key={idx} style={{ padding: '1.5rem', border: '1px solid hsl(210,16%,92%)', borderRadius: '16px', background: 'hsl(210,20%,98%)' }}>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: 'hsl(220,20%,10%)', marginBottom: '0.5rem', display: 'flex', gap: 12 }}>
+                <span style={{ color: 'hsl(215,100%,45%)' }}>{idx + 1}.</span> {faq.q}
+              </h3>
+              <p style={{ margin: 0, fontSize: 14, color: 'hsl(220,10%,46%)', lineHeight: 1.6, paddingLeft: '1.5rem' }}>
+                {faq.a}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /** CTA Section */
 function CTASection({ nhaName, phone, owner }) {
   return (
@@ -484,11 +583,6 @@ function CTASection({ nhaName, phone, owner }) {
           padding: 'clamp(2.5rem,6vw,4rem)',
           background: 'var(--gradient-cta)', textAlign: 'center'
         }}>
-          {/* blobs */}
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', top: -60, right: -60, width: 240, height: 240, borderRadius: '50%', background: 'rgba(255,255,255,0.12)', blur: '2xl' }} />
-            <div style={{ position: 'absolute', bottom: -60, left: -60, width: 280, height: 280, borderRadius: '50%', background: 'rgba(255,255,255,0.08)' }} />
-          </div>
           <div style={{ position: 'relative', maxWidth: 560, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
             <h2 style={{ fontSize: 'clamp(1.6rem,4vw,2.5rem)', fontWeight: 800, color: '#fff', margin: 0, lineHeight: 1.2 }}>
               Sẵn sàng trở thành cư dân tiếp theo?
@@ -498,7 +592,7 @@ function CTASection({ nhaName, phone, owner }) {
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               <a href="#rooms" style={{
-                background: '#fff', color: 'hsl(24,80%,50%)',
+                background: '#fff', color: 'hsl(215,100%,35%)',
                 padding: '12px 28px', borderRadius: 12, fontSize: 15, fontWeight: 700,
                 textDecoration: 'none', boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
                 transition: 'all 0.25s', display: 'inline-flex', alignItems: 'center', gap: 8
@@ -585,7 +679,7 @@ function RoomModal({ room, settings, onClose }) {
                   {images.slice(0, 4).map((img, idx) => (
                     <div key={idx} onClick={() => setActiveImg(idx)} style={{
                       aspectRatio: '1', borderRadius: 10, overflow: 'hidden', cursor: 'pointer',
-                      border: activeImg === idx ? '2px solid hsl(24,80%,55%)' : '2px solid transparent'
+                      border: activeImg === idx ? '2px solid hsl(215,100%,45%)' : '2px solid transparent'
                     }}>
                       <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
@@ -598,7 +692,7 @@ function RoomModal({ room, settings, onClose }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ padding: '1.25rem', borderRadius: 14, background: 'hsla(24,80%,55%,0.06)', border: '1px solid hsla(24,80%,55%,0.15)' }}>
                 <p style={{ margin: '0 0 4px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', color: 'hsl(220,10%,56%)', letterSpacing: '0.06em' }}>Giá phòng</p>
-                <p style={{ margin: 0, fontSize: 28, fontWeight: 800, color: 'hsl(24,80%,50%)' }}>
+                <p style={{ margin: 0, fontSize: 28, fontWeight: 800, color: 'hsl(215,100%,35%)' }}>
                   {formatVND(room.price)}
                   <span style={{ fontSize: 13, fontWeight: 500, color: 'hsl(220,10%,56%)' }}> / tháng</span>
                 </p>
@@ -652,12 +746,16 @@ function Footer({ settings }) {
           {/* Brand */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div style={{
-                width: 34, height: 34, borderRadius: 10,
-                background: 'var(--gradient-primary)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#fff', fontWeight: 800, fontSize: 16
-              }}>H</div>
+              {settings.logo_image ? (
+                <img src={settings.logo_image} alt="Logo" style={{ height: 34, borderRadius: 8, objectFit: 'contain' }} />
+              ) : (
+                <div style={{
+                  width: 34, height: 34, borderRadius: 10,
+                  background: 'var(--gradient-primary)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: '#fff', fontWeight: 800, fontSize: 16
+                }}>H</div>
+              )}
               <span style={{ fontWeight: 800, fontSize: 17 }}>{settings.nha_tro_name}</span>
             </div>
             <p style={{ margin: 0, fontSize: 13, color: 'hsla(30,15%,90%,0.55)', lineHeight: 1.65 }}>
@@ -744,7 +842,7 @@ const LandingPage = () => {
 
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", minHeight: '100vh' }}>
-      <Navbar name={settings.nha_tro_name} phone={settings.phone} />
+      <Navbar name={settings.nha_tro_name} phone={settings.phone} logo_image={settings.logo_image} />
       <HeroSection settings={settings} availableCount={availableCount} />
       <FeaturesSection />
       <RoomsSection rooms={rooms} loading={loading} onRoomClick={setSelectedRoom} />
@@ -755,6 +853,10 @@ const LandingPage = () => {
           <AdsBanner layout="banner" />
         </div>
       </section>
+
+      <LocationSection address={settings.address} />
+
+      <FAQSection />
 
       <RulesSection note={settings.note} />
       <CTASection nhaName={settings.nha_tro_name} phone={settings.phone} owner={settings.owner} />

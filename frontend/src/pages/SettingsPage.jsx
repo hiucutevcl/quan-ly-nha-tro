@@ -13,6 +13,8 @@ const defaultSettings = {
     bank_name: '',
     bank_account: '',
     bank_owner: '',
+    hero_image: '',
+    logo_image: '',
     custom_quick_replies: JSON.stringify([
         { title: '🏠 Xem phòng trống', answer: 'Hiện tại nhà trọ đang có phòng trống. Vui lòng liên hệ số ĐT chủ trọ để xem phòng!' },
         { title: '💰 Báo giá thuê', answer: 'Giá thuê phòng từ 2.500.000đ - 3.500.000đ tùy diện tích. (Chưa bao gồm điện nước).' },
@@ -98,6 +100,66 @@ const SettingsPage = () => {
                                 <label className="block text-sm font-bold text-gray-600 mb-1">Tên chủ trọ</label>
                                 <input type="text" name="owner" className="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400"
                                     value={settings.owner} onChange={handleChange} placeholder="Nguyễn Văn A" />
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-bold text-gray-600 mb-1">Ảnh Nền (Hero Image)</label>
+                                <div className="flex gap-2">
+                                    <input type="text" name="hero_image" className="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400"
+                                        value={settings.hero_image || ''} onChange={handleChange} placeholder="Link ảnh nền trang chủ" />
+                                    <label className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-2 rounded font-bold cursor-pointer text-sm whitespace-nowrap flex items-center justify-center transition-colors">
+                                        <span>📸 Tải Xếp</span>
+                                        <input 
+                                            type="file" className="hidden" accept="image/*"
+                                            onChange={async (e) => {
+                                                const file = e.target.files[0];
+                                                if (!file) return;
+                                                const formData = new FormData();
+                                                formData.append('image', file);
+                                                try {
+                                                    setSettings(prev => ({ ...prev, hero_image: 'Đang tải ảnh lên...' }));
+                                                    const res = await axiosAuth.post('/settings/upload-banner', formData, {
+                                                        headers: { 'Content-Type': 'multipart/form-data' }
+                                                    });
+                                                    setSettings(prev => ({ ...prev, hero_image: res.data.imageUrl }));
+                                                } catch (err) {
+                                                    setSettings(prev => ({ ...prev, hero_image: '' }));
+                                                    alert('Lỗi tải ảnh: ' + (err.response?.data?.message || err.message));
+                                                }
+                                            }}
+                                        />
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-600 mb-1">Logo Nhà Trọ</label>
+                                <div className="flex gap-2">
+                                    <input type="text" name="logo_image" className="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400"
+                                        value={settings.logo_image || ''} onChange={handleChange} placeholder="Link logo nhà trọ" />
+                                    <label className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-2 rounded font-bold cursor-pointer text-sm whitespace-nowrap flex items-center justify-center transition-colors">
+                                        <span>📸 Tải Ảnh</span>
+                                        <input 
+                                            type="file" className="hidden" accept="image/*"
+                                            onChange={async (e) => {
+                                                const file = e.target.files[0];
+                                                if (!file) return;
+                                                const formData = new FormData();
+                                                formData.append('image', file);
+                                                try {
+                                                    setSettings(prev => ({ ...prev, logo_image: 'Đang tải ảnh lên...' }));
+                                                    const res = await axiosAuth.post('/settings/upload-banner', formData, {
+                                                        headers: { 'Content-Type': 'multipart/form-data' }
+                                                    });
+                                                    setSettings(prev => ({ ...prev, logo_image: res.data.imageUrl }));
+                                                } catch (err) {
+                                                    setSettings(prev => ({ ...prev, logo_image: '' }));
+                                                    alert('Lỗi tải ảnh: ' + (err.response?.data?.message || err.message));
+                                                }
+                                            }}
+                                        />
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -102,6 +102,14 @@ const Login = () => {
                         </button>
                     </form>
 
+                    {/* Hướng dẫn đăng ký */}
+                    <div className="mt-6 pt-6 border-t border-gray-100 text-center">
+                        <p className="text-sm text-gray-500 font-medium">Bạn chưa có tài khoản?</p>
+                        <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                            Trang web không hỗ trợ tự đăng ký. Việc cấp tài khoản chỉ thực hiện <strong className="text-blue-500">sau khi thuê nhà</strong> và được <strong className="text-blue-500">quản lý trực tiếp bởi chủ trọ</strong> để đảm bảo an ninh và thông tin chính xác.
+                        </p>
+                    </div>
+
                 </div>
             </div>
         </div>
