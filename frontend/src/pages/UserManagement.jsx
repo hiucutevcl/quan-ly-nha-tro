@@ -33,9 +33,11 @@ const UserManagement = () => {
     const handleAddUser = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('https://api-quan-ly-nha-tro.onrender.com/api/auth/register', { ...newUser, role: 'Tenant' }, apiHeaders);
+            const formattedUsername = newUser.username.trim();
+            const submissionData = { ...newUser, username: formattedUsername, role: 'Tenant' };
+            await axios.post('https://api-quan-ly-nha-tro.onrender.com/api/auth/register', submissionData, apiHeaders);
             // Hiển phiếu đăng nhập sau khi tạo thành công
-            setCredCard({ full_name: newUser.full_name, username: newUser.username, password: newUser.password });
+            setCredCard({ full_name: newUser.full_name, username: formattedUsername, password: newUser.password });
             setNewUser({ username: '', password: '', full_name: '', phone: '', id_card: '', hometown: '' });
             setShowAddForm(false);
             fetchUsers();

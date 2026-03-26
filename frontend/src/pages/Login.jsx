@@ -23,7 +23,8 @@ const Login = () => {
         setErrorMsg('');
         setIsLoading(true);
         try {
-            const response = await axios.post('https://api-quan-ly-nha-tro.onrender.com/api/auth/login', { username, password });
+            const formattedUsername = username.trim();
+            const response = await axios.post('https://api-quan-ly-nha-tro.onrender.com/api/auth/login', { username: formattedUsername, password });
             const token = response.data.token;
             localStorage.setItem('token', token);
             const decoded = jwtDecode(token);

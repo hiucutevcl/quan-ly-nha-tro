@@ -5,7 +5,8 @@ const db = require('../config/db');
 // API 1: Đăng ký tài khoản (Register)
 const register = async (req, res) => {
     try {
-        const { username, password, role, full_name, phone, id_card, hometown } = req.body;
+        let { username, password, role, full_name, phone, id_card, hometown } = req.body;
+        if (username) username = username.trim();
 
         // B1: Kiểm tra username đã tồn tại trong CSDL chưa
         const [existingUsers] = await db.query('SELECT id FROM Users WHERE username = ?', [username]);
@@ -34,7 +35,8 @@ const register = async (req, res) => {
 // API 2: Đăng nhập (Login)
 const login = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        let { username, password } = req.body;
+        if (username) username = username.trim();
 
         // B1: Tìm user theo username CSDL
         const [users] = await db.query('SELECT * FROM Users WHERE username = ?', [username]);
