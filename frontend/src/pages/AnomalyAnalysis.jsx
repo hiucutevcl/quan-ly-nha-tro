@@ -37,7 +37,8 @@ const AnomalyPage = ({ token }) => {
     if (loading) return <div style={{ textAlign: 'center', padding: 40, color: '#64748b' }}>Đang phân tích dữ liệu...</div>;
     if (!data) return null;
 
-    const { anomalies, summary } = data;
+    const { anomalies, all_analyses, summary } = data;
+    const itemsToRender = all_analyses || anomalies; // Fallback in case backend hasn't updated yet
 
     return (
         <div>
@@ -59,32 +60,32 @@ const AnomalyPage = ({ token }) => {
                 ))}
             </div>
 
-            {/* Anomaly List */}
-            {anomalies.length === 0 ? (
+            {/* All Rooms List */}
+            {itemsToRender.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '50px 0', color: '#16a34a' }}>
                     <div style={{ fontSize: 48 }}>✅</div>
-                    <div style={{ fontWeight: 700, fontSize: 18, marginTop: 8 }}>Tuyệt vời! Không có phòng nào có bất thường trong kỳ này.</div>
-                    <div style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>Ngưỡng phát hiện: tăng hơn {((summary.threshold_used - 1) * 100).toFixed(0)}% so với trung bình 3 tháng trước</div>
+                    <div style={{ fontWeight: 700, fontSize: 18, marginTop: 8 }}>Chưa có đủ dữ liệu lịch sử để phân tích.</div>
+                    <div style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>Cần ít nhất hóa đơn của 2 tháng trước để bắt đầu so sánh.</div>
                 </div>
             ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                    {anomalies.map(a => (
+                    {itemsToRender.map(a => (
                         <div key={a.room_id} style={{
-                            background: a.severity === 'high' ? '#fef2f2' : '#fffbeb',
-                            border: `1.5px solid ${a.severity === 'high' ? '#fca5a5' : '#fde68a'}`,
+                            background: a.severity === 'high' ? '#fef2f2' : (a.severity === 'medium' ? '#fffbeb' : '#f0fdf4'),
+                            border: `1.5px solid ${a.severity === 'high' ? '#fca5a5' : (a.severity === 'medium' ? '#fde68a' : '#86efac')}`,
                             borderRadius: 14, padding: 20,
                         }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 8, marginBottom: 14 }}>
                                 <div>
                                     <span style={{ fontSize: 16, fontWeight: 800, color: '#0f172a' }}>🏠 {a.room_name}</span>
                                     {a.tenant_name && <span style={{ marginLeft: 8, fontSize: 13, color: '#64748b' }}>· {a.tenant_name}</span>}
-                                    <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>Tháng ghi nhận: {a.month_year}</div>
+                                    <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>Kỳ phân tích: {a.month_year}</div>
                                 </div>
                                 <span style={{
-                                    background: a.severity === 'high' ? '#dc2626' : '#f59e0b', color: 'white',
+                                    background: a.severity === 'high' ? '#dc2626' : (a.severity === 'medium' ? '#f59e0b' : '#16a34a'), color: 'white',
                                     fontSize: 12, fontWeight: 700, padding: '3px 12px', borderRadius: 999
                                 }}>
-                                    {a.severity === 'high' ? '🔴 Bất thường cao' : '🟡 Bất thường vừa'}
+                                    {a.severity === 'high' ? '🔴 Bất thường (Cao)' : (a.severity === 'medium' ? '🟡 Bất thường (Vừa)' : '🟢 Bình thường')}
                                 </span>
                             </div>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
@@ -94,15 +95,19 @@ const AnomalyPage = ({ token }) => {
                                         <div style={{ display: 'flex', gap: 20, fontSize: 13 }}>
                                             <div>
                                                 <div style={{ color: '#94a3b8', fontSize: 11 }}>Tháng này</div>
-                                                <div style={{ fontWeight: 800, fontSize: 18, color: '#dc2626' }}>{w.current} <span style={{ fontSize: 12, fontWeight: 400 }}>{w.unit}</span></div>
+                                                <div style={{ fontWeight: 800, fontSize: 18, color: w.severity !== 'normal' ? '#dc2626' : '#15803d' }}>
+                                                    {w.current} <span style={{ fontSize: 12, fontWeight: 400 }}>{w.unit}</span>
+                                                </div>
                                             </div>
                                             <div>
                                                 <div style={{ color: '#94a3b8', fontSize: 11 }}>TB 3 tháng trước</div>
                                                 <div style={{ fontWeight: 700, color: '#0f172a' }}>{w.avg} {w.unit}</div>
                                             </div>
                                             <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
-                                                <div style={{ color: '#94a3b8', fontSize: 11 }}>Tăng</div>
-                                                <div style={{ fontWeight: 800, color: '#dc2626', fontSize: 18 }}>{formatPct(w.percent_increase)}</div>
+                                                <div style={{ color: '#94a3b8', fontSize: 11 }}>Biến động</div>
+                                                <div style={{ fontWeight: 800, color: w.severity !== 'normal' ? '#dc2626' : '#15803d', fontSize: 18 }}>
+                                                    {w.percent_increase >= 0 ? `+${w.percent_increase}%` : `${w.percent_increase}%`}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

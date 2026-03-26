@@ -60,7 +60,8 @@ const getAnomalies = async (req, res) => {
 
         const ANOMALY_THRESHOLD = 1.5; // tăng hơn 50% => bất thường
         const MIN_HISTORY = 2;         // cần ít nhất 2 tháng lịch sử
-        const anomalies = [];
+        const anomalies = [];          // Giữ lại để tương thích (chỉ chứa phòng bất thường)
+        const all_analyses = [];       // Chứa TẤT CẢ các phòng đã phân tích
 
         for (const roomId in roomMap) {
             const room = roomMap[roomId];
@@ -83,59 +84,68 @@ const getAnomalies = async (req, res) => {
             const isElecAnomaly = elecRatio >= ANOMALY_THRESHOLD;
             const isWaterAnomaly = waterRatio >= ANOMALY_THRESHOLD;
 
-            if (isElecAnomaly || isWaterAnomaly) {
-                const warnings = [];
-                if (isElecAnomaly) {
-                    warnings.push({
-                        type: 'electricity',
-                        label: '⚡ Điện tăng bất thường',
-                        current: currentElec,
-                        avg: Math.round(avgElec * 10) / 10,
-                        ratio: Math.round(elecRatio * 100) / 100,
-                        percent_increase: Math.round((elecRatio - 1) * 100),
-                        unit: 'kWh',
-                        severity: elecRatio >= 2 ? 'high' : 'medium'
-                    });
-                }
-                if (isWaterAnomaly) {
-                    warnings.push({
-                        type: 'water',
-                        label: '💧 Nước tăng bất thường',
-                        current: currentWater,
-                        avg: Math.round(avgWater * 10) / 10,
-                        ratio: Math.round(waterRatio * 100) / 100,
-                        percent_increase: Math.round((waterRatio - 1) * 100),
-                        unit: 'm³',
-                        severity: waterRatio >= 2 ? 'high' : 'medium'
-                    });
-                }
+            const warnings = [];
+            
+            // Luôn ghi nhận thông số (Dù bất thường hay không để hiển thị chi tiết)
+            warnings.push({
+                type: 'electricity',
+                label: '⚡ Điện',
+                current: currentElec,
+                avg: Math.round(avgElec * 10) / 10,
+                ratio: Math.round(elecRatio * 100) / 100,
+                percent_increase: Math.round((elecRatio - 1) * 100),
+                unit: 'kWh',
+                severity: isElecAnomaly ? (elecRatio >= 2 ? 'high' : 'medium') : 'normal'
+            });
 
-                const maxSeverity = warnings.some(w => w.severity === 'high') ? 'high' : 'medium';
-                anomalies.push({
-                    room_id: room.room_id,
-                    room_name: room.room_name,
-                    tenant_name: room.tenant_name,
-                    month_year: latestInvoice.month_year,
-                    is_paid: latestInvoice.is_paid,
-                    warnings,
-                    severity: maxSeverity,
-                    history_months: historyInvoices.map(i => ({
-                        month_year: i.month_year,
-                        elec_used: Number(i.elec_used),
-                        water_used: Number(i.water_used),
-                    }))
-                });
+            warnings.push({
+                type: 'water',
+                label: '💧 Nước',
+                current: currentWater,
+                avg: Math.round(avgWater * 10) / 10,
+                ratio: Math.round(waterRatio * 100) / 100,
+                percent_increase: Math.round((waterRatio - 1) * 100),
+                unit: 'm³',
+                severity: isWaterAnomaly ? (waterRatio >= 2 ? 'high' : 'medium') : 'normal'
+            });
+
+            const maxSeverity = (isElecAnomaly || isWaterAnomaly) 
+                ? (warnings.some(w => w.severity === 'high') ? 'high' : 'medium')
+                : 'normal';
+
+            const analysisRecord = {
+                room_id: room.room_id,
+                room_name: room.room_name,
+                tenant_name: room.tenant_name,
+                month_year: latestInvoice.month_year,
+                is_paid: latestInvoice.is_paid,
+                warnings,
+                severity: maxSeverity,
+                history_months: historyInvoices.map(i => ({
+                    month_year: i.month_year,
+                    elec_used: Number(i.elec_used),
+                    water_used: Number(i.water_used),
+                }))
+            };
+
+            all_analyses.push(analysisRecord);
+            
+            if (maxSeverity !== 'normal') {
+                anomalies.push(analysisRecord);
             }
         }
 
-        // Sắp xếp: high trước, medium sau
-        anomalies.sort((a, b) => (a.severity === 'high' ? -1 : 1));
+        // Sắp xếp: high trước, medium giữa, normal cuối cùng
+        const severityOrder = { 'high': 1, 'medium': 2, 'normal': 3 };
+        all_analyses.sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
+        anomalies.sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
 
-        const totalRooms = Object.keys(roomMap).length;
+        const totalRoomsAnalyzed = all_analyses.length;
         res.status(200).json({
             anomalies,
+            all_analyses,
             summary: {
-                total_rooms_analyzed: totalRooms,
+                total_rooms_analyzed: totalRoomsAnalyzed,
                 rooms_with_anomaly: anomalies.length,
                 high_severity: anomalies.filter(a => a.severity === 'high').length,
                 medium_severity: anomalies.filter(a => a.severity === 'medium').length,
