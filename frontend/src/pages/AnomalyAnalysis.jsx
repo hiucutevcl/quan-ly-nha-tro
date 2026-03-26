@@ -282,13 +282,33 @@ const AssetsPage = ({ token, rooms }) => {
                     <div style={{ textAlign: 'center', padding: 40, color: '#94a3b8' }}>
                         <div style={{ fontSize: 40 }}>📦</div>
                         <div style={{ marginTop: 8, fontWeight: 600 }}>Chưa có tài sản nào được ghi nhận.</div>
+                        <button onClick={() => { setShowForm(true); setEditItem(null); setForm({ room_id: '', asset_name: '', description: '', condition_status: 'Tốt', quantity: 1 }); setSelectedAmenities([]); }}
+                            style={{ background: '#4f46e5', color: 'white', border: 'none', borderRadius: 8, padding: '9px 18px', fontWeight: 700, cursor: 'pointer', fontSize: 14, marginTop: 16 }}>
+                            + Thêm Tài Sản Đầu Tiên
+                        </button>
                     </div>
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                        {Object.entries(grouped).map(([roomName, items]) => (
+                        {Object.entries(grouped).map(([roomName, items]) => {
+                            const firstItem = items[0];
+                            return (
                             <div key={roomName} style={{ background: 'white', borderRadius: 12, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
-                                <div style={{ background: '#f8fafc', padding: '10px 18px', fontWeight: 800, color: '#1e1b4b', fontSize: 15, borderBottom: '1px solid #e2e8f0' }}>
-                                    🏠 {roomName} <span style={{ fontWeight: 400, color: '#94a3b8', fontSize: 13 }}>({items.length} tài sản)</span>
+                                <div style={{ background: '#f8fafc', padding: '10px 18px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div style={{ fontWeight: 800, color: '#1e1b4b', fontSize: 15 }}>
+                                        🏠 {roomName} <span style={{ fontWeight: 400, color: '#94a3b8', fontSize: 13 }}>({items.length} tài sản)</span>
+                                    </div>
+                                    <button 
+                                        onClick={() => {
+                                            setShowForm(true);
+                                            setEditItem(null);
+                                            setForm({ room_id: firstItem.room_id, asset_name: '', description: '', condition_status: 'Tốt', quantity: 1 });
+                                            setSelectedAmenities([]);
+                                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                                        }}
+                                        style={{ background: '#e0e7ff', color: '#4338ca', border: 'none', borderRadius: 6, padding: '6px 12px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
+                                    >
+                                        + Thêm tiện nghi
+                                    </button>
                                 </div>
                                 <div>
                                     {items.map(item => {
@@ -310,7 +330,7 @@ const AssetsPage = ({ token, rooms }) => {
                                     })}
                                 </div>
                             </div>
-                        ))}
+                        )})}
                     </div>
                 )
             }
