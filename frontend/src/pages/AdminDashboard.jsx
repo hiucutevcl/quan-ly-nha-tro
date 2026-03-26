@@ -7,6 +7,7 @@ import InvoiceManagement from './InvoiceManagement';
 import ReportDashboard from './ReportDashboard';
 import SettingsPage from './SettingsPage';
 import PaymentCalendar from './PaymentCalendar';
+import AnomalyAnalysis from './AnomalyAnalysis';
 
 const TABS = [
     { key: 'rooms',    label: 'Quản lý Phòng',  icon: '🏠' },
@@ -14,6 +15,7 @@ const TABS = [
     { key: 'invoices', label: 'Hóa Đơn',         icon: '📄' },
     { key: 'calendar', label: 'Lịch Thu Tiền',  icon: '📅' },
     { key: 'reports',  label: 'Thống Kê',        icon: '📊' },
+    { key: 'anomaly',  label: 'Phân Tích',       icon: '🔍' },
     { key: 'settings', label: 'Cài Đặt',         icon: '⚙️' },
 ];
 
@@ -129,6 +131,7 @@ const AdminDashboard = () => {
                     {activeTab === 'invoices' && <InvoiceManagement />}
                     {activeTab === 'calendar' && <PaymentCalendar />}
                     {activeTab === 'reports'  && <ReportDashboard />}
+                    {activeTab === 'anomaly'  && <AnomalyAnalysis />}
                     {activeTab === 'settings' && <SettingsPage />}
                 </div>
             </div>

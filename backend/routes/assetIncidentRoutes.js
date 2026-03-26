@@ -1,0 +1,144 @@
+const express = require('express');
+const router = express.Router();
+const db = require('../config/db');
+const { verifyToken, checkAdmin } = require('../middlewares/authMiddleware');
+
+// ======= TÀI SẢN/ĐỒ ĐẠC PHÒNG (RoomAssets) =======
+
+// Lấy danh sách tài sản của 1 phòng
+router.get('/assets/:roomId', verifyToken, checkAdmin, async (req, res) => {
+    try {
+        const [rows] = await db.query(
+            'SELECT * FROM RoomAssets WHERE room_id = ? ORDER BY created_at DESC',
+            [req.params.roomId]
+        );
+        res.json(rows);
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+});
+
+// Lấy tất cả tài sản (có thể lọc theo phòng)
+router.get('/assets', verifyToken, checkAdmin, async (req, res) => {
+    try {
+        const [rows] = await db.query(`
+            SELECT a.*, r.room_name
+            FROM RoomAssets a
+            JOIN Rooms r ON a.room_id = r.id
+            ORDER BY r.room_name ASC, a.created_at DESC
+        `);
+        res.json(rows);
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+});
+
+// Thêm tài sản mới vào phòng
+router.post('/assets', verifyToken, checkAdmin, async (req, res) => {
+    const { room_id, asset_name, description, condition_status, quantity } = req.body;
+    if (!room_id || !asset_name) {
+        return res.status(400).json({ message: 'Thiếu room_id hoặc tên tài sản!' });
+    }
+    try {
+        await db.query(
+            `INSERT INTO RoomAssets (room_id, asset_name, description, condition_status, quantity)
+             VALUES (?, ?, ?, ?, ?)`,
+            [room_id, asset_name, description || '', condition_status || 'Tốt', quantity || 1]
+        );
+        res.status(201).json({ message: 'Đã thêm tài sản thành công!' });
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+});
+
+// Cập nhật tình trạng tài sản
+router.put('/assets/:id', verifyToken, checkAdmin, async (req, res) => {
+    const { asset_name, description, condition_status, quantity } = req.body;
+    try {
+        await db.query(
+            `UPDATE RoomAssets SET asset_name=?, description=?, condition_status=?, quantity=? WHERE id=?`,
+            [asset_name, description || '', condition_status, quantity || 1, req.params.id]
+        );
+        res.json({ message: 'Cập nhật tài sản thành công!' });
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+});
+
+// Xóa tài sản
+router.delete('/assets/:id', verifyToken, checkAdmin, async (req, res) => {
+    try {
+        await db.query('DELETE FROM RoomAssets WHERE id = ?', [req.params.id]);
+        res.json({ message: 'Đã xóa tài sản!' });
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+});
+
+// ======= SỰ CỐ/INCIDENT (RoomIncidents) =======
+
+// Lấy danh sách sự cố (có thể lọc theo phòng)
+router.get('/incidents', verifyToken, checkAdmin, async (req, res) => {
+    try {
+        const { room_id } = req.query;
+        let sql = `
+            SELECT inc.*, r.room_name
+            FROM RoomIncidents inc
+            JOIN Rooms r ON inc.room_id = r.id
+        `;
+        const params = [];
+        if (room_id) {
+            sql += ' WHERE inc.room_id = ?';
+            params.push(room_id);
+        }
+        sql += ' ORDER BY inc.reported_at DESC';
+        const [rows] = await db.query(sql, params);
+        res.json(rows);
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+});
+
+// Ghi nhận sự cố mới
+router.post('/incidents', verifyToken, checkAdmin, async (req, res) => {
+    const { room_id, title, description, severity } = req.body;
+    if (!room_id || !title) {
+        return res.status(400).json({ message: 'Thiếu room_id hoặc tiêu đề sự cố!' });
+    }
+    try {
+        await db.query(
+            `INSERT INTO RoomIncidents (room_id, title, description, severity, status)
+             VALUES (?, ?, ?, ?, 'Mới')`,
+            [room_id, title, description || '', severity || 'Trung bình']
+        );
+        res.status(201).json({ message: 'Đã ghi nhận sự cố!' });
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+});
+
+// Cập nhật trạng thái sự cố
+router.put('/incidents/:id', verifyToken, checkAdmin, async (req, res) => {
+    const { title, description, severity, status, resolved_at, resolve_note } = req.body;
+    try {
+        await db.query(
+            `UPDATE RoomIncidents SET title=?, description=?, severity=?, status=?, resolved_at=?, resolve_note=? WHERE id=?`,
+            [title, description || '', severity, status, resolved_at || null, resolve_note || '', req.params.id]
+        );
+        res.json({ message: 'Cập nhật sự cố thành công!' });
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+});
+
+// Xóa sự cố
+router.delete('/incidents/:id', verifyToken, checkAdmin, async (req, res) => {
+    try {
+        await db.query('DELETE FROM RoomIncidents WHERE id = ?', [req.params.id]);
+        res.json({ message: 'Đã xóa sự cố!' });
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+});
+
+module.exports = router;

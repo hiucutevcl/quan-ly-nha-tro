@@ -10,6 +10,7 @@ const roomRoutes = require('./routes/roomRoutes');
 const statisticRoutes = require('./routes/statisticRoutes');
 const settingRoutes = require('./routes/settingRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const assetIncidentRoutes = require('./routes/assetIncidentRoutes');
 
 const app = express();
 
@@ -38,6 +39,47 @@ async function runMigrations() {
             }
         }
     }
+
+    // Tạo bảng RoomAssets nếu chưa có
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS RoomAssets (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                room_id INT NOT NULL,
+                asset_name VARCHAR(255) NOT NULL COMMENT 'Tên đồ đạc/tài sản',
+                description TEXT DEFAULT '' COMMENT 'Mô tả chi tiết',
+                condition_status VARCHAR(100) DEFAULT 'Tốt' COMMENT 'Tình trạng: Tốt, Hỏng, Cần sửa',
+                quantity INT DEFAULT 1,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                FOREIGN KEY (room_id) REFERENCES Rooms(id) ON DELETE CASCADE
+            )
+        `);
+        console.log('✅ Migration: Bảng RoomAssets sẵn sàng');
+    } catch (e) {
+        console.error('❌ Migration RoomAssets:', e.message);
+    }
+
+    // Tạo bảng RoomIncidents nếu chưa có
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS RoomIncidents (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                room_id INT NOT NULL,
+                title VARCHAR(255) NOT NULL COMMENT 'Tiêu đề sự cố',
+                description TEXT DEFAULT '' COMMENT 'Mô tả chi tiết sự cố',
+                severity VARCHAR(50) DEFAULT 'Trung bình' COMMENT 'Mức độ: Thấp, Trung bình, Cao, Khẩn cấp',
+                status VARCHAR(50) DEFAULT 'Mới' COMMENT 'Trạng thái: Mới, Đang xử lý, Đã xử lý',
+                reported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                resolved_at DATETIME NULL,
+                resolve_note TEXT DEFAULT '' COMMENT 'Ghi chú xử lý',
+                FOREIGN KEY (room_id) REFERENCES Rooms(id) ON DELETE CASCADE
+            )
+        `);
+        console.log('✅ Migration: Bảng RoomIncidents sẵn sàng');
+    } catch (e) {
+        console.error('❌ Migration RoomIncidents:', e.message);
+    }
 }
 
 // Khai báo các Routes
@@ -47,6 +89,7 @@ app.use('/api/rooms', roomRoutes);
 app.use('/api/statistics', statisticRoutes);
 app.use('/api/settings', settingRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/room-management', assetIncidentRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, async () => {
