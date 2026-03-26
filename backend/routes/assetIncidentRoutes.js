@@ -158,4 +158,61 @@ router.delete('/incidents/:id', verifyToken, checkAdmin, async (req, res) => {
     }
 });
 
+// ==============================================================
+// ======= API DÀNH RIÊNG CHO NGƯỜI THUÊ (TENANTS) ==============
+// ==============================================================
+
+// Lấy danh sách tài sản trong phòng của người thuê
+router.get('/tenant/assets', verifyToken, async (req, res) => {
+    try {
+        // Tìm phòng của người dùng hiện tại
+        const [rooms] = await db.query('SELECT id FROM Rooms WHERE tenant_id = ? LIMIT 1', [req.user.id]);
+        if (rooms.length === 0) return res.json([]);
+        
+        const [assets] = await db.query(
+            'SELECT * FROM RoomAssets WHERE room_id = ? ORDER BY created_at DESC',
+            [rooms[0].id]
+        );
+        res.json(assets);
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+});
+
+// Lấy danh sách sự cố người thuê đã báo cáo
+router.get('/tenant/incidents', verifyToken, async (req, res) => {
+    try {
+        const [rooms] = await db.query('SELECT id FROM Rooms WHERE tenant_id = ? LIMIT 1', [req.user.id]);
+        if (rooms.length === 0) return res.json([]);
+        
+        const [incidents] = await db.query(
+            'SELECT * FROM RoomIncidents WHERE room_id = ? ORDER BY reported_at DESC',
+            [rooms[0].id]
+        );
+        res.json(incidents);
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+});
+
+// Người thuê gửi báo cáo sự cố mới
+router.post('/tenant/incidents', verifyToken, async (req, res) => {
+    const { title, description, severity } = req.body;
+    if (!title) return res.status(400).json({ message: 'Vui lòng nhập tiêu đề sự cố!' });
+    
+    try {
+        const [rooms] = await db.query('SELECT id FROM Rooms WHERE tenant_id = ? LIMIT 1', [req.user.id]);
+        if (rooms.length === 0) return res.status(400).json({ message: 'Bạn chưa được xếp vào phòng nào!' });
+        
+        await db.query(
+            `INSERT INTO RoomIncidents (room_id, title, description, severity, status)
+             VALUES (?, ?, ?, ?, 'Mới')`,
+            [rooms[0].id, title, description || '', severity || 'Trung bình']
+        );
+        res.status(201).json({ message: 'Đã gửi báo cáo sự cố thành công! Quản lý sẽ sớm xử lý.' });
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+});
+
 module.exports = router;

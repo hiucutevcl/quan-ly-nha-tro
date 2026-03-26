@@ -1,10 +1,132 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+
+const TenantAssets = ({ axiosAuth }) => {
+    const [assets, setAssets] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        axiosAuth.get('/room-management/tenant/assets')
+            .then(res => { setAssets(res.data); setLoading(false); })
+            .catch(() => setLoading(false));
+    }, []);
+
+    if (loading) return <div className="text-center py-10 opacity-60">Đang tải tài sản...</div>;
+    if (assets.length === 0) return <div className="text-center py-10 bg-white rounded-2xl border border-slate-200">Không có tài sản nào được hệ thống ghi nhận.</div>;
+
+    const CONDITION_COLORS = { 'Tốt': 'bg-emerald-50 text-emerald-700', 'Cần sửa': 'bg-amber-50 text-amber-700', 'Hỏng': 'bg-rose-50 text-rose-700' };
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {assets.map(a => (
+                <div key={a.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center">
+                    <div>
+                        <h4 className="font-bold text-slate-800">{a.asset_name} {a.quantity > 1 && `(x${a.quantity})`}</h4>
+                        {a.description && <p className="text-xs text-slate-500 mt-1">{a.description}</p>}
+                    </div>
+                    <span className={`px-3 py-1 text-xs font-bold rounded-full ${CONDITION_COLORS[a.condition_status] || 'bg-slate-100'}`}>
+                        {a.condition_status}
+                    </span>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+const TenantIncidents = ({ axiosAuth }) => {
+    const [incidents, setIncidents] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [form, setForm] = useState({ title: '', severity: 'Trung bình', description: '' });
+    const [showForm, setShowForm] = useState(false);
+
+    const fetchIncidents = useCallback(() => {
+        setLoading(true);
+        axiosAuth.get('/room-management/tenant/incidents')
+            .then(res => { setIncidents(res.data); setLoading(false); })
+            .catch(() => setLoading(false));
+    }, []);
+
+    useEffect(() => { fetchIncidents(); }, []);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await axiosAuth.post('/room-management/tenant/incidents', form);
+            alert(res.data.message);
+            setForm({ title: '', severity: 'Trung bình', description: '' });
+            setShowForm(false);
+            fetchIncidents();
+        } catch (err) { alert(err.response?.data?.message || 'Lỗi gửi báo cáo!'); }
+    };
+
+    const SC = { 'Khẩn cấp': 'text-rose-600 bg-rose-50 border-rose-200', 'Cao': 'text-orange-600 bg-orange-50 border-orange-200', 'Trung bình': 'text-amber-600 bg-amber-50 border-amber-200', 'Thấp': 'text-emerald-600 bg-emerald-50 border-emerald-200' };
+    const STC = { 'Mới': 'text-blue-600 bg-blue-50 border-blue-200', 'Đang xử lý': 'text-amber-600 bg-amber-50 border-amber-200', 'Đã xử lý': 'text-emerald-600 bg-emerald-50 border-emerald-200' };
+
+    return (
+        <div>
+            <div className="flex justify-between items-center mb-4">
+                <h3 className="font-bold text-lg text-slate-800">Lịch sử báo cáo</h3>
+                <button onClick={() => setShowForm(!showForm)} className="bg-rose-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-rose-700">
+                    {showForm ? '✕ Đóng' : '+ Báo Cáo Sự Cố'}
+                </button>
+            </div>
+
+            {showForm && (
+                <form onSubmit={handleSubmit} className="bg-white p-5 rounded-2xl border-2 border-rose-100 shadow-sm mb-6">
+                    <h4 className="font-bold text-rose-600 mb-4">Gửi báo cáo hỏng hóc / sự cố</h4>
+                    <div className="space-y-3">
+                        <div>
+                            <label className="block text-xs font-bold text-slate-600 mb-1">Vấn đề gặp phải *</label>
+                            <input required value={form.title} onChange={e => setForm({...form, title: e.target.value})} placeholder="VD: Ống nước rò rỉ, Cửa hư khóa..." className="w-full border border-slate-200 rounded-lg p-2 text-sm focus:border-rose-400 outline-none" />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold text-slate-600 mb-1">Mức độ nghiêm trọng</label>
+                            <select value={form.severity} onChange={e => setForm({...form, severity: e.target.value})} className="w-full border border-slate-200 rounded-lg p-2 text-sm focus:border-rose-400 outline-none">
+                                {['Thấp', 'Trung bình', 'Cao', 'Khẩn cấp'].map(s => <option key={s}>{s}</option>)}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold text-slate-600 mb-1">Mô tả cụ thể</label>
+                            <textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} rows={3} placeholder="Mô tả chi tiết tình trạng để thợ chuẩn bị đồ sửa..." className="w-full border border-slate-200 rounded-lg p-2 text-sm focus:border-rose-400 outline-none" />
+                        </div>
+                    </div>
+                    <button type="submit" className="mt-4 bg-rose-600 text-white px-6 py-2 rounded-lg text-sm font-bold shadow-sm w-full">Gửi Báo Cáo</button>
+                </form>
+            )}
+
+            {loading ? <div className="text-center py-8 opacity-60">Đang tải...</div> : 
+             incidents.length === 0 ? <div className="text-center py-10 bg-white rounded-2xl border border-slate-200 text-slate-500">Chưa có báo cáo sự cố nào.</div> : (
+                <div className="space-y-4">
+                    {incidents.map(inc => (
+                        <div key={inc.id} className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm relative overflow-hidden">
+                            <div className="flex justify-between items-start mb-2">
+                                <h4 className="font-bold text-slate-800 text-base">{inc.title}</h4>
+                                <div className="flex gap-2 text-[10px] font-bold">
+                                    <span className={`px-2 py-1 rounded-full border ${SC[inc.severity] || ''}`}>{inc.severity}</span>
+                                    <span className={`px-2 py-1 rounded-full border ${STC[inc.status] || ''}`}>{inc.status === 'Mới' ? 'Đang chờ' : inc.status}</span>
+                                </div>
+                            </div>
+                            {inc.description && <p className="text-sm text-slate-600 mb-3">{inc.description}</p>}
+                            <div className="text-xs text-slate-400">Gửi lúc: {new Date(inc.reported_at).toLocaleString('vi-VN')}</div>
+                            
+                            {inc.status === 'Đã xử lý' && inc.resolve_note && (
+                                <div className="mt-3 bg-emerald-50 border border-emerald-100 p-3 rounded-lg text-sm text-emerald-800">
+                                    <b className="text-emerald-700">✅ P/Hồi từ Quản lý:</b> {inc.resolve_note}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
 
 const TenantInvoices = () => {
     const [invoices, setInvoices] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState('invoices'); // invoices, assets, incidents
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem('user') || '{}');
 
@@ -180,11 +302,31 @@ const TenantInvoices = () => {
                     })()}
                 </div>
 
-                <div className="flex items-center justify-between mb-5">
-                    <h2 className="text-xl font-extrabold text-slate-800 flex items-center gap-2 tracking-tight">
-                        <span className="text-indigo-500">🧾</span> Lịch sử hóa đơn
-                    </h2>
+                {/* Tabs */}
+                <div className="flex gap-2 overflow-x-auto pb-4 mb-4 scrollbar-hide">
+                    {[
+                        { id: 'invoices', label: '🧾 Hóa Đơn & Thanh Toán' },
+                        { id: 'assets', label: '🪑 Tiện Nghi & Tài Sản' },
+                        { id: 'incidents', label: '🔧 Báo Cáo Sự Cố' }
+                    ].map(tab => (
+                        <button 
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`whitespace-nowrap px-5 py-2.5 rounded-xl font-bold text-sm transition-all ${activeTab === tab.id ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
                 </div>
+
+                {/* Tab content: Invoices */}
+                {activeTab === 'invoices' && (
+                    <>
+                        <div className="flex items-center justify-between mb-5">
+                            <h2 className="text-xl font-extrabold text-slate-800 flex items-center gap-2 tracking-tight">
+                                <span className="text-indigo-500">🧾</span> Lịch sử hóa đơn
+                            </h2>
+                        </div>
 
                 {invoices.length === 0 ? (
                     <div className="text-center py-16 bg-white rounded-3xl shadow-sm border border-slate-200 border-dashed">
@@ -301,6 +443,27 @@ const TenantInvoices = () => {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                )}
+                </>)}
+
+                {/* Tab content: Assets */}
+                {activeTab === 'assets' && (
+                    <div>
+                        <h2 className="text-xl font-extrabold text-slate-800 mb-5 flex items-center gap-2">
+                            <span className="text-indigo-500">🪑</span> Danh sách đồ đạc & Tiện nghi phòng
+                        </h2>
+                        <TenantAssets axiosAuth={axiosAuth} />
+                    </div>
+                )}
+
+                {/* Tab content: Incidents */}
+                {activeTab === 'incidents' && (
+                    <div>
+                        <h2 className="text-xl font-extrabold text-slate-800 mb-5 flex items-center gap-2">
+                            <span className="text-rose-500">🔧</span> Quản lý Sự cố Hỏng hóc
+                        </h2>
+                        <TenantIncidents axiosAuth={axiosAuth} />
                     </div>
                 )}
                 
