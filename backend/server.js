@@ -46,14 +46,13 @@ async function runMigrations() {
             CREATE TABLE IF NOT EXISTS RoomAssets (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 room_id INT NOT NULL,
-                asset_name VARCHAR(255) NOT NULL COMMENT 'Tên đồ đạc/tài sản',
-                description TEXT DEFAULT '' COMMENT 'Mô tả chi tiết',
-                condition_status VARCHAR(100) DEFAULT 'Tốt' COMMENT 'Tình trạng: Tốt, Hỏng, Cần sửa',
+                asset_name VARCHAR(255) NOT NULL,
+                description TEXT,
+                condition_status VARCHAR(100) DEFAULT 'Tốt',
                 quantity INT DEFAULT 1,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                FOREIGN KEY (room_id) REFERENCES Rooms(id) ON DELETE CASCADE
-            )
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
         console.log('✅ Migration: Bảng RoomAssets sẵn sàng');
     } catch (e) {
@@ -66,15 +65,14 @@ async function runMigrations() {
             CREATE TABLE IF NOT EXISTS RoomIncidents (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 room_id INT NOT NULL,
-                title VARCHAR(255) NOT NULL COMMENT 'Tiêu đề sự cố',
-                description TEXT DEFAULT '' COMMENT 'Mô tả chi tiết sự cố',
-                severity VARCHAR(50) DEFAULT 'Trung bình' COMMENT 'Mức độ: Thấp, Trung bình, Cao, Khẩn cấp',
-                status VARCHAR(50) DEFAULT 'Mới' COMMENT 'Trạng thái: Mới, Đang xử lý, Đã xử lý',
+                title VARCHAR(255) NOT NULL,
+                description TEXT,
+                severity VARCHAR(50) DEFAULT 'Trung bình',
+                status VARCHAR(50) DEFAULT 'Mới',
                 reported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 resolved_at DATETIME NULL,
-                resolve_note TEXT DEFAULT '' COMMENT 'Ghi chú xử lý',
-                FOREIGN KEY (room_id) REFERENCES Rooms(id) ON DELETE CASCADE
-            )
+                resolve_note TEXT
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
         console.log('✅ Migration: Bảng RoomIncidents sẵn sàng');
     } catch (e) {
