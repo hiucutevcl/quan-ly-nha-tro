@@ -224,13 +224,33 @@ router.put('/tenant/assets/:id', verifyToken, async (req, res) => {
         
         const roomId = rooms[0].id;
         
+        // Lấy tên tài sản để tự động báo sự cố
+        const [assets] = await db.query('SELECT asset_name FROM RoomAssets WHERE id = ? AND room_id = ?', [req.params.id, roomId]);
+        if (assets.length === 0) return res.status(404).json({ message: 'Không tìm thấy tài sản trong phòng của bạn.' });
+        
+        const assetName = assets[0].asset_name;
+
         // Cập nhật trạng thái và tự động ghi đè description (tuỳ chọn)
         await db.query(
             `UPDATE RoomAssets SET condition_status = ? 
              WHERE id = ? AND room_id = ?`,
             [condition_status, req.params.id, roomId]
         );
-        res.json({ message: 'Đã báo cáo tình trạng tài sản!' });
+
+        // Tự động tạo Ticket Sự cố nếu báo hỏng/cần sửa
+        if (condition_status === 'Hỏng' || condition_status === 'Cần sửa') {
+            const severity = condition_status === 'Hỏng' ? 'Cao' : 'Trung bình';
+            const title = `[Tự động] Cư dân báo: ${assetName} bị ${condition_status}`;
+            const description = `Hệ thống tự động ghi nhận tài sản "${assetName}" được chuyển trạng thái thành "${condition_status}" bởi cư dân báo cáo từ bảng theo dõi.`;
+            
+            await db.query(
+                `INSERT INTO RoomIncidents (room_id, title, description, severity, status)
+                 VALUES (?, ?, ?, ?, 'Mới')`,
+                [roomId, title, description, severity]
+            );
+        }
+
+        res.json({ message: 'Đã cập nhật tình trạng tài sản thành công!' });
     } catch (e) {
         res.status(500).json({ message: e.message });
     }
