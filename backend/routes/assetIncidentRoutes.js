@@ -215,4 +215,25 @@ router.post('/tenant/incidents', verifyToken, async (req, res) => {
     }
 });
 
+// Người thuê báo cáo tình trạng tài sản (Cập nhật condition_status)
+router.put('/tenant/assets/:id', verifyToken, async (req, res) => {
+    const { condition_status, note } = req.body;
+    try {
+        const [rooms] = await db.query('SELECT id FROM Rooms WHERE tenant_id = ? LIMIT 1', [req.user.id]);
+        if (rooms.length === 0) return res.status(403).json({ message: 'Không có quyền truy cập.' });
+        
+        const roomId = rooms[0].id;
+        
+        // Cập nhật trạng thái và tự động ghi đè description (tuỳ chọn)
+        await db.query(
+            `UPDATE RoomAssets SET condition_status = ? 
+             WHERE id = ? AND room_id = ?`,
+            [condition_status, req.params.id, roomId]
+        );
+        res.json({ message: 'Đã báo cáo tình trạng tài sản!' });
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+});
+
 module.exports = router;

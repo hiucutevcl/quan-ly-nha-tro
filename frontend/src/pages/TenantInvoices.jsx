@@ -17,17 +17,35 @@ const TenantAssets = ({ axiosAuth }) => {
 
     const CONDITION_COLORS = { 'Tốt': 'bg-emerald-50 text-emerald-700', 'Cần sửa': 'bg-amber-50 text-amber-700', 'Hỏng': 'bg-rose-50 text-rose-700' };
 
+    const updateCondition = async (id, newStatus) => {
+        try {
+            await axiosAuth.put(`/room-management/tenant/assets/${id}`, { condition_status: newStatus });
+            setAssets(assets.map(a => a.id === id ? { ...a, condition_status: newStatus } : a));
+        } catch (err) {
+            alert('Lỗi cập nhật trạng thái: ' + (err.response?.data?.message || err.message));
+        }
+    };
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {assets.map(a => (
-                <div key={a.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center">
+                <div key={a.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
                     <div>
                         <h4 className="font-bold text-slate-800">{a.asset_name} {a.quantity > 1 && `(x${a.quantity})`}</h4>
                         {a.description && <p className="text-xs text-slate-500 mt-1">{a.description}</p>}
                     </div>
-                    <span className={`px-3 py-1 text-xs font-bold rounded-full ${CONDITION_COLORS[a.condition_status] || 'bg-slate-100'}`}>
-                        {a.condition_status}
-                    </span>
+                    <div className="flex flex-col items-end">
+                        <select
+                            value={a.condition_status}
+                            onChange={(e) => updateCondition(a.id, e.target.value)}
+                            className={`text-xs font-bold px-3 py-1.5 rounded-lg border outline-none cursor-pointer hover:shadow-sm transition ${CONDITION_COLORS[a.condition_status] || 'bg-slate-50 text-slate-600'}`}
+                        >
+                            <option value="Tốt">Tốt</option>
+                            <option value="Cần sửa">Cần sửa</option>
+                            <option value="Hỏng">Hỏng</option>
+                        </select>
+                        <span className="text-[10px] text-slate-400 mt-1 italic">Tự động báo cáo Quản lý</span>
+                    </div>
                 </div>
             ))}
         </div>
