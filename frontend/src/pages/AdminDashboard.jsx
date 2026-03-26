@@ -126,7 +126,7 @@ const AdminDashboard = () => {
 
                 {/* Nội dung Tab */}
                 <div className="flex-1 p-4 md:p-8">
-                    {activeTab === 'rooms'    && <RoomManagement />}
+                    {activeTab === 'rooms'    && <RoomManagement setActiveTab={setActiveTab} />}
                     {activeTab === 'users'    && <UserManagement />}
                     {activeTab === 'invoices' && <InvoiceManagement />}
                     {activeTab === 'calendar' && <PaymentCalendar />}

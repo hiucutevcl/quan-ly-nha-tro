@@ -3,7 +3,7 @@ import axios from 'axios';
 import MeterHistoryModal from '../components/MeterHistoryModal';
 import ContractPDFGenerator from '../components/ContractPDFGenerator';
 
-const RoomManagement = () => {
+const RoomManagement = ({ setActiveTab }) => {
     const [rooms, setRooms] = useState([]);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -304,6 +304,13 @@ const RoomManagement = () => {
                             <div className={`p-4 text-white font-bold flex justify-between items-center ${room.status === 'Available' ? 'bg-slate-400' : 'bg-indigo-600'}`}>
                                 <span className="text-xl">{room.room_name}</span>
                                 <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                                    {setActiveTab && (
+                                        <button onClick={() => setActiveTab('anomaly')}
+                                            className="text-xs bg-white/20 hover:bg-white/30 px-2 py-0.5 rounded-full transition font-normal"
+                                            title="Chuyển đến màn Quản lý Tài sản & Sự cố">
+                                            🪑 Tài sản
+                                        </button>
+                                    )}
                                     <button onClick={() => setHistoryRoom(room)}
                                         className="text-xs bg-white/20 hover:bg-white/30 px-2 py-0.5 rounded-full transition font-normal">
                                         📈 Lịch sử

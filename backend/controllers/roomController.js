@@ -58,8 +58,12 @@ const updateRoomPrice = async (req, res) => {
 const deleteRoom = async (req, res) => {
     const { id } = req.params;
     try {
+        // Xóa tài sản và sự cố liên kết với phòng trước khi xóa phòng (Do không dùng ON DELETE CASCADE)
+        await db.query('DELETE FROM RoomAssets WHERE room_id = ?', [id]).catch(() => {});
+        await db.query('DELETE FROM RoomIncidents WHERE room_id = ?', [id]).catch(() => {});
+        
         await db.query('DELETE FROM Rooms WHERE id = ?', [id]);
-        res.status(200).json({ message: 'Đã xóa phòng!' });
+        res.status(200).json({ message: 'Đã xóa phòng và các tài sản liên quan!' });
     } catch (error) {
         res.status(500).json({ message: 'Không thể xóa phòng đang có người ở hoặc đã có hóa đơn. ' + error.message });
     }
