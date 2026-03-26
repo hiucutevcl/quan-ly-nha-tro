@@ -124,6 +124,8 @@ const AssetsPage = ({ token, rooms }) => {
     const [showForm, setShowForm] = useState(false);
     const [editItem, setEditItem] = useState(null);
     const [form, setForm] = useState({ room_id: '', asset_name: '', description: '', condition_status: 'Tốt', quantity: 1 });
+    const [selectedAmenities, setSelectedAmenities] = useState([]);
+    const COMMON_AMENITIES = ["Máy lạnh", "Tủ lạnh", "Máy giặt", "Nóng lạnh", "Thang máy", "Ban công/Cửa sổ", "Wifi", "Giường", "Tủ quần áo", "Nhà vệ sinh riêng", "Bếp riêng", "Gác lửng"];
     const headers = { headers: { Authorization: `Bearer ${token}` } };
 
     const fetchAssets = useCallback(() => {
@@ -140,10 +142,35 @@ const AssetsPage = ({ token, rooms }) => {
             if (editItem) {
                 await axios.put(`${API}/room-management/assets/${editItem.id}`, form, headers);
             } else {
-                await axios.post(`${API}/room-management/assets`, form, headers);
+                let assetsToSubmit = [];
+                // Add all checked amenities
+                selectedAmenities.forEach(am => {
+                    assetsToSubmit.push({ asset_name: am, condition_status: 'Tốt', quantity: 1, description: '' });
+                });
+                // Add custom if typed
+                if (form.asset_name.trim()) {
+                    assetsToSubmit.push({ 
+                        asset_name: form.asset_name, 
+                        condition_status: form.condition_status, 
+                        quantity: form.quantity, 
+                        description: form.description 
+                    });
+                }
+                if (assetsToSubmit.length === 0) {
+                    return alert('Vui lòng chọn ít nhất 1 tiện nghi hoặc nhập tên tài sản mới!');
+                }
+                
+                if (assetsToSubmit.length === 1) {
+                    // Single insert fallback
+                    await axios.post(`${API}/room-management/assets`, { ...assetsToSubmit[0], room_id: form.room_id }, headers);
+                } else {
+                    // Bulk insert
+                    await axios.post(`${API}/room-management/assets/bulk`, { room_id: form.room_id, assets: assetsToSubmit }, headers);
+                }
             }
             setShowForm(false); setEditItem(null);
             setForm({ room_id: '', asset_name: '', description: '', condition_status: 'Tốt', quantity: 1 });
+            setSelectedAmenities([]);
             fetchAssets();
         } catch (err) { alert(err.response?.data?.message || err.message); }
     };
@@ -182,7 +209,7 @@ const AssetsPage = ({ token, rooms }) => {
                     <option value="">-- Tất cả phòng --</option>
                     {rooms.map(r => <option key={r.id} value={r.id}>{r.room_name}</option>)}
                 </select>
-                <button onClick={() => { setShowForm(!showForm); setEditItem(null); setForm({ room_id: '', asset_name: '', description: '', condition_status: 'Tốt', quantity: 1 }); }}
+                <button onClick={() => { setShowForm(!showForm); setEditItem(null); setForm({ room_id: '', asset_name: '', description: '', condition_status: 'Tốt', quantity: 1 }); setSelectedAmenities([]); }}
                     style={{ background: '#4f46e5', color: 'white', border: 'none', borderRadius: 8, padding: '9px 18px', fontWeight: 700, cursor: 'pointer', fontSize: 14 }}>
                     {showForm ? '✕ Đóng' : '+ Thêm Tài Sản'}
                 </button>
@@ -190,21 +217,44 @@ const AssetsPage = ({ token, rooms }) => {
 
             {showForm && (
                 <form onSubmit={handleSubmit} style={{ background: 'white', border: '1.5px solid #e0e7ff', borderRadius: 12, padding: 20, marginBottom: 20 }}>
-                    <h3 style={{ margin: '0 0 16px', fontWeight: 800, color: '#4338ca' }}>{editItem ? '✏️ Sửa tài sản' : '➕ Thêm tài sản mới'}</h3>
+                    <h3 style={{ margin: '0 0 16px', fontWeight: 800, color: '#4338ca' }}>{editItem ? '✏️ Sửa tài sản' : '➕ Thêm tài sản/tiện nghi mới'}</h3>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
-                        <div>
+                        <div style={{ gridColumn: '1 / -1' }}>
                             <label style={labelStyle}>Phòng *</label>
                             <select required value={form.room_id} onChange={e => setForm({ ...form, room_id: e.target.value })} style={inputStyle}>
                                 <option value="">-- Chọn phòng --</option>
                                 {rooms.map(r => <option key={r.id} value={r.id}>{r.room_name}</option>)}
                             </select>
                         </div>
-                        <div>
-                            <label style={labelStyle}>Tên đồ đạc/Tài sản *</label>
-                            <input required value={form.asset_name} onChange={e => setForm({ ...form, asset_name: e.target.value })} placeholder="VD: Máy lạnh, Giường, Tủ..." style={inputStyle} />
+
+                        {!editItem && (
+                            <div style={{ gridColumn: '1 / -1', background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0', marginTop: 10 }}>
+                                <label style={{ ...labelStyle, fontSize: 14, color: '#1e293b', marginBottom: 12 }}>Đánh dấu những tiện nghi có trong phòng:</label>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 12 }}>
+                                    {COMMON_AMENITIES.map(amenity => (
+                                        <label key={amenity} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 14, color: '#334155' }}>
+                                            <input 
+                                                type="checkbox" 
+                                                checked={selectedAmenities.includes(amenity)}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) setSelectedAmenities([...selectedAmenities, amenity]);
+                                                    else setSelectedAmenities(selectedAmenities.filter(a => a !== amenity));
+                                                }}
+                                                style={{ width: 16, height: 16, cursor: 'pointer' }}
+                                            />
+                                            {amenity}
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        <div style={{ gridColumn: '1 / -1', marginTop: 10 }}>
+                            <label style={labelStyle}>{editItem ? 'Tên đồ đạc/Tài sản *' : 'Tài sản khác (Hoặc tự nhập tên)'}</label>
+                            <input required={!!editItem} value={form.asset_name} onChange={e => setForm({ ...form, asset_name: e.target.value })} placeholder="VD: Bàn làm việc, ghế xoay..." style={inputStyle} />
                         </div>
                         <div>
-                            <label style={labelStyle}>Tình trạng</label>
+                            <label style={labelStyle}>Tình trạng {(!editItem && selectedAmenities.length > 0) ? '(Chỉ áp dụng cho TS Khác)' : ''}</label>
                             <select value={form.condition_status} onChange={e => setForm({ ...form, condition_status: e.target.value })} style={inputStyle}>
                                 {['Tốt', 'Cần sửa', 'Hỏng'].map(s => <option key={s}>{s}</option>)}
                             </select>

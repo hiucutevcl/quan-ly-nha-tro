@@ -51,6 +51,23 @@ router.post('/assets', verifyToken, checkAdmin, async (req, res) => {
     }
 });
 
+// Thêm nhiều tài sản cùng lúc (Bulk Insert dùng cho tiện nghi chọn sẵn)
+router.post('/assets/bulk', verifyToken, checkAdmin, async (req, res) => {
+    const { room_id, assets } = req.body; // assets: [{asset_name, condition_status, quantity, description}]
+    if (!room_id || !Array.isArray(assets) || assets.length === 0) {
+        return res.status(400).json({ message: 'Thiếu room_id hoặc danh sách tiện nghi/tài sản trống!' });
+    }
+    try {
+        const values = assets.map(a => [
+            room_id, a.asset_name, a.description || '', a.condition_status || 'Tốt', a.quantity || 1
+        ]);
+        await db.query(`INSERT INTO RoomAssets (room_id, asset_name, description, condition_status, quantity) VALUES ?`, [values]);
+        res.status(201).json({ message: `Đã thêm ${assets.length} tài sản/tiện nghi!` });
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+});
+
 // Cập nhật tình trạng tài sản
 router.put('/assets/:id', verifyToken, checkAdmin, async (req, res) => {
     const { asset_name, description, condition_status, quantity } = req.body;
