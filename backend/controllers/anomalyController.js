@@ -4,32 +4,44 @@ const db = require('../config/db');
  * API: Phân tích số liệu điện/nước bất thường của các phòng
  * Logic: So sánh tiêu thụ tháng gần nhất với trung bình 3 tháng trước đó
  * Nếu tháng hiện tại > trung bình * ngưỡng (mặc định 1.5x) => bất thường
+ * 
+ * LƯU Ý: Bảng Invoices không có cột elec_used/water_used riêng.
+ * Phải tính: elec_used = (new_elec - old_elec), water_used = (new_water - old_water)
  */
 const getAnomalies = async (req, res) => {
     try {
-        // Lấy toàn bộ lịch sử hóa đơn có thông tin điện/nước, sắp xếp theo phòng & tháng
+        // Lấy lịch sử hóa đơn có thông tin điện/nước đầy đủ
+        // Tính elec_used và water_used trực tiếp từ cột old/new
         const sql = `
             SELECT 
                 i.room_id,
                 r.room_name,
                 u.full_name AS tenant_name,
                 i.month_year,
-                i.elec_used,
-                i.water_used,
-                i.elec_amount,
-                i.water_amount,
+                (i.new_elec - i.old_elec) AS elec_used,
+                (i.new_water - i.old_water) AS water_used,
+                i.elec_fee,
+                i.water_fee,
                 i.total_amount,
                 i.is_paid
             FROM Invoices i
             JOIN Rooms r ON i.room_id = r.id
             LEFT JOIN Users u ON r.tenant_id = u.id
-            WHERE i.elec_used IS NOT NULL AND i.water_used IS NOT NULL
+            WHERE i.new_elec IS NOT NULL 
+              AND i.old_elec IS NOT NULL
+              AND i.new_water IS NOT NULL
+              AND i.old_water IS NOT NULL
+              AND (i.new_elec - i.old_elec) >= 0
+              AND (i.new_water - i.old_water) >= 0
             ORDER BY i.room_id ASC, i.month_year DESC
         `;
         const [rows] = await db.query(sql);
 
         if (rows.length === 0) {
-            return res.status(200).json({ anomalies: [], summary: { total_rooms: 0, rooms_with_anomaly: 0 } });
+            return res.status(200).json({
+                anomalies: [],
+                summary: { total_rooms_analyzed: 0, rooms_with_anomaly: 0, high_severity: 0, medium_severity: 0, threshold_used: 1.5 }
+            });
         }
 
         // Nhóm dữ liệu theo phòng
@@ -46,19 +58,18 @@ const getAnomalies = async (req, res) => {
             roomMap[row.room_id].invoices.push(row);
         }
 
-        const ANOMALY_THRESHOLD = 1.5; // Ngưỡng: tăng hơn 50% so với trung bình
-        const MIN_HISTORY = 2;         // Cần ít nhất 2 tháng lịch sử để so sánh
+        const ANOMALY_THRESHOLD = 1.5; // tăng hơn 50% => bất thường
+        const MIN_HISTORY = 2;         // cần ít nhất 2 tháng lịch sử
         const anomalies = [];
 
         for (const roomId in roomMap) {
             const room = roomMap[roomId];
-            const invoices = room.invoices; // Đã sort DESC theo tháng
+            const invoices = room.invoices; // sorted DESC by month_year
 
-            if (invoices.length < MIN_HISTORY + 1) continue; // Không đủ dữ liệu
+            if (invoices.length < MIN_HISTORY + 1) continue;
 
-            // Tháng mới nhất (index 0) vs lịch sử (index 1 trở đi, tối đa 3 tháng)
             const latestInvoice = invoices[0];
-            const historyInvoices = invoices.slice(1, 4); // Lấy tối đa 3 tháng trước
+            const historyInvoices = invoices.slice(1, 4); // tối đa 3 tháng trước
 
             const avgElec = historyInvoices.reduce((s, i) => s + Number(i.elec_used || 0), 0) / historyInvoices.length;
             const avgWater = historyInvoices.reduce((s, i) => s + Number(i.water_used || 0), 0) / historyInvoices.length;
@@ -72,7 +83,6 @@ const getAnomalies = async (req, res) => {
             const isElecAnomaly = elecRatio >= ANOMALY_THRESHOLD;
             const isWaterAnomaly = waterRatio >= ANOMALY_THRESHOLD;
 
-            // Chỉ thêm vào nếu có ít nhất 1 bất thường
             if (isElecAnomaly || isWaterAnomaly) {
                 const warnings = [];
                 if (isElecAnomaly) {
@@ -111,8 +121,8 @@ const getAnomalies = async (req, res) => {
                     severity: maxSeverity,
                     history_months: historyInvoices.map(i => ({
                         month_year: i.month_year,
-                        elec_used: i.elec_used,
-                        water_used: i.water_used,
+                        elec_used: Number(i.elec_used),
+                        water_used: Number(i.water_used),
                     }))
                 });
             }
