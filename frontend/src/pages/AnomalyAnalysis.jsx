@@ -125,7 +125,7 @@ const AssetsPage = ({ token, rooms }) => {
     const [editItem, setEditItem] = useState(null);
     const [form, setForm] = useState({ room_id: '', asset_name: '', description: '', condition_status: 'Tốt', quantity: 1 });
     const [selectedAmenities, setSelectedAmenities] = useState([]);
-    const COMMON_AMENITIES = ["Máy lạnh", "Tủ lạnh", "Máy giặt", "Nóng lạnh", "Thang máy", "Ban công/Cửa sổ", "Wifi", "Giường", "Tủ quần áo", "Nhà vệ sinh riêng", "Bếp riêng", "Gác lửng"];
+    const COMMON_AMENITIES = ["Máy lạnh", "Tủ lạnh", "Máy giặt", "Nóng lạnh", "Giường", "Nệm", "Tủ quần áo", "Bàn ghế", "Tivi", "Quạt", "Wifi", "Bếp điện"];
     const headers = { headers: { Authorization: `Bearer ${token}` } };
 
     const fetchAssets = useCallback(() => {
