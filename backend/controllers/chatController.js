@@ -104,7 +104,7 @@ const handleChatRequest = async (req, res) => {
         const systemInstruction = `Bạn là trợ lý ảo thân thiện của nhà trọ ${name}. Nhiệm vụ của bạn là tư vấn cho khách thuê phòng trọ một cách ngắn gọn, thân thiện và tự nhiên. KHÔNG dùng markdown phức tạp. Trả lời trực tiếp như chat với bạn bè. Dùng emoji vừa đủ.\nThông tin nhà trọ:\n- Tên: ${name}\n- Liên hệ: ${phone}\n- Địa chỉ: ${address} ${buildingsInfo}\n- Điện: ${elecPrice}đ/kWh, Nước: ${waterPrice}đ/khối\n- Nội quy: ${rules}\n- Danh sách phòng & giá:\n${templateData.prices}\n- Danh sách phòng TRỐNG:\n${templateData.roomList}\n\nChỉ nói những gì khách hỏi. Cung cấp giá hoặc số phòng trống chính xác theo danh sách.`;
 
         const model = genAI.getGenerativeModel({
-            model: 'gemini-1.5-flash',
+            model: 'gemini-2.5-flash',
             systemInstruction: systemInstruction,
         });
 
