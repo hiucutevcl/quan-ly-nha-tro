@@ -9,6 +9,7 @@ const Chatbot = () => {
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [customQuickReplies, setCustomQuickReplies] = useState([]);
+    const [logoUrl, setLogoUrl] = useState("");
     const messagesEndRef = useRef(null);    const API_URL = window.location.hostname === 'localhost' 
         ? 'http://localhost:5000/api/chat/public' 
         : 'https://api-quan-ly-nha-tro.onrender.com/api/chat/public';
@@ -33,9 +34,10 @@ const Chatbot = () => {
                     } catch(e) {}
                 }
                 setCustomQuickReplies(dynamicReplies);
+                if (res.data.logo_image) setLogoUrl(res.data.logo_image);
             })
             .catch(err => console.error("Lỗi tải quick replies:", err));
-    }, []);
+    }, [API_URL]);
 
     // quickReplyIdx: truyền index của quick reply (0-4) để server dùng đúng template admin
     const handleSend = async (overrideText = null, quickReplyIdx = null) => {
@@ -67,12 +69,14 @@ const Chatbot = () => {
             {/* Nút bong bóng */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+                className="w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 overflow-hidden border-2 border-white"
             >
                 {isOpen ? (
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
+                ) : logoUrl ? (
+                    <img src={logoUrl} alt="Bot" className="w-full h-full object-cover bg-white" />
                 ) : (
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -85,10 +89,14 @@ const Chatbot = () => {
                 <div className="absolute bottom-16 right-0 w-80 sm:w-96 h-[450px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col overflow-hidden border border-gray-100 animate-in slide-in-from-bottom-5 duration-300">
                     {/* Header */}
                     <div className="bg-blue-600 p-4 text-white flex items-center gap-3">
-                        <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
+                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center overflow-hidden shrink-0 shadow-sm border border-blue-500">
+                            {logoUrl ? (
+                                <img src={logoUrl} alt="Trợ lý" className="w-full h-full object-cover" />
+                            ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            )}
                         </div>
                         <div>
                             <h3 className="font-bold">Trợ lý Nhà trọ</h3>
