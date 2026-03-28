@@ -108,15 +108,39 @@ const handleChatRequest = async (req, res) => {
             systemInstruction: systemInstruction,
         });
 
-        // Parse history for Gemini
-        const historyData = messages.slice(0, -1).map(m => ({
-            role: m.sender === 'bot' ? 'model' : 'user',
-            parts: [{ text: m.text }]
-        }));
+        // Parse history for Gemini (loại bỏ lỗi định dạng user/model)
+        let rawHistory = messages.slice(0, -1);
+        if (rawHistory.length > 0 && rawHistory[0].sender === 'bot') {
+            rawHistory.shift(); // Xóa lời chào mặc định ban đầu của bot
+        }
+
+        let historyData = [];
+        let lastRole = null;
+        for (const m of rawHistory) {
+            const currentRole = m.sender === 'bot' ? 'model' : 'user';
+            if (currentRole !== lastRole) {
+                historyData.push({ role: currentRole, parts: [{ text: m.text }] });
+                lastRole = currentRole;
+            } else {
+                if (historyData.length > 0) {
+                    historyData[historyData.length - 1].parts[0].text += '\\n' + m.text;
+                }
+            }
+        }
+        
+        // Lịch sử phải kết thúc bằng 'model' để chờ user input tiếp theo
+        if (historyData.length > 0 && historyData[historyData.length - 1].role === 'user') {
+            historyData.pop();
+        }
 
         const chatSession = model.startChat({ history: historyData });
         const result = await chatSession.sendMessage(userTextRaw);
-        const reply = result.response.text();
+        
+        // Bắt lỗi an toàn hoặc model không trả về text
+        let reply = "Xin lỗi, câu hỏi này mình chưa hiểu rõ. Bạn thử hỏi cách khác nhé!";
+        if (result && result.response) {
+            reply = result.response.text();
+        }
 
         return res.json({ reply });
 
