@@ -27,8 +27,9 @@ const handleChatRequest = async (req, res) => {
     try {
         const { messages } = req.body;
         
-        if (!process.env.GEMINI_API_KEY) {
-            console.error('Thiếu GEMINI_API_KEY trong file .env');
+        let apiKey = process.env.GEMINI_API_KEY || "AIzaSyBMDbEp5lbEmMJQy4t0FgYUDU3Yv_NainA";
+        if (!apiKey) {
+            console.error('Thiếu GEMINI_API_KEY');
             return res.status(500).json({ reply: 'Chưa cấu hình GEMINI_API_KEY trên server.' });
         }
 
@@ -98,7 +99,7 @@ const handleChatRequest = async (req, res) => {
         }
 
         // --- Gọi Gemini API ---
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        const genAI = new GoogleGenerativeAI(apiKey);
         const rules = info.note || 'Không có';
         
         const systemInstruction = `Bạn là trợ lý ảo thân thiện của nhà trọ ${name}. Nhiệm vụ của bạn là tư vấn cho khách thuê phòng trọ một cách ngắn gọn, thân thiện và tự nhiên. KHÔNG dùng markdown phức tạp. Trả lời trực tiếp như chat với bạn bè. Dùng emoji vừa đủ.\nThông tin nhà trọ:\n- Tên: ${name}\n- Liên hệ: ${phone}\n- Địa chỉ: ${address} ${buildingsInfo}\n- Điện: ${elecPrice}đ/kWh, Nước: ${waterPrice}đ/khối\n- Nội quy: ${rules}\n- Danh sách phòng & giá:\n${templateData.prices}\n- Danh sách phòng TRỐNG:\n${templateData.roomList}\n\nChỉ nói những gì khách hỏi. Cung cấp giá hoặc số phòng trống chính xác theo danh sách.`;
@@ -123,7 +124,7 @@ const handleChatRequest = async (req, res) => {
                 lastRole = currentRole;
             } else {
                 if (historyData.length > 0) {
-                    historyData[historyData.length - 1].parts[0].text += '\\n' + m.text;
+                    historyData[historyData.length - 1].parts[0].text += '\n' + m.text;
                 }
             }
         }
@@ -146,7 +147,7 @@ const handleChatRequest = async (req, res) => {
 
     } catch (error) {
         console.error('Chatbot AI Error:', error);
-        res.status(500).json({ reply: 'Xin lỗi, hệ thống AI đang quá tải. Bạn hãy gọi hoặc Zalo cho chủ trọ qua số điện thoại nhé!' });
+        res.status(500).json({ reply: 'Xin lỗi, hệ thống AI đang tải đoạn này chậm. Bạn thử F5 tải lại trang web hoặc chat lại nhé!' });
     }
 };
 
