@@ -113,82 +113,109 @@ const Chatbot = () => {
 
             {/* Cửa sổ chat */}
             {isOpen && (
-                <div className="absolute bottom-20 right-0 w-[350px] sm:w-[400px] h-[520px] bg-white rounded-2xl shadow-[0_30px_60px_rgba(0,0,0,0.15)] flex flex-col overflow-hidden border border-gray-100 animate-in slide-in-from-bottom-5 duration-300">
+                <div className="absolute bottom-20 right-0 w-[350px] sm:w-[400px] h-[550px] bg-white rounded-3xl shadow-[0_20px_70px_-10px_rgba(0,0,0,0.2)] flex flex-col overflow-hidden border border-gray-200/50 animate-in slide-in-from-bottom-5 fade-in duration-300 z-50">
                     {/* Header */}
-                    <div className="bg-blue-600 p-4 text-white flex items-center gap-3">
-                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center overflow-hidden shrink-0 shadow-sm border border-blue-500">
-                            {logoUrl ? (
-                                <img src={logoUrl} alt="Trợ lý" className="w-full h-full object-cover" />
-                            ) : (
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                            )}
+                    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 text-white flex items-center justify-between shadow-md z-10">
+                        <div className="flex items-center gap-3">
+                            <div className="relative w-11 h-11 bg-white rounded-full flex items-center justify-center overflow-hidden shrink-0 shadow-inner border-2 border-white/20">
+                                {logoUrl ? (
+                                    <img src={logoUrl} alt="Trợ lý" className="w-full h-full object-cover" />
+                                ) : (
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                )}
+                                <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-md tracking-wide drop-shadow-sm">Trợ lý Nhà trọ</h3>
+                                <div className="flex items-center gap-1.5">
+                                    <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse shadow-[0_0_5px_#4ade80]"></span>
+                                    <p className="text-xs text-blue-100 font-medium">Đang trực tuyến</p>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <h3 className="font-bold">Trợ lý Nhà trọ</h3>
-                            <p className="text-xs text-blue-100">Đang trực tuyến</p>
-                        </div>
+                        <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/20 rounded-full transition-colors group">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 opacity-80 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
 
                     {/* Messages */}
                     <div 
                         ref={messagesEndRef}
-                        className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50"
+                        className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/70"
                     >
-                        {messages.map((msg, idx) => (
-                            <div key={idx} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-[80%] p-3 rounded-2xl text-sm whitespace-pre-line ${
-                                    msg.sender === 'user' 
-                                    ? 'bg-blue-600 text-white rounded-tr-none' 
-                                    : 'bg-white text-gray-800 shadow-sm border border-gray-100 rounded-tl-none leading-relaxed'
-                                }`}>
-                                    {msg.text}
+                        {messages.map((msg, idx) => {
+                            const isUser = msg.sender === 'user';
+                            return (
+                                <div key={idx} className={`flex items-end gap-2 ${isUser ? 'justify-end' : 'justify-start'}`}>
+                                    {!isUser && (
+                                        <div className="w-6 h-6 shrink-0 rounded-full bg-indigo-100 flex items-center justify-center overflow-hidden mb-1 shadow-sm border border-indigo-200">
+                                            {logoUrl ? <img src={logoUrl} className="w-full h-full object-cover"/> : <span className="text-[10px]">🤖</span>}
+                                        </div>
+                                    )}
+                                    <div className={`max-w-[80%] p-3.5 text-sm whitespace-pre-line shadow-sm leading-relaxed ${
+                                        isUser 
+                                        ? 'bg-gradient-to-bl from-blue-500 to-indigo-600 text-white rounded-2xl rounded-br-sm' 
+                                        : 'bg-white text-gray-700 border border-gray-100/80 rounded-2xl rounded-bl-sm'
+                                    }`}>
+                                        {msg.text}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                         {isLoading && (
-                            <div className="flex justify-start">
-                                <div className="max-w-[80%] p-3 px-4 rounded-2xl bg-white text-gray-800 shadow-sm border border-gray-100 rounded-tl-none flex items-center gap-1">
-                                    <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                                    <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                                    <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce"></div>
+                            <div className="flex justify-start items-end gap-2">
+                                <div className="w-6 h-6 shrink-0 rounded-full bg-indigo-100 flex items-center justify-center overflow-hidden mb-1 shadow-sm border border-indigo-200">
+                                    {logoUrl ? <img src={logoUrl} className="w-full h-full object-cover"/> : <span className="text-[10px]">🤖</span>}
+                                </div>
+                                <div className="max-w-[70%] py-3 px-4 rounded-2xl bg-white shadow-sm border border-gray-100 rounded-bl-sm flex items-center gap-1.5 h-[42px]">
+                                    <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                                    <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                                    <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"></div>
                                 </div>
                             </div>
                         )}
                     </div>
 
                     {/* Quick Replies */}
-                    <div className="px-4 pb-3 bg-gray-50 flex gap-2 overflow-x-auto no-scrollbar scroll-smooth">
-                        {customQuickReplies.map((qr, idx) => (
-                            <button 
-                                key={idx}
-                                onClick={() => handleSend(qr.title)}
-                                disabled={isLoading}
-                                className="whitespace-nowrap px-3 py-1.5 bg-white border border-blue-100 text-blue-600 rounded-full text-xs font-medium hover:bg-blue-50 transition-colors shadow-sm disabled:opacity-50"
-                            >
-                                {qr.title}
-                            </button>
-                        ))}
-                    </div>
+                    {customQuickReplies.length > 0 && (
+                        <div className="px-4 pb-2 bg-slate-50/70 flex gap-2 overflow-x-auto no-scrollbar scroll-smooth">
+                            {customQuickReplies.map((qr, idx) => (
+                                <button 
+                                    key={idx}
+                                    onClick={() => handleSend(qr.title)}
+                                    disabled={isLoading}
+                                    className="whitespace-nowrap px-4 py-2 bg-white border border-indigo-100 text-indigo-600 rounded-full text-xs font-semibold hover:bg-indigo-50 hover:border-indigo-300 hover:-translate-y-0.5 transition-all shadow-sm hover:shadow disabled:opacity-50 disabled:hover:translate-y-0"
+                                >
+                                    {qr.title}
+                                </button>
+                            ))}
+                        </div>
+                    )}
 
-                    {/* Input */}
-                    <div className="p-4 bg-white border-t flex gap-2">
-                        <input
-                            type="text"
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                            placeholder="Nhắn hoặc hỏi thêm..."
-                            disabled={isLoading}
-                            className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-                        />
+                    {/* Input Area */}
+                    <div className="p-3.5 bg-white border-t border-gray-100 flex gap-2 items-center z-10 shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
+                        <div className="flex-1 relative">
+                            <input
+                                type="text"
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                                placeholder="Hỏi thêm về phòng, giá thuê..."
+                                disabled={isLoading}
+                                className="w-full bg-gray-50 focus:bg-white border border-gray-200 rounded-full pl-5 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all disabled:opacity-50 disabled:bg-gray-100"
+                            />
+                        </div>
                         <button
-                            onClick={handleSend}
-                            className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
+                            onClick={() => handleSend()}
+                            disabled={!input.trim() || isLoading}
+                            className="w-11 h-11 bg-gradient-to-tr from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full flex items-center justify-center transition-all shadow-md active:scale-95 disabled:opacity-50 disabled:active:scale-100 shrink-0"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
                             </svg>
                         </button>
                     </div>
