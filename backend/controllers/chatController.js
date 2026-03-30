@@ -27,10 +27,10 @@ const handleChatRequest = async (req, res) => {
     try {
         const { messages } = req.body;
         
-        let apiKey = process.env.GEMINI_API_KEY || "AIzaSyBMDbEp5lbEmMJQy4t0FgYUDU3Yv_NainA";
+        let apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
             console.error('Thiếu GEMINI_API_KEY');
-            return res.status(500).json({ reply: 'Chưa cấu hình GEMINI_API_KEY trên server.' });
+            return res.status(500).json({ reply: 'Hệ thống chưa được cấp quyền AI (Chưa cấu hình GEMINI_API_KEY trên Render).' });
         }
 
         const lastMessage = messages && messages.length > 0 ? messages[messages.length - 1] : null;
@@ -147,7 +147,7 @@ const handleChatRequest = async (req, res) => {
 
     } catch (error) {
         console.error('Chatbot AI Error:', error);
-        res.status(500).json({ reply: 'SYS_ERR: ' + (error.message || error.toString()) });
+        res.status(500).json({ reply: 'Hệ thống AI đang bảo trì. Vui lòng liên hệ trực tiếp chủ trọ!' });
     }
 };
 
