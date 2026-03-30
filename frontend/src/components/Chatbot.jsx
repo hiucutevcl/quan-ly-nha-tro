@@ -65,28 +65,55 @@ const Chatbot = () => {
     };
 
     return (
-        <div className="fixed bottom-6 right-6 z-[1000]">
+        <div className="fixed bottom-6 right-6 z-[1000] flex flex-col items-end">
+            {/* Gợi ý bật chat */}
+            {!isOpen && (
+                <div 
+                    className="mb-3 mr-2 bg-white px-4 py-2.5 rounded-2xl shadow-lg border border-gray-100 animate-bounce cursor-pointer flex items-center gap-2 relative transition-transform hover:scale-105" 
+                    onClick={() => setIsOpen(true)}
+                >
+                    <span className="relative flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                    </span>
+                    <span className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Chat ngay nào 👋</span>
+                    {/* Mũi tên */}
+                    <div className="absolute -bottom-2 right-5 w-4 h-4 bg-white border-b border-r border-gray-100 transform rotate-45"></div>
+                </div>
+            )}
+
             {/* Nút bong bóng */}
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 overflow-hidden border-2 border-white"
-            >
-                {isOpen ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                ) : logoUrl ? (
-                    <img src={logoUrl} alt="Bot" className="w-full h-full object-cover bg-white" />
-                ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                    </svg>
+            <div className="relative group hover:cursor-pointer">
+                {!isOpen && (
+                    <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full blur opacity-40 group-hover:opacity-80 transition duration-500 animate-pulse"></div>
                 )}
-            </button>
+                <button
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="relative w-16 h-16 bg-gradient-to-tr from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 overflow-hidden border-[3px] border-white z-10"
+                >
+                    {isOpen ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    ) : logoUrl ? (
+                        <img src={logoUrl} alt="Bot" className="w-full h-full object-cover bg-white" />
+                    ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                    )}
+                </button>
+                {!isOpen && (
+                    <span className="absolute top-0 right-0 flex h-4 w-4 z-20">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-white"></span>
+                    </span>
+                )}
+            </div>
 
             {/* Cửa sổ chat */}
             {isOpen && (
-                <div className="absolute bottom-16 right-0 w-80 sm:w-96 h-[450px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col overflow-hidden border border-gray-100 animate-in slide-in-from-bottom-5 duration-300">
+                <div className="absolute bottom-20 right-0 w-[350px] sm:w-[400px] h-[520px] bg-white rounded-2xl shadow-[0_30px_60px_rgba(0,0,0,0.15)] flex flex-col overflow-hidden border border-gray-100 animate-in slide-in-from-bottom-5 duration-300">
                     {/* Header */}
                     <div className="bg-blue-600 p-4 text-white flex items-center gap-3">
                         <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center overflow-hidden shrink-0 shadow-sm border border-blue-500">
