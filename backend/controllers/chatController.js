@@ -147,7 +147,7 @@ const handleChatRequest = async (req, res) => {
 
     } catch (error) {
         console.error('Chatbot AI Error:', error);
-        res.status(500).json({ reply: 'Xin lỗi, hệ thống AI đang tải đoạn này chậm. Bạn thử F5 tải lại trang web hoặc chat lại nhé!' });
+        res.status(500).json({ reply: 'SYS_ERR: ' + (error.message || error.toString()) });
     }
 };
 
