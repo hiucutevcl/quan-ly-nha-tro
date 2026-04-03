@@ -29,7 +29,7 @@ const defaultSettings = {
     ]),
     buildings_list: JSON.stringify(['Cơ sở Cầu Giấy', 'Cơ sở Ba Đình']),
     buildings_info: JSON.stringify([
-      { name: 'Cơ sở Minh Hiếu 1', address: 'Xuân Thủy, Cầu Giấy, Hà Nội' }
+      { name: 'Cơ sở Minh Hiếu 1', address: 'Xuân Thủy, Cầu Giấy, Hà Nội', elec_price: 3500, water_price: 25000 }
     ])
 };
 
@@ -289,7 +289,7 @@ const SettingsPage = () => {
                         };
 
                         const addBuild = () => {
-                            const newList = [...buildInfoList, { name: '', address: '' }];
+                            const newList = [...buildInfoList, { name: '', address: '', elec_price: 3500, water_price: 20000 }];
                             setSettings({ ...settings, buildings_info: JSON.stringify(newList) });
                         };
 
@@ -312,12 +312,22 @@ const SettingsPage = () => {
                                             <div>
                                                 <label className="block text-xs font-bold text-gray-600 mb-1">Tên cơ sở (VD: Cơ sở Đống Đa)</label>
                                                 <input type="text" className="w-full border border-indigo-200/50 rounded p-2 text-sm focus:ring-2 focus:ring-teal-400"
-                                                    value={build.name} onChange={(e) => handleBuildChange(idx, 'name', e.target.value)} placeholder="Tên để phân loại phòng..." />
+                                                    value={build.name || ''} onChange={(e) => handleBuildChange(idx, 'name', e.target.value)} placeholder="Tên để phân loại phòng..." />
                                             </div>
                                             <div>
                                                 <label className="block text-xs font-bold text-gray-600 mb-1">Địa chỉ chi tiết (Dùng để tìm Google Maps)</label>
                                                 <input type="text" className="w-full border border-indigo-200/50 rounded p-2 text-sm focus:ring-2 focus:ring-teal-400"
-                                                    value={build.address} onChange={(e) => handleBuildChange(idx, 'address', e.target.value)} placeholder="VD: 123 Phố X, Phường Y..." />
+                                                    value={build.address || ''} onChange={(e) => handleBuildChange(idx, 'address', e.target.value)} placeholder="VD: 123 Phố X, Phường Y..." />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-blue-600 mb-1">Giá điện (VNĐ/kWh)</label>
+                                                <input type="number" className="w-full border border-blue-200/50 rounded p-2 text-sm focus:ring-2 focus:ring-blue-400"
+                                                    value={build.elec_price || ''} onChange={(e) => handleBuildChange(idx, 'elec_price', e.target.value)} placeholder="VD: 3500" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-blue-600 mb-1">Giá nước (VNĐ/m³ hoặc VND/Người)</label>
+                                                <input type="number" className="w-full border border-blue-200/50 rounded p-2 text-sm focus:ring-2 focus:ring-blue-400"
+                                                    value={build.water_price || ''} onChange={(e) => handleBuildChange(idx, 'water_price', e.target.value)} placeholder="VD: 20000" />
                                             </div>
                                         </div>
                                     </div>
