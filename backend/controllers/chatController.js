@@ -53,26 +53,38 @@ const handleChatRequest = async (req, res) => {
         }
 
         try {
-            const [avRooms] = await db.query('SELECT room_name, price, amenities FROM Rooms WHERE status = "Available"');
+            const [avRooms] = await db.query('SELECT room_name, price, amenities, floor, area, building_name FROM Rooms WHERE status = "Available"');
             availableRooms = avRooms;
-            const [alRooms] = await db.query('SELECT room_name, price, status, amenities FROM Rooms');
+            const [alRooms] = await db.query('SELECT room_name, price, status, amenities, floor, area, building_name FROM Rooms');
             allRooms = alRooms;
         } catch (dbErr) {
             console.log("Không thể lấy Rooms:", dbErr.message);
         }
 
+        let servicesInfo = '';
+        try {
+            const [srvs] = await db.query('SELECT service_name, price, unit FROM Services');
+            servicesInfo = srvs.map(s => `${s.service_name}: ${Number(s.price).toLocaleString()}đ/${s.unit}`).join(', ');
+        } catch (e) { console.log(e); }
+
         const phone = info.phone || 'chủ trọ';
         const address = info.address || 'Đang cập nhật';
         const name = info.nha_tro_name || 'Nhà Trọ';
-        const elecPrice = Number(info.elec_price || 3500).toLocaleString();
-        const waterPrice = Number(info.water_price || 15000).toLocaleString();
-        const buildingsInfo = info.buildings_info ? `\nKhu nhà: ${info.buildings_info}` : '';
+        
+        let branchDetails = '';
+        if (info.buildings_info) {
+             try {
+                const bArray = JSON.parse(info.buildings_info);
+                branchDetails = bArray.map(b => `- Khu ${b.name}: ${b.address} (Điện: ${b.elec_price}đ, Nước: ${b.water_price}đ)`).join('\n');
+             } catch(e) {}
+        }
+        const buildingsInfoText = branchDetails ? `\nCác Cơ Sở:\n${branchDetails}` : '';
 
         const templateData = {
-            name, phone, address, elecPrice, waterPrice, buildingsInfo,
+            name, phone, address,
             count: availableRooms.length,
-            roomList: availableRooms.map(r => `• Phòng ${r.room_name}: ${Number(r.price).toLocaleString()}đ/tháng${r.amenities ? ` — ${r.amenities}` : ''}`).join('\n') || 'Đang cập nhật',
-            prices: allRooms.map(r => `• Phòng ${r.room_name}: ${Number(r.price).toLocaleString()}đ (${r.status === 'Available' ? 'Trống' : 'Đã thuê'})`).join('\n') || 'Đang cập nhật'
+            roomList: availableRooms.map(r => `• Phòng ${r.room_name} (${r.building_name||'Cơ sở 1'}) - Tầng ${r.floor||'?'}, ${r.area||'?'}m2 : ${Number(r.price).toLocaleString()}đ/tháng — Tiện ích: ${r.amenities||'Cơ bản'}`).join('\n') || 'Hiện không có phòng trống',
+            prices: allRooms.map(r => `• Phòng ${r.room_name} (${r.building_name||'Cơ sở 1'}): ${Number(r.price).toLocaleString()}đ - Tình trạng: ${r.status === 'Available' ? 'Trống' : 'Đã thuê'}`).join('\n') || 'Đang cập nhật'
         };
 
         const formatTemplate = (template, data) => {
@@ -102,7 +114,22 @@ const handleChatRequest = async (req, res) => {
         const genAI = new GoogleGenerativeAI(apiKey);
         const rules = info.note || 'Không có';
         
-        const systemInstruction = `Bạn là trợ lý ảo thân thiện của nhà trọ ${name}. Nhiệm vụ của bạn là tư vấn cho khách thuê phòng trọ một cách ngắn gọn, thân thiện và tự nhiên. KHÔNG dùng markdown phức tạp. Trả lời trực tiếp như chat với bạn bè. Dùng emoji vừa đủ.\nThông tin nhà trọ:\n- Tên: ${name}\n- Liên hệ: ${phone}\n- Địa chỉ: ${address} ${buildingsInfo}\n- Điện: ${elecPrice}đ/kWh, Nước: ${waterPrice}đ/khối\n- Nội quy: ${rules}\n- Danh sách phòng & giá:\n${templateData.prices}\n- Danh sách phòng TRỐNG:\n${templateData.roomList}\n\nChỉ nói những gì khách hỏi. Cung cấp giá hoặc số phòng trống chính xác theo danh sách.`;
+        const systemInstruction = `Bạn là máy chủ AI tư vấn tổng đài của nhà trọ ${name}. Nhiệm vụ của bạn là tư vấn cho khách thuê phòng một cách chuyên nghiệp, tự nhiên, và giải đáp mọi thắc mắc dựa trên Database. KHÔNG dùng markdown phức tạp. Dùng emoji vừa đủ.\n
+DỮ LIỆU DATABASE HIỆN TẠI:
+- Tên hệ thống: ${name}
+- Liên hệ Chủ nhà/Quản lý: ${phone}
+- Địa chỉ trụ sở: ${address} \n${buildingsInfoText}
+- Phí dịch vụ cố định: ${servicesInfo}
+- Nội quy nhà trọ: ${rules}
+- DANH SÁCH CHI TIẾT CÁC PHÒNG (Dùng để tra cứu giá, cấu trúc của mọi phòng):
+${templateData.prices}
+- DANH SÁCH CÁC PHÒNG CÒN TRỐNG NGAY LÚC NÀY (Báo cho khách nếu họ muốn thuê):
+${templateData.roomList}
+
+LƯU Ý QUAN TRỌNG:
+1. Mọi câu hỏi về vị trí, chi nhánh, diện tích, giá tiền, tầng đều phải lấy chính xác từ "DỮ LIỆU DATABASE HIỆN TẠI".
+2. Nếu khách hỏi thông tin phòng không có trong bảng trên, nói không tìm thấy dữ liệu.
+3. Luôn luôn mời khách liên hệ Zalo số điện thoại nếu cần đặt cọc hoặc xem phòng trực tiếp.`;
 
         const model = genAI.getGenerativeModel({
             model: 'gemini-2.5-flash',
