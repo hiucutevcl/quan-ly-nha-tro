@@ -7,6 +7,7 @@ const InvoiceManagement = () => {
     const [rooms, setRooms] = useState([]);
     const [allRooms, setAllRooms] = useState([]); // Lưu dữ liệu phòng đầy đủ để auto-fill
     const [invoices, setInvoices] = useState([]);
+    const [settings, setSettings] = useState({});
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [filterPaid, setFilterPaid] = useState('all'); // 'all' | 'paid' | 'unpaid'
@@ -26,9 +27,11 @@ const InvoiceManagement = () => {
             const resRooms = await axios.get('https://api-quan-ly-nha-tro.onrender.com/api/invoices/rooms', apiHeaders);
             const resAllRooms = await axios.get('https://api-quan-ly-nha-tro.onrender.com/api/rooms/all', apiHeaders);
             const resInvoices = await axios.get('https://api-quan-ly-nha-tro.onrender.com/api/invoices/all', apiHeaders);
+            const resSettings = await axios.get('https://api-quan-ly-nha-tro.onrender.com/api/settings', apiHeaders);
             setRooms(resRooms.data);
             setAllRooms(resAllRooms.data);
             setInvoices(resInvoices.data);
+            setSettings(resSettings.data);
             setLoading(false);
         } catch (error) {
             alert('Lỗi lấy dữ liệu: ' + (error.response?.data?.message || error.message));
@@ -93,6 +96,23 @@ const InvoiceManagement = () => {
             (filterPaid === 'unpaid' && !inv.is_paid);
         return matchSearch && matchPaid;
     });
+
+    // Lấy giá điện nước theo chi nhánh của phòng đang chọn
+    let currentElecPrice = 4000;
+    let currentWaterPrice = 30000;
+    if (invoiceData.room_id) {
+        const roomInfo = allRooms.find(r => String(r.id) === String(invoiceData.room_id));
+        if (roomInfo && roomInfo.building_name && settings.buildings_info) {
+            try {
+                const bList = JSON.parse(settings.buildings_info);
+                const branch = bList.find(b => b.name === roomInfo.building_name);
+                if (branch) {
+                    if (branch.elec_price) currentElecPrice = Number(branch.elec_price);
+                    if (branch.water_price) currentWaterPrice = Number(branch.water_price);
+                }
+            } catch(e) {}
+        }
+    }
 
     // Xuất Excel
     const exportToExcel = () => {
@@ -169,7 +189,7 @@ const InvoiceManagement = () => {
                             <div>
                                 <label className="block text-xs font-bold mb-1 text-gray-600 flex justify-between">
                                     <span>⚡ Điện MỚI</span>
-                                    <span className="text-indigo-600 font-normal">4.000đ/kWh</span>
+                                    <span className="text-indigo-600 font-normal">{currentElecPrice.toLocaleString('vi-VN')}đ/kWh</span>
                                 </label>
                                 <input type="number" className="w-full border p-2 rounded bg-yellow-50" required
                                     name="new_elec" value={invoiceData.new_elec} onChange={handleInputChange} />
@@ -187,7 +207,7 @@ const InvoiceManagement = () => {
                             <div>
                                 <label className="block text-xs font-bold mb-1 text-gray-600 flex justify-between">
                                     <span>💧 Nước MỚI</span>
-                                    <span className="text-indigo-600 font-normal">30.000đ/m³</span>
+                                    <span className="text-indigo-600 font-normal">{currentWaterPrice.toLocaleString('vi-VN')}đ</span>
                                 </label>
                                 <input type="number" className="w-full border p-2 rounded bg-indigo-50" required
                                     name="new_water" value={invoiceData.new_water} onChange={handleInputChange} />

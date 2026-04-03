@@ -8,9 +8,9 @@ const createInvoice = async (req, res) => {
         const { room_id, new_elec, new_water, month_year, parking_count = 0, is_wifi = true, is_trash = true } = req.body;
 
         // B1: Lấy thông tin phòng để biết tiền phòng và chỉ số đồng hồ
-        const [rooms] = await db.query('SELECT price, current_elec, current_water FROM Rooms WHERE id = ?', [room_id]);
+        const [rooms] = await db.query('SELECT price, current_elec, current_water, building_name FROM Rooms WHERE id = ?', [room_id]);
         if (rooms.length === 0) return res.status(404).json({ message: 'Không tìm thấy phòng!' });
-        const { price: room_fee, current_elec: room_elec, current_water: room_water } = rooms[0];
+        const { price: room_fee, current_elec: room_elec, current_water: room_water, building_name } = rooms[0];
 
         // B2: Truy vấn hóa đơn tháng trước
         const [lastInvoices] = await db.query(
@@ -42,9 +42,22 @@ const createInvoice = async (req, res) => {
             if(s.service_name.includes('xe')) parking_price = Number(s.price);
         });
 
-        // Đơn giá Điện & Nước (4.000đ/kWh, 30.000đ/m³)
-        const ELEC_UNIT_PRICE = 4000;
-        const WATER_UNIT_PRICE = 30000;
+        // Đơn giá Điện & Nước Tự Động Theo Chi Nhánh (Khu Nhà)
+        let ELEC_UNIT_PRICE = 4000;
+        let WATER_UNIT_PRICE = 30000;
+        try {
+            const [settingsResult] = await db.query("SELECT setting_value FROM AppSettings WHERE setting_key = 'buildings_info'");
+            if (settingsResult.length > 0) {
+                const buildingsInfo = JSON.parse(settingsResult[0].setting_value || '[]');
+                const branchInfo = buildingsInfo.find(b => b.name === building_name);
+                if (branchInfo) {
+                    ELEC_UNIT_PRICE = Number(branchInfo.elec_price) || 4000;
+                    WATER_UNIT_PRICE = Number(branchInfo.water_price) || 30000;
+                }
+            }
+        } catch (e) {
+            console.error("Lỗi lấy giá dịch vụ chi nhánh:", e);
+        }
 
         // Tính tiền Phí Dịch vụ
         const trash_fee = is_trash ? trash_price : 0;
