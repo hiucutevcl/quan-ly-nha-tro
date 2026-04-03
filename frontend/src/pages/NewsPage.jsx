@@ -76,10 +76,7 @@ export default function NewsPage() {
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
               <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest border-b pb-3 mb-4">Tài trợ thương mại</h3>
               
-              {/* Banner Quảng Cáo 1 */}
-              <AdsBanner layout="any" />
-
-              {/* Banner Quảng Cáo 2 */}
+              {/* Banners Quảng Cáo */}
               <AdsBanner layout="any" />
               
               <div className="mt-4 p-4 bg-orange-50 rounded-xl text-center border border-orange-100">

@@ -80,7 +80,6 @@ export default function ArticleDetail() {
               <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest border-b pb-3 mb-4">Tài trợ thương mại</h3>
               
               <AdsBanner layout="sidebar" />
-              <AdsBanner layout="banner" />
               
               <div className="mt-4 p-4 bg-orange-50 rounded-xl text-center border border-orange-100">
                 <p className="text-xs font-semibold text-orange-800 mb-1">Cơ hội liên kết kinh doanh</p>
