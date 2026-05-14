@@ -53,7 +53,7 @@ const handleChatRequest = async (req, res) => {
         }
 
         try {
-            const [avRooms] = await db.query('SELECT * FROM Rooms WHERE status = "Available"');
+            const [avRooms] = await db.query("SELECT * FROM Rooms WHERE status = 'Available'");
             availableRooms = avRooms;
             const [alRooms] = await db.query('SELECT * FROM Rooms');
             allRooms = alRooms;
