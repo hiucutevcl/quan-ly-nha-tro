@@ -53,9 +53,9 @@ const handleChatRequest = async (req, res) => {
         }
 
         try {
-            const [avRooms] = await db.query('SELECT room_name, price, amenities, floor, area, building_name FROM Rooms WHERE status = "Available"');
+            const [avRooms] = await db.query('SELECT * FROM Rooms WHERE status = "Available"');
             availableRooms = avRooms;
-            const [alRooms] = await db.query('SELECT room_name, price, status, amenities, floor, area, building_name FROM Rooms');
+            const [alRooms] = await db.query('SELECT * FROM Rooms');
             allRooms = alRooms;
         } catch (dbErr) {
             console.log("Không thể lấy Rooms:", dbErr.message);
