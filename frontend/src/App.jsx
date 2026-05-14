@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 
 import Login from './pages/Login'
 import LandingPage from './pages/LandingPage'
@@ -9,10 +9,16 @@ import NewsPage from './pages/NewsPage'
 import ArticleDetail from './pages/ArticleDetail'
 import AdminDashboard from './pages/AdminDashboard'
 import TenantInvoices from './pages/TenantInvoices'
+import Chatbot from './components/Chatbot'
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  // Không hiển thị Chatbot ở các trang quản trị / bảo mật
+  const noChatbotRoutes = ['/login', '/admin-dashboard', '/my-invoices'];
+  const showChatbot = !noChatbotRoutes.includes(location.pathname);
+
   return (
-    <BrowserRouter>
+    <>
       <Routes>
         {/* Trang chủ - Landing Page */}
         <Route path="/" element={<LandingPage />} />
@@ -36,6 +42,17 @@ function App() {
         {/* Bước 6: Trang Người Thuê (Tenant) */}
         <Route path="/my-invoices" element={<TenantInvoices />} />
       </Routes>
+
+      {/* Hiển thị chatbot trên các trang cộng đồng */}
+      {showChatbot && <Chatbot />}
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   )
 }

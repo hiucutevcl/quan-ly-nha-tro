@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Chatbot from '../components/Chatbot';
 import AdsBanner from '../components/AdsBanner';
 
 const API_URL = 'https://api-quan-ly-nha-tro.onrender.com/api';
@@ -1087,7 +1086,6 @@ const LandingPage = () => {
       {selectedRoom && (
         <RoomModal room={selectedRoom} settings={settings} onClose={() => setSelectedRoom(null)} />
       )}
-      <Chatbot />
     </div>
   );
 };
