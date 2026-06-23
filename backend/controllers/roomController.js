@@ -65,7 +65,7 @@ const deleteRoom = async (req, res) => {
         await db.query('DELETE FROM Rooms WHERE id = ?', [id]);
         res.status(200).json({ message: 'Đã xóa phòng và các tài sản liên quan!' });
     } catch (error) {
-        res.status(500).json({ message: 'Không thể xóa phòng đang có người ở hoặc đã có hóa đơn. ' + error.message });
+        res.status(500).json({ message: '[DB_SQL_4091]: Không thể xóa phòng này vì đang có khách thuê hoặc hóa đơn chưa thanh toán. Vui lòng dọn dẹp dữ liệu trước!' });
     }
 };
 
@@ -106,6 +106,11 @@ const uploadRoomImage = async (req, res) => {
     
     if (!req.files || req.files.length === 0) {
         return res.status(400).json({ message: 'Không có file ảnh nào được chọn!' });
+    }
+    
+    const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+    if (req.files.some(file => file.size > MAX_SIZE)) {
+        return res.status(413).json({ message: '[IO_FS_4130]: Kích thước ảnh quá nặng. Vui lòng chọn file dưới 5MB.' });
     }
 
     try {

@@ -20,7 +20,7 @@ const verifyToken = (req, res, next) => {
         req.user = decoded; // Lưu thông tin giải mã vào req (thường là req.user) để các hàm khác sử dụng
         next(); // Token hợp lệ, cho phép đi tiếp vào route bảo vệ
     } catch (err) {
-        return res.status(401).json({ message: 'Token đã hết hạn hoặc không đúng!' });
+        return res.status(401).json({ message: '[AUTH_ERR_4011]: Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại để tiếp tục.' });
     }
 };
 

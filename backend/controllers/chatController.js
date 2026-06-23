@@ -174,7 +174,7 @@ LƯU Ý QUAN TRỌNG:
 
     } catch (error) {
         console.error('Chatbot AI Error:', error);
-        res.status(500).json({ reply: 'Hệ thống AI đang bảo trì. Vui lòng liên hệ trực tiếp chủ trọ!' });
+        res.status(500).json({ reply: '[NLP_AI_5299]: Chatbot thông minh đang nghỉ ngơi. Vui lòng đợi một lát và thử lại!' });
     }
 };
 
